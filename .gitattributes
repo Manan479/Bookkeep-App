@@ -1,0 +1,7 @@
+# Keep the project's own line endings: every file here is written with LF (the app parses fine either way,
+# but a checkout that rewrote them all as CRLF would show the whole project as changed in the first diff).
+* text=auto eol=lf
+# Things that must stay byte-for-byte: a png has no line endings, and a bat file needs its own.
+*.png binary
+*.bat text eol=crlf
+*.exe binary
