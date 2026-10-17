@@ -1,0 +1,8 @@
+// core/config.js - Static configuration lists (currencies, report catalogue, field definitions).
+// One list, so the wizard, the company profile and anything else offering a currency cannot drift apart.
+const CURRENCIES=[['$','USD $'],['Rs ','PKR Rs'],['£','GBP £'],['€','EUR €'],['AED ','AED']];
+const RPTS=[['Financial',[['pl','Profit and Loss'],['bs','Balance Sheet'],['tb','Trial Balance'],['ac','All accounts'],['cf','Cash Flow']]],['Sales and purchases',[['sp','Sales by party'],['ts','Detailed sales report'],['sq','Sales by product'],['pp','Purchases by supplier']]],['Receivables and payables',[['ar','Receivables aging'],['ap','Payables aging'],['stm','Party statement']]],['Stock',[['sv','Stock valuation'],['ls','Low stock'],['sm','Stock movement']]],['Expenses',[['ex','Expenses by category']]],['Distributor',[['dr','Distributor report']]],['Tax',[['tx','Tax summary']]]];
+const ADDL={method:{arr:METHODS,t:'Add payment method',ph:'e.g. Mobile wallet, Money order'},category:{arr:CATS,t:'Add expense category',ph:'e.g. Insurance'},account:{arr:COA,t:'Add account',ph:'e.g. Bank loan'}};
+const CK={tax:['taxIds','Tax ID',[['t','Type (NTN, VAT, GSTIN...)'],['v','Number']]],social:['social','Social account',[['p','Platform'],['v','Handle or link']]],bank:['banks','Bank account',[['bank','Bank'],['title','Account title'],['no','Account number or IBAN'],['branch','Branch']]],branch:['branches','Branch',[['n','Name'],['a','Address'],['c','City'],['p','Phone'],['e','Email']]]};
+const ACC=['#0F5B3F','#1F6FEB','#B4232C','#7B3FE4','#C77700','#111827'];
+const CURS=[['$','USD $'],['Rs ','PKR Rs'],['£','GBP £'],['€','EUR €'],['AED ','AED']];

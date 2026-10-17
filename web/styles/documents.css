@@ -1,0 +1,32 @@
+/* documents.css - printed paper: invoices, receipts, notes. Print rules come last on purpose. */
+.paperwrap{display:block;overflow:hidden;position:relative;margin:0 auto}
+.paper .im{font-size:.8em;color:#555;line-height:1.3}
+/* The slogan under the company name. Grey on purpose: the name carries the accent, the slogan supports it. */
+.paper .slogan{font-size:.85em;color:#4a5a52;font-style:italic;margin:1px 0 4px}
+.lgimg{width:64px;height:64px;object-fit:contain;flex:none}
+.lgimg.sm{width:44px;height:44px}
+.paper:not(.a5):not(.t80):not(.t58) .lgimg{width:91px;height:91px}
+.paper{background:#fff;color:#111;border-radius:2px;padding:51px;box-shadow:0 4px 18px rgba(0,0,0,.25);font-size:17px;line-height:1.5;width:794px;min-height:1123px;transform-origin:top left;display:flex;flex-direction:column}
+.paper.a5{width:559px;min-height:794px;padding:36px;font-size:12px}
+.paper.t80{width:302px;min-height:0;font-family:ui-monospace,monospace;font-size:11px;padding:14px}
+.paper.t58{width:219px;min-height:0;font-family:ui-monospace,monospace;font-size:10px;padding:10px}
+.paper table{width:100%;border-collapse:collapse;margin:10px 0}
+.paper th{text-align:left;border-bottom:1.5px solid #111;padding:4px 0;font-size:10px}
+.paper td{padding:5px 0;border-bottom:1px solid #e5e5e5}
+.paper .rt{text-align:right}
+.paper:not(.t80):not(.t58) td{padding:11px 0}
+.paper .logo{width:64px;height:64px;border:1.5px dashed #9aa8a0;border-radius:10px;display:grid;place-items:center;color:#7a8a82;font-weight:700;font-size:11px;flex:none}
+.paper .logo.sm{width:44px;height:44px;font-size:9px}
+.paper .terms{margin-top:22px;padding:14px 18px;background:#f3f6f4;border-radius:8px;font-size:.95em;line-height:1.7}
+.paper .terms b{display:block;margin-bottom:4px;font-size:1.05em}
+.paper .terms ol{margin:0;padding-left:22px}
+.paper:not(.a5):not(.t80):not(.t58) td{padding:16px 0}
+.paper:not(.a5):not(.t80):not(.t58) th{font-size:14px;padding:6px 0}
+.paper:not(.a5):not(.t80):not(.t58) .logo{width:91px;height:91px;font-size:15px}
+.paper .hr{border-top:1px dashed #999;margin:6px 0}
+.paper .tt{display:flex;justify-content:space-between}
+.paper .gt{font-weight:800;font-size:1.15em;border-top:1px solid #111;margin-top:3px;padding-top:3px}
+@media print{body *{visibility:hidden}.paper,.paper *{visibility:visible}#app{overflow:visible;height:auto;position:static}.scr{position:static;overflow:visible;padding:0;animation:none}.paperwrap{width:auto!important;height:auto!important;overflow:visible}.paper{position:absolute;left:0;top:0;box-shadow:none;transform:none!important}
+/* Several documents printed at once: each paper has to follow the last instead of stacking on the first. */
+.paperbatch .paper{position:relative!important;page-break-after:always}
+.paperbatch .paperwrap{height:auto!important}}

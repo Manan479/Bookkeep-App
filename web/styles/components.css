@@ -1,0 +1,149 @@
+/* components.css - buttons, cards, rows, chips, sheets, calendar, forms, tab bar, animations. */
+.scr{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 176px;animation:in .25s ease}
+/* 176px, not 110: the New Invoice button sits above the tab bar and was covering the last row of every list. */
+.row.sel{border-color:var(--pr);background:var(--prt)}
+.selbar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:12;display:flex;gap:8px;align-items:center}
+.selbar .btn{flex:1;padding:11px 6px;font-size:12.5px}
+/* Nothing to add while rows are being picked: the New button would sit on top of the selection bar. */
+#app.selon .fab{display:none}
+.scr.full{padding-bottom:150px}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.top h1{margin:0;flex:1;font-size:20px}
+.ic{width:38px;height:38px;border-radius:50%;background:var(--sf);border:1px solid var(--bd);display:grid;place-items:center;font-size:17px}
+.card{background:var(--sf);border:1px solid var(--bd);box-shadow:var(--sh);border-radius:16px;padding:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.lbl{color:var(--tx2);font-size:12px;font-weight:500}
+.num{font-weight:800;font-size:19px;font-variant-numeric:tabular-nums;margin-top:2px}
+.sm{font-size:11px}
+.red{color:var(--bad)}
+.grn{color:var(--ok)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:99px;background:var(--sf);border:1px solid var(--bd);font-weight:600;font-size:12.5px;transition:all .2s}
+.chip.on{background:var(--pr);color:var(--onpr);border-color:var(--pr)}
+.hero{background:var(--pr);color:var(--onpr);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}
+.hero .num{font-size:28px}
+.hero .lbl{color:inherit;opacity:.8}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:16px;margin-bottom:8px;width:100%;text-align:left;animation:in .3s backwards}
+/* `backwards`, not `both`: filling forwards leaves a transform on every row for ever, which puts each one in
+   its own layer and makes lists shimmer against the rest of the screen while they scroll. */
+.dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);padding:0;flex:none;transition:transform .15s;background:var(--sf2)}
+.dot:active{transform:scale(.92)}
+/* The chosen one wears a ring with a gap, so it reads at a glance in a row of twelve. */
+.dot.on{box-shadow:0 0 0 3px var(--sf),0 0 0 5px var(--tx);border-color:transparent}
+.dot.pick{position:relative;overflow:hidden;background:conic-gradient(#d23b3b,#d98a0b,#1e8e5a,#3a6fd8,#8e2b3c,#d23b3b)}
+.dot.pick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;padding:0;cursor:pointer}
+/* A soft render (typing in a search box, tapping a chip) redraws the same screen. Without this, every row
+   replays its entry animation and the whole list appears to jump under your thumb. */
+.scr.still,.scr.still *{animation:none!important}
+.av{width:42px;height:42px;border-radius:50%;background:var(--prt);color:var(--pr);display:grid;place-items:center;font-weight:700;flex:none}
+.grow{flex:1;min-width:0}
+.t{font-weight:700}
+.r{text-align:right}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;margin-top:3px}
+.b-Paid{background:var(--prt);color:var(--ok)}
+.b-Partial{background:rgba(217,138,11,.15);color:var(--warn)}
+.b-Overdue,.b-Unpaid{background:rgba(210,59,59,.14);color:var(--bad)}
+.b-Draft{background:rgba(58,111,216,.14);color:var(--info)}
+.search{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--bd);background:var(--sf);margin-bottom:10px;outline:none}
+.search:focus{border-color:var(--pr)}
+.alerts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.alert{border-radius:14px;padding:12px;font-weight:700;font-size:13px}
+.alert span{display:block;font-weight:500;font-size:11px;margin-top:2px;opacity:.8}
+.a1{background:rgba(217,138,11,.14);color:var(--warn)}
+.a2{background:rgba(210,59,59,.13);color:var(--bad)}
+.chart{display:flex;align-items:flex-end;gap:6px;height:130px;margin-top:10px;border-bottom:1px solid var(--bd)}
+.col{flex:1;display:flex;align-items:flex-end;gap:2px;height:100%}
+.bar{flex:1;background:var(--pr);border-radius:5px 5px 0 0;height:0;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.bar.p{background:var(--bar2)}
+.xl{display:flex;gap:6px;margin-top:4px}
+.xl span{flex:1;text-align:center;font-size:10.5px;color:var(--tx2)}
+.fab{position:absolute;left:16px;right:16px;bottom:96px;background:var(--pr);color:var(--onpr);padding:15px;border-radius:99px;font-weight:700;box-shadow:0 6px 18px rgba(15,91,63,.35);z-index:5;transition:transform .15s}
+.fab:active,.btn:active,.row:active,.chip:active{transform:scale(.97)}
+.tabs{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:26px;display:flex;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:10}
+.tab{flex:1;padding:7px 0;border-radius:20px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10.5px;font-weight:600;color:var(--tx2);transition:all .25s}
+.tab i{font-style:normal;font-size:18px;transition:transform .25s}
+.tab.on{background:var(--prt);color:var(--pr)}
+.tab.on i{transform:translateY(-2px) scale(1.12)}
+.btn{padding:13px;border-radius:99px;font-weight:700;border:1.5px solid var(--pr);color:var(--pr);flex:1;transition:transform .15s}
+.btn.p{background:var(--pr);color:var(--onpr)}
+.bar-act{position:absolute;left:0;right:0;bottom:0;background:var(--sf);border-top:1px solid var(--bd);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:6}
+.tot div{display:flex;justify-content:space-between;padding:5px 0;font-variant-numeric:tabular-nums}
+.tot .g{font-weight:800;font-size:16px;border-top:1px solid var(--bd);margin-top:4px;padding-top:9px}
+.tot .bal{background:var(--prt);color:var(--pr);border-radius:10px;padding:10px;font-weight:800;margin-top:6px}
+.f{display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-bottom:10px}
+.f label{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;display:block}
+.f label.w{grid-column:1/3}
+.f small{display:block;color:var(--tx2);font-size:11px}
+.f input,.f select{border:0;background:none;width:100%;outline:none;font-weight:600;padding:2px 0}
+.item{padding:12px 0;border-bottom:1px solid var(--bd)}
+.item:last-of-type{border:0}
+.item .l{display:flex;justify-content:space-between;font-weight:700}
+.item .w2{color:var(--warn);font-size:11.5px;font-weight:600;margin-top:2px}
+.item .ed{display:flex;gap:8px;margin-top:8px}
+.item .ed label{flex:1;background:var(--sf2);border-radius:10px;padding:5px 9px;font-size:11px;color:var(--tx2)}
+.item .ed input{width:100%;border:0;background:none;font-weight:700;outline:none}
+.tg{width:46px;height:28px;border-radius:99px;background:var(--bd);position:relative;flex:none;transition:background .2s}
+.tg:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+.tg.on{background:var(--pr)}
+.tg.on:after{transform:translateX(18px)}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;animation:fd .2s}
+@keyframes fd{from{opacity:0}}
+.sheet{background:var(--sf);border-radius:24px 24px 0 0;width:100%;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px));animation:up .3s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes up{from{transform:translateY(100%)}}
+/* Closing. Every sheet, confirmation and success panel leaves the way it arrived: the sheet slides back
+   down while the overlay fades out, and `forwards` holds that end state because the element is removed a
+   moment later. The class is added by the one hook in ui/kit.js, so no screen has to remember to do it. */
+.ov.off{animation:fo .2s ease-in forwards}
+.ov.off .sheet{animation:down .2s ease-in forwards}
+@keyframes fo{to{opacity:0}}
+@keyframes down{to{transform:translateY(100%)}}
+.ok.off{animation:fo .22s ease-in forwards}
+.sheet .grab{width:40px;height:4px;border-radius:9px;background:var(--bd);margin:0 auto 12px}
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.ex button{background:var(--sf2);border:1px solid var(--bd);border-radius:14px;padding:14px;font-weight:700;text-align:left}
+.ok{position:absolute;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;animation:fd .25s}
+.ok svg{width:110px;height:110px}
+.ok circle{fill:var(--prt)}
+.ok path{stroke:var(--pr);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:70;stroke-dashoffset:70;animation:dr .5s .15s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.toast{position:absolute;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 20px;border-radius:14px;font-weight:600;font-size:13.5px;max-width:calc(100% - 40px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:40;animation:tin .22s ease-out}
+/* The toast is centred with a transform, so its own animation must repeat that transform in BOTH frames.
+   Sharing the generic 'in' keyframe dropped the translateX and made it jump sideways as it appeared. */
+@keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%)}}
+.sw{display:flex;gap:6px;margin-bottom:12px}
+.sw .chip{flex:1;text-align:center;padding:9px 0}
+.tbl .tr{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
+.tbl .tr:last-child{border:0}
+.tbl .tr b{font-weight:800}
+.skel{height:64px;border-radius:16px;margin-bottom:8px;background:linear-gradient(90deg,var(--sf) 25%,var(--sf2) 50%,var(--sf) 75%);background-size:200% 100%;animation:sh 1.1s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.uv{display:flex;align-items:center;gap:4px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0;text-align:center}
+.cal i{font-style:normal;color:var(--tx2);font-size:11px;padding:4px}
+.cd{aspect-ratio:1;border-radius:50%;font-weight:600}
+.cd.on{background:var(--pr);color:var(--onpr)}
+.cd.td{border:1.5px solid var(--pr)}
+.cd.inr{background:var(--prt);border-radius:8px}
+.calh{display:flex;align-items:center;justify-content:space-between}
+.bar-row{display:flex;gap:10px}
+.btn:disabled{opacity:.4}
+.gh{display:flex;justify-content:space-between;margin:14px 2px 8px;color:var(--tx2);font-weight:700;font-size:12.5px}
+.gh span{font-variant-numeric:tabular-nums}
+.sel{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;font-weight:600;padding:2px 0}
+.sel.search{margin:0;padding:12px 14px}
+.top .ic{position:relative}
+.dot{position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;border-radius:99px;font-size:10px;min-width:16px;height:16px;display:grid;place-items:center;padding:0 3px}
+textarea.search{resize:none;font-family:inherit}
+.b-Void,.b-Expired{background:var(--sf2);color:var(--mut)}
+.b-Sent{background:rgba(58,111,216,.14);color:var(--info)}
+.b-Accepted{background:var(--prt);color:var(--ok)}
+.b-Rejected{background:rgba(210,59,59,.14);color:var(--bad)}
+.b-Converted{background:var(--prt);color:var(--pr)}
+.dbtn{width:100%;text-align:left;font-weight:700;padding:2px 0}
+.tap{display:block;text-align:left;width:100%;transition:transform .15s}
+.tap:active{transform:scale(.97)}
+.uv input{flex:1;min-width:0}
+.ut{flex:none;min-width:34px;padding:4px 9px;border-radius:99px;background:var(--pr);color:var(--onpr);font-weight:700;font-size:12px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}

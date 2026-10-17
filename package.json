@@ -1,0 +1,12 @@
+{
+  "name": "bookkeep",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bookkeeping, inventory and invoicing for small trading businesses",
+  "scripts": {
+    "test": "node tests/run.js",
+    "build": "node tools/build.js",
+    "test:bundle": "node tools/build.js && BUNDLE=1 node tests/run.js",
+    "graph": "python tools/structure.py"
+  }
+}
