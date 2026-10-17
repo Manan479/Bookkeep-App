@@ -45,6 +45,19 @@ square of its length. A fresh session that reads this file is far cheaper than c
 - **Answer first, keep replies short.** Long explanations are the biggest avoidable cost here.
 - **Keep this file short.** Append a line; do not rewrite it.
 
+## Version control — commit before you finish
+
+This folder is a **git repository** (branch `main`). **The user does not use git and should not have to**:
+committing is part of finishing a piece of work, like running the tests. At the end of a session, commit with
+a message that says what changed and why.
+
+- `git` is installed but **not on PATH**: `C:\Program Files\Git\cmd\git.exe`.
+- Ignored on purpose: `dist/` (regenerate with `node tools/build.js`), `android/app/build/`, `.gradle/`,
+  `.idea/`, `android/local.properties` (it holds this machine's SDK path).
+- `.gitattributes` keeps every file LF in the repository. Do not fight it; a CRLF checkout turns the first
+  real diff into "the whole project changed".
+- `git status` before you start tells you whether the last session left anything uncommitted.
+
 ## How to run the tests
 
 `node` is **not on PATH** on this machine. Use the full path:
