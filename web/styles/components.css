@@ -3,7 +3,10 @@
 /* 176px, not 110: the New Invoice button sits above the tab bar and was covering the last row of every list. */
 .row.sel{border-color:var(--pr);background:var(--prt)}
 .selbar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:12;display:flex;gap:8px;align-items:center}
-.selbar .btn{flex:1;padding:11px 6px;font-size:12.5px}
+/* "Deselect all" is the longest label in the app's tightest row, so the select-all button gets a little more
+   room than the others and the text never wraps. */
+.selbar .btn{flex:1;min-width:0;padding:11px 4px;font-size:11.5px;white-space:nowrap}
+.selbar .btn:first-of-type{flex:1.35}
 /* Nothing to add while rows are being picked: the New button would sit on top of the selection bar. */
 #app.selon .fab{display:none}
 .scr.full{padding-bottom:150px}
