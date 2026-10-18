@@ -21,7 +21,13 @@
 .sm{font-size:11px}
 .red{color:var(--bad)}
 .grn{color:var(--ok)}
+/* The chip row scrolls sideways and used to just stop dead at the screen edge, which reads as "that is all there
+   is" rather than "there is more over here". A mask fades whichever side has content beyond it; the classes are
+   set by chipFades() from the real scroll position, so a row that fits never fades at all. */
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.chips.fade-l{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 22px);mask-image:linear-gradient(to right,transparent 0,#000 22px)}
+.chips.fade-r{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 22px);mask-image:linear-gradient(to left,transparent 0,#000 22px)}
+.chips.fade-l.fade-r{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%)}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:8px 14px;border-radius:99px;background:var(--sf);border:1px solid var(--bd);font-weight:600;font-size:12.5px;transition:all .2s}
 .chip.on{background:var(--pr);color:var(--onpr);border-color:var(--pr)}

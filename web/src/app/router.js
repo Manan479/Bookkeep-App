@@ -7,6 +7,9 @@ function render(skel,soft){applyAccent();const a=$('#app');
 // The figures on screen now, in order, so a soft render can move from the old value to the new one instead of
 // snapping. Read before the screen is torn down; it is the only place the previous numbers still exist.
 let prevN=[];try{prevN=[...a.querySelectorAll('[data-n]')].map(e=>+e.dataset.n||0)}catch(e){}
+// Where the page and each horizontal filter row were scrolled to. A soft render rebuilds the screen, and a
+// rebuilt element starts at zero - so tapping a filter used to jump both chip rows back to their left edge.
+let prevChips=[],prevTop=0;try{prevChips=[...a.querySelectorAll('.chips')].map(c=>c.scrollLeft);const cur=a.querySelector('.scr');if(cur)prevTop=cur.scrollTop}catch(e){}
 // `.selbar` is in this list for a reason: the selection bar is appended beside the screen, not inside it, so
 // leaving it out left one bar behind on every render - and Cancel drew a screen with no bar while an old one
 // stayed on top, which reads as "the bar is stuck".
@@ -16,10 +19,13 @@ a.querySelectorAll('.scr,.fab,.tabs,.bar-act,.ok,.selbar').forEach(e=>e.remove()
 // core/users.js; an install with no users is ungated.
 S.screen=gateScreen();
 const sc=S.screen,ok=screenAllowed();let body;try{body=!ok?noAccess():sc==='login'?loginScr():sc==='users'?usersScr():sc==='stf'?stfScr():sc==='stfp'?stfPageScr():sc==='skd'?skdScr():sc==='th'?thScr():sc==='batch'?batchScr():sc==='inv'?inv():sc==='prod'?prodForm():sc==='pay'?payScr():sc==='cust'?custScr():sc==='dl'?distList():sc==='dd'?distDet():sc==='pt'?ptScr():sc==='pd'?pdScr():sc==='co'?coScr():sc==='tp'?tpScr():sc==='st'?stScr():sc==='wz'?wzScr():sc==='rp'?rpScr():sc==='rpt'?rptScr():sc==='ac'?acScr():sc==='acd'?acdScr():sc==='stmt'?stmtScr():sc==='nt'?ntScr():sc==='jl'?jlScr():sc==='jf'?jfScr():sc==='jd'?jdScr():sc==='ex'?exScr():sc==='exf'?exfScr():sc==='exd'?exdScr():sc==='qt'?qtScr():sc==='qd'?qdScr():sc==='cb'?cbScr():sc==='cbd'?cbdScr():sc==='tfr'?tfrScr():sc==='rt'?rtScr():sc==='rtf'?rtfScr():sc==='rtd'?rtdScr():sc==='pm'?pmScr():sc==='pmf'?pmfScr():sc==='pmd'?pmdScr():sc==='prev'?prev():sc==='pl'?pl():({dash,sales:()=>list(INV,'Sales','New Invoice'),pur:()=>list(PUR,'Purchases','New Purchase'),inv:inventory,more})[S.tab]()}catch(err){body=screenError(sc||S.tab,err)}
-const sy=window._sy||0;
+const sy=soft?prevTop:(window._sy||0);
 const put=()=>{const chipTap=!!S.pop;let bar='';try{bar=selBar()}catch(e){}try{a.classList.toggle('selon',bar!=='')}catch(e){}a.insertAdjacentHTML('beforeend',body+bar+(sc?'':tabs()));const s=$('.scr');
 // A chip tap is a content change worth animating, so the rows are allowed to play their entrance. Typing in a
 // search box is the same soft render and must stay perfectly still under the thumb, which is what `still` is for.
 if(soft&&s){s.style.animation='none';if(!chipTap)s.classList.add('still');s.scrollTop=sy}
+// Put the chip rows back where they were, then let them decide which edges deserve a fade.
+try{const cs=[...a.querySelectorAll('.chips')];if(soft)cs.forEach((c,i)=>{if(prevChips[i]!=null)c.scrollLeft=prevChips[i]})}catch(e){}
+try{chipFades()}catch(e){}
 countUp(soft,prevN);grow(soft&&!chipTap);S.pop=null;fitPaper();if(window.saveNow)window.saveNow()};
 if(skel){a.insertAdjacentHTML('beforeend','<div class="scr">'+'<div class="skel"></div>'.repeat(5)+'</div>');setTimeout(()=>{a.querySelector('.scr').remove();put()},350)}else put()}
