@@ -20,6 +20,7 @@ execFileSync(process.execPath, [
   '--overwrite',
   '--asar',
   '--extra-resource=' + path.join(here, '..', 'web'),
+  '--icon=' + path.join(here, 'icon.ico'),
   '--ignore=^/release',
   '--ignore=^/build\\.js$',
   '--app-version=0.1.0',

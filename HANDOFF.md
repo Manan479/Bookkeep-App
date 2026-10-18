@@ -730,3 +730,11 @@ which is why the cash/bank amounts used to sit against the label.
 
 The packaged exe was rebuilt after this and smoke-tested with `--smoke-app --smoke-tab=sales`: SMOKE_INFO reported
 app="hasnav", and the capture showed the sidebar layout.
+
+## Desktop shell polish
+
+Single-instance lock: a second launch focuses the existing window instead of opening another copy of the app (two
+copies would each write their own browser storage, and the second window is what shows as a strip of UI at the
+edge of the first). Native menu bar is auto-hidden (Alt shows it), the window carries `desktop/icon.ico` and the
+packaged exe is built with it, and a resize forces a repaint after 120ms to clear stale edge pixels. A maximised
+capture at 1920x1052 confirmed the log-in stays a centred 720px column.

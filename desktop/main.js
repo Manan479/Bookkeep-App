@@ -21,6 +21,8 @@ function createWindow(){
     width: 1180, height: 820, minWidth: 900, minHeight: 640,
     title: 'Bookkeep',
     backgroundColor: '#0B120F',
+    autoHideMenuBar: true,
+    icon: path.join(__dirname, 'icon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -29,6 +31,13 @@ function createWindow(){
     }
   });
   win.loadFile(webIndex());
+  if (process.argv.includes('--smoke-max')) win.maximize();
+  // Chromium occasionally leaves a strip of the previous frame along an edge after a maximise/resize. Forcing a
+  // repaint when the size settles clears it; it costs nothing and it is why the strip should not reappear.
+  win.on('resize', () => {
+    clearTimeout(win.__repaint);
+    win.__repaint = setTimeout(() => { try { win.webContents.invalidate(); } catch (e) {} }, 120);
+  });
   win.on('closed', () => { win = null; });
   // --smoke exists so the build can prove the window really loads the app: it captures the first screen, writes
   // it to the temp folder and exits. It changes nothing about how the app runs normally.
@@ -86,20 +95,31 @@ ipcMain.handle('print-page', async () => {
   });
 });
 
-app.whenReady().then(async () => {
-  // While developing, a cached stylesheet would hide every change until the profile was wiped. A packaged build
-  // keeps its cache: its files only change when the app is installed again.
-  if (!app.isPackaged) { try { await session.defaultSession.clearCache(); } catch (e) {} }
-  Menu.setApplicationMenu(Menu.buildFromTemplate([
-    { label: 'Bookkeep', submenu: [
-      { role: 'reload' }, { role: 'toggleDevTools' }, { type: 'separator' },
-      { role: 'quit' }
-    ]},
-    { label: 'Edit', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },
-    { label: 'View', submenu: [{ role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'resetZoom' }, { type: 'separator' }, { role: 'togglefullscreen' }] }
-  ]));
-  createWindow();
-  app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
-});
+// One process, one window. Two copies of the app would each keep their own copy of the book in browser storage
+// and quietly write over each other - and the second one is also what shows as a strip of another window at the
+// edge of the first. A second launch focuses the window that is already open.
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (win) { if (win.isMinimized()) win.restore(); win.show(); win.focus(); }
+  });
+
+  app.whenReady().then(async () => {
+    // While developing, a cached stylesheet would hide every change until the profile was wiped. A packaged build
+    // keeps its cache: its files only change when the app is installed again.
+    if (!app.isPackaged) { try { await session.defaultSession.clearCache(); } catch (e) {} }
+    Menu.setApplicationMenu(Menu.buildFromTemplate([
+      { label: 'Bookkeep', submenu: [
+        { role: 'reload' }, { role: 'toggleDevTools' }, { type: 'separator' },
+        { role: 'quit' }
+      ]},
+      { label: 'Edit', submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }] },
+      { label: 'View', submenu: [{ role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'resetZoom' }, { type: 'separator' }, { role: 'togglefullscreen' }] }
+    ]));
+    createWindow();
+    app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
+  });
+}
 
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
