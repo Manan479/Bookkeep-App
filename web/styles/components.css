@@ -28,7 +28,10 @@
 /* The filter band on a list screen: search and chips stay at the top while the rows scroll under them, so a
    long list never hides the thing you are filtering by. The title above it is allowed to scroll away - it is
    context, not a control. Negative margins make the band cover the full width, since .scr is padded. */
-.shead{position:sticky;top:0;z-index:6;background:var(--bg);margin:0 -16px;padding:10px 16px 0;transition:box-shadow .18s}
+/* `top:-16px`, not 0: a sticky offset is measured from the scrollport's PADDING edge, and `.scr` has 16px of
+   top padding. With top:0 the band pinned 16px below the ceiling and a row showed through the gap. -16 is that
+   padding, so the band sits flush. If `.scr`'s padding-top changes, this number has to change with it. */
+.shead{position:sticky;top:-16px;z-index:6;background:var(--bg);margin:0 -16px;padding:10px 16px 0;transition:box-shadow .18s}
 .shead.stuck{box-shadow:0 12px 14px -14px rgba(0,0,0,.65)}
 .chips.fade-l{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 22px);mask-image:linear-gradient(to right,transparent 0,#000 22px)}
 .chips.fade-r{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 22px);mask-image:linear-gradient(to left,transparent 0,#000 22px)}
