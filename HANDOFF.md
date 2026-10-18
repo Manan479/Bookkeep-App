@@ -804,3 +804,9 @@ an icon and a label sit centred rather than on a font baseline. The full-width "
 Preview and document screens wrap their title row and paper-size control in `.pvhead`. On desktop it is one centred
 column: back and title as a group, paper sizes beneath, then the page, then the caption; the action bar keeps its
 right-aligned pair. On the phone `.pvhead` is transparent and the old vertical order is unchanged.
+
+## Button optical centring (measured)
+
+Flex centring puts the line box in the middle, but the font's ink sits low in its em box: the header button measured
+26/25 px left/right and 19/16 top/bottom. `padding-top:12px; padding-bottom:14px; line-height:1` on `.btn` (and 10/12
+on the header action) lifts the ink without changing height. Re-measured on the captured window: 26/25 and 19/18.

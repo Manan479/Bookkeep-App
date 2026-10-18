@@ -382,3 +382,11 @@ html[dir="rtl"] .ic.flip{transform:scaleX(-1)}
   .pvhead .top h1{flex:none;text-align:center}
   .pvhead .top>span{display:none}
 }
+
+/* Fonts carry descender space below the cap line; a single-line button centred by line box looks low. A line
+   height of 1 removes the excess so the ink sits on the middle of the pill. */
+.btn,.fab{line-height:1}
+
+/* Same total padding, 2px taken from the top and given to the bottom: the line box rises, so the ink (which sits
+   low inside the font's em box) lands on the button's optical centre. Height is unchanged. */
+.btn{padding-top:12px;padding-bottom:14px;line-height:1}

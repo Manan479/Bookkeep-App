@@ -90,7 +90,7 @@ function createWindow(){
         try {
           // A one-line layout readout, so a screenshot can be checked against what the CSS actually computed.
           const info = await win.webContents.executeJavaScript(
-            "(()=>{const c=document.querySelector('.scr .card');const s=c?getComputedStyle(c):null;return {app:document.getElementById('app').className,cardWidth:s&&s.width,marginLeft:s&&s.marginLeft,hasNavClass:document.getElementById('app').className.includes('hasnav')}})()"
+            "(()=>{const c=document.querySelector('.scr .card');const s=c?getComputedStyle(c):null;const b=document.querySelector('.deskonly');let box=null;if(b){const br=b.getBoundingClientRect();const rg=document.createRange();rg.selectNodeContents(b);const tr=rg.getBoundingClientRect();box={buttonW:br.width,textW:tr.width,left:tr.left-br.left,right:br.right-tr.right,top:tr.top-br.top,bottom:br.bottom-tr.bottom,display:getComputedStyle(b).display,justify:getComputedStyle(b).justifyContent,text:b.textContent}}return {app:document.getElementById('app').className,cardWidth:s&&s.width,marginLeft:s&&s.marginLeft,hasNavClass:document.getElementById('app').className.includes('hasnav'),button:box}})()"
           );
           console.log('SMOKE_INFO=' + JSON.stringify(info));
           const img = await win.webContents.capturePage();
