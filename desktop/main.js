@@ -72,9 +72,14 @@ function createWindow(){
       // login screen. It exists for verification and changes nothing otherwise.
       if (process.argv.includes('--smoke-app')) {
         const tabArg = (process.argv.find(a => a.startsWith('--smoke-tab=')) || '--smoke-tab=dash').split('=')[1];
+        const preview = process.argv.includes('--smoke-preview') ? 'true' : 'false';
+        const invoice = process.argv.includes('--smoke-invoice') ? 'true' : 'false';
         setTimeout(() => {
           win.webContents.executeJavaScript(
-            "(async()=>{try{if(USERS.length){const r=await signInHashed(USERS[0].id,'1234');if(!r.ok)throw new Error(r.reason)}S.screen=null;S.tab='" + tabArg + "';render()}catch(e){document.title='ERR '+e.message}})()"
+            "(async()=>{try{if(USERS.length){const r=await signInHashed(USERS[0].id,'1234');if(!r.ok)throw new Error(r.reason)}S.screen=null;S.tab='" + tabArg + "';render();" +
+            "if(" + preview + "&&typeof INV!=='undefined'&&INV.length){openInv(INV[0][0]);S.screen='prev';render();}" +
+            "if(" + invoice + "){openScr('inv','sale');}" +
+            "}catch(e){document.title='ERR '+e.message}})()"
           ).catch(() => {});
         }, 1200);
       }

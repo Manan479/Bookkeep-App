@@ -291,3 +291,21 @@ html[dir="rtl"] .ic.flip{transform:scaleX(-1)}
 
 /* The log-in column: title, fields, button and notes share one width and one set of edges on every screen size. */
 .auth{max-width:520px;margin:0 auto}
+
+@media (min-width:900px){
+  /* Paper size and other choice rows are segmented controls, not full-width bars. */
+  .sw{display:inline-flex;flex-wrap:wrap;max-width:100%}
+  .sw .chip{flex:none;min-width:78px;padding:9px 18px}
+  /* Actions sit together at the end of the bar, on a comfortable button width. */
+  .bar-act{justify-content:flex-end;gap:10px}
+  .bar-act .btn{flex:0 0 auto;min-width:170px}
+  .bar-act .ic{flex:none}
+  /* Print preview: a page on a workspace, with breathing room above the action bar. */
+  .paperwrap{margin-top:6px}
+  .scr.full{padding-bottom:110px}
+}
+@media (min-width:900px){
+  /* Modules are a grid on a desktop, not a single column of full-width rows. */
+  .modgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:1180px;margin:0 auto}
+  .modgrid .row{margin:0}
+}

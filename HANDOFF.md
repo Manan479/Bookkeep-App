@@ -759,3 +759,11 @@ window and are untouched). Verified: launching twice leaves one window titled "B
 The Sign in button is an inline-block, so `margin:auto` never centred it; the notes are block text with no align.
 `loginScr()` now returns one `.auth` column (`max-width:520px;margin:0 auto`) holding the title, card, fields,
 button, first-run hint and "Can't sign in?", so all of them share the same edges on desktop and phone.
+
+## Desktop screens, not stretched phone screens
+
+Print/Preview: paper-size choice is a compact segmented control (`.sw` no longer flexes to full width on desktop),
+the page is scaled to fit the *height* as well as the width (fitPaper), and the action bar's buttons are grouped at
+the right with fixed widths instead of stretching. The invoice editor keeps its 720px centred form column with the
+same compact action group. More is a two-column module grid (`modgrid`). Sidebar layout, ready-to-show and the
+single-instance/cleanup rules are unchanged.
