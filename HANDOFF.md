@@ -738,3 +738,11 @@ copies would each write their own browser storage, and the second window is what
 edge of the first). Native menu bar is auto-hidden (Alt shows it), the window carries `desktop/icon.ico` and the
 packaged exe is built with it, and a resize forces a repaint after 120ms to clear stale edge pixels. A maximised
 capture at 1920x1052 confirmed the log-in stays a centred 720px column.
+
+## Stale strip on the desktop window
+
+The strip at the window edge is a compositor artefact, not the page: a page capture never showed it, an OS-level
+capture did. The shell now: disables hardware acceleration, disables `CalculateNativeWinOcclusion`, sets
+`backgroundThrottling:false`, paints the first frame before showing the window, repaints after a resize, and keeps
+its own title (`Bookkeep 0.1.0`) instead of letting the page's `<title>` overwrite it. Single-instance lock was
+already added; four `Bookkeep` processes in Task Manager are Electron helpers for one window, not four windows.

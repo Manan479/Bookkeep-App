@@ -8,6 +8,16 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
+// Some Windows GPUs leave a strip of an old frame along a window edge after maximise/resize. The page itself is
+// correct (a page capture never shows it), so this is the compositor, not the app. This shell draws simple
+// 2D screens; software rendering costs nothing visible and removes that class of artefact.
+app.disableHardwareAcceleration();
+app.setAppUserModelId('com.bookkeep.desktop');
+// Windows' "native window occlusion" tells Chromium a covered or partly off-screen window needs no painting. On
+// some drivers it decides wrong and leaves a strip of the previous frame along an edge - visible in a screen
+// capture, absent from a page capture. Turning that calculation off keeps the window painting normally.
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
+
 let win = null;
 
 // In development the shell reads ../web directly, so there is never a second copy of the screens. A packaged
@@ -19,17 +29,24 @@ const webIndex = () => app.isPackaged
 function createWindow(){
   win = new BrowserWindow({
     width: 1180, height: 820, minWidth: 900, minHeight: 640,
-    title: 'Bookkeep',
+    title: 'Bookkeep ' + app.getVersion(),
     backgroundColor: '#0B120F',
     autoHideMenuBar: true,
     icon: path.join(__dirname, 'icon.ico'),
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: true
+      sandbox: true,
+      // A window that Windows thinks is occluded must still repaint; this is the second half of the fix above.
+      backgroundThrottling: false
     }
   });
+  // Paint the first complete frame before showing the window, so there is no half-drawn first frame to leave
+  // behind on the desktop.
+  win.once('ready-to-show', () => win.show());
+  win.on('page-title-updated', (e) => e.preventDefault());
   win.loadFile(webIndex());
   if (process.argv.includes('--smoke-max')) win.maximize();
   // Chromium occasionally leaves a strip of the previous frame along an edge after a maximise/resize. Forcing a
