@@ -127,3 +127,4 @@ T('a new user without a PIN is still refused',userProblem(-1,{n:'NoPin',role:'ca
 T('a hashed user has no plain PIN field at all',!('pin' in USERS[0]));
 T('the upgrade sweep exists',typeof ensurePinHashes==='function'&&typeof pinCrypto==='function');
 })();
+T('the login screen is one centred column, so the button and notes share the card edges',loginScr().includes('class="auth"'));

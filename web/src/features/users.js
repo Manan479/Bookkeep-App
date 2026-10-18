@@ -2,15 +2,17 @@
 const DEFAULT_PIN='1234';
 const defaultPin=()=>USERS.some(u=>u.role==='admin'&&(String(u.pin)===DEFAULT_PIN||u.wasDefault));
 function loginScr(){const u=USERS.filter(x=>x.active!==false);
- return `<div class="scr"><div class="top"><h1>Sign in</h1><span style="width:38px"></span></div>
+ // One centred column, so the title, the fields, the button and the small notes all share the same edges on a
+ // desktop. Before this the notes were left-aligned against the window while the card sat in the middle.
+ return `<div class="scr"><div class="auth"><div class="top"><h1>Sign in</h1><span style="width:38px"></span></div>
  <div class="card" style="margin-bottom:12px"><div class="t">${COMP.name}</div><div class="lbl sm">Enter your PIN to open the books.</div></div>
  ${u.length?`<div class="f"><label class="w"><small>User</small><select id="lu">${u.map(x=>`<option value="${x.id||x.n}" ${S.lu===(x.id||x.n)?'selected':''}>${x.n} · ${ROLE_LABEL[x.role]||x.role}</option>`).join('')}</select></label>
  <label class="w"><small>PIN</small><input id="lp" type="password" inputmode="numeric" placeholder="••••" onkeydown="if(event.key==='Enter')tryPin()"></label></div>
  <button class="btn p" style="width:100%;flex:none;margin-top:12px" onclick="tryPin()">Sign in</button>
- ${defaultPin()?'<div class="lbl sm" style="margin-top:12px">First run: the administrator PIN is '+DEFAULT_PIN+'. Change it under Users once you are in.</div>':''}
- <button class="ut" style="margin-top:14px" onclick="forgotPin()">Can\'t sign in?</button>`
+ ${defaultPin()?`<div class="lbl sm" style="margin-top:12px;text-align:center">First run: the administrator PIN is ${DEFAULT_PIN}. Change it under Users once you are in.</div>`:''}
+ <button class="ut" style="display:block;margin:14px auto 0" onclick="forgotPin()">Can\'t sign in?</button>`
  :'<div class="card lbl">No users yet. This should not happen — reopen the app, or reset the data from Settings.</div>'}
- </div>`}
+ </div></div>`}
 async function tryPin(){const s=$('#lu'),p=$('#lp')?$('#lp').value:'';
  // The select's value is the user's id, but fall back to the name in front of the " · role" label, so a book
  // saved by an older build cannot leave the owner locked out.

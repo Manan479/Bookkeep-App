@@ -753,3 +753,9 @@ The user's screenshot had the old title "Bookkeep", not "Bookkeep 0.1.0": they w
 made before the single-instance lock existed, so the new launch could not displace it. Packaged builds now close any
 other Bookkeep process that owns a window 600ms after start (PowerShell `CloseMainWindow`; helper processes have no
 window and are untouched). Verified: launching twice leaves one window titled "Bookkeep 0.1.0".
+
+## Log-in column
+
+The Sign in button is an inline-block, so `margin:auto` never centred it; the notes are block text with no align.
+`loginScr()` now returns one `.auth` column (`max-width:520px;margin:0 auto`) holding the title, card, fields,
+button, first-run hint and "Can't sign in?", so all of them share the same edges on desktop and phone.

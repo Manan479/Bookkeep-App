@@ -288,3 +288,6 @@ html[dir="rtl"] .ic.flip{transform:scaleX(-1)}
   /* Leave room for the floating button, which sits over the bottom-right corner on desktop. */
   .scr{padding-bottom:140px}
 }
+
+/* The log-in column: title, fields, button and notes share one width and one set of edges on every screen size. */
+.auth{max-width:520px;margin:0 auto}

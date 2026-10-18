@@ -61,6 +61,13 @@ function createWindow(){
   // it to the temp folder and exits. It changes nothing about how the app runs normally.
   if (process.argv.includes('--smoke')) {
     win.webContents.once('did-finish-load', () => {
+      if (process.argv.includes('--smoke-try')) {
+        setTimeout(() => {
+          win.webContents.executeJavaScript(
+            "(async()=>{try{const el=document.getElementById('lp');if(el)el.value='1234';await tryPin();return {user:S.user&&S.user.n,screen:S.screen,hash:USERS.map(u=>({n:u.n,hashed:!!u.pinHash,plain:!!u.pin})),crypto:!!(window.crypto&&window.crypto.subtle)}}catch(e){return {err:e.message}}})()"
+          ).then(r => console.log('SMOKE_TRY=' + JSON.stringify(r))).catch(e => console.log('SMOKE_TRY_ERR ' + e.message));
+        }, 1500);
+      }
       // --smoke-app signs in and opens the dashboard, so the desktop *layout* can be inspected, not just the
       // login screen. It exists for verification and changes nothing otherwise.
       if (process.argv.includes('--smoke-app')) {
