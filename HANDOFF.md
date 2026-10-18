@@ -652,3 +652,15 @@ key to a table, and gives the import/verification order. Nothing in the app talk
 executed against a live Postgres and its guarantees exercised (unbalanced entry refused, posted entry and its
 lines immutable, retried `client_uuid` refused, trial balance zero). No pgcrypto is needed: gen_random_uuid()
 is core from PostgreSQL 13.
+
+## Urdu, and the language layer
+
+`core/i18n.js` holds `LANGS` and the Urdu dictionary `UR`, keyed by the ENGLISH phrase, so a missing entry stays
+English instead of showing a key. `tr()` reads it, `S.lang` is saved with the book, and More → Language (`lg`)
+switches. `applyLang()` in `render()` sets `<html lang dir>`; the handful of RTL fixes live at the end of
+`components.css` (Nastaliq line-height, amount columns, numeric direction, back-arrow flip). Chips translate what
+they SHOW but keep the English value in the onclick - translating the value would break every filter.
+
+Translated so far: tab bar, More/Theme/Language, dashboard, and the Sales, Purchases, Expenses, Payments, Parties,
+Inventory, Journal, Quotations and Returns lists (titles, search boxes, status badges, empty states, period and
+status chips). Still English: forms, reports, settings and printed documents.

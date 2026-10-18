@@ -62,15 +62,28 @@ function chart(l,v,pv){const m=Math.max(1,...v,...(pv||[0]));return `<div class=
 // every `.chip.on` used to animate on every redraw, so tapping "Paid" made the period chip dance too. It also
 // tells the render loop that a filter changed (so the list may animate in) rather than a search box being typed
 // into (where replaying row animations under the thumb is exactly what `still` exists to stop).
-const chips=(arr,cur,fn)=>`<div class="chips">${arr.map(a=>`<button class="chip ${a===cur?'on':''}${a===S.pop?' pop':''}" onclick="S.pop='${a}';${fn}('${a}')">${a==='Custom'&&S.cr&&cur==='Custom'?fmtS(S.cr[0])+' - '+fmtS(S.cr[1]):a}</button>`).join('')}</div>`;
+// A chip shows the translated word but keeps the ENGLISH value in its onclick: the filters compare English values
+// ('Paid', 'This Month'), so translating the value would quietly break every filter.
+const chips=(arr,cur,fn)=>`<div class="chips">${arr.map(a=>`<button class="chip ${a===cur?'on':''}${a===S.pop?' pop':''}" onclick="S.pop='${a}';${fn}('${a}')">${a==='Custom'&&S.cr&&cur==='Custom'?fmtS(S.cr[0])+' - '+fmtS(S.cr[1]):tr(a)}</button>`).join('')}</div>`;
 // Fade only the side the row can actually scroll to. Scroll position is asked for, not guessed, so a row that
-// fits on the screen keeps crisp edges.
-function chipFades(){document.querySelectorAll('.chips').forEach(c=>{try{const max=c.scrollWidth-c.clientWidth;c.classList.toggle('fade-l',c.scrollLeft>2);c.classList.toggle('fade-r',max>2&&c.scrollLeft<max-2)}catch(e){}})}
+// fits on the screen keeps crisp edges. Under RTL the start is the RIGHT edge and scrollLeft runs negative, so
+// the sides swap - otherwise the first chip is faded as though it were the last.
+function chipFades(){document.querySelectorAll('.chips').forEach(c=>{try{
+  const max=c.scrollWidth-c.clientWidth, rtl=isRTL();
+  if(max<=2){c.classList.remove('fade-l','fade-r');return}
+  const sl=rtl?Math.abs(c.scrollLeft):c.scrollLeft, start=sl<=2, end=sl>=max-2;
+  c.classList.toggle('fade-l',rtl?!end:!start);
+  c.classList.toggle('fade-r',rtl?!start:!end);
+}catch(e){}})}
 // A sticky filter band only needs its shadow once rows are actually passing underneath it, which is when its
 // top has reached the top of its scrolling screen. Asked of the browser, not guessed from a scroll count.
 function headsStuck(){document.querySelectorAll('.shead').forEach(h=>{try{const sc=h.closest('.scr');if(!sc)return;const a=h.getBoundingClientRect(),b=sc.getBoundingClientRect();h.classList.toggle('stuck',a.top<=b.top+1)}catch(e){}})}
 const setP=p=>{tick();if(p==='Custom'){pick(null,v=>{S.cr=v.split('|');S.period='Custom';render(false,true)},false,true);return}S.period=p;render(false,true)};
-const tabs=()=>`<nav class="tabs">${[['dash','▦','Dashboard'],['sales','🧾','Sales'],['pur','🛒','Purchases'],['inv','📦','Inventory'],['more','⋯','More']].filter(t=>canTab(t[0])).map(t=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join('')}</nav>`;
+const tabs=()=>`<nav class="tabs">${[['dash','▦','Dashboard'],['sales','🧾','Sales'],['pur','🛒','Purchases'],['inv','📦','Inventory'],['more','⋯','More']].filter(t=>canTab(t[0])).map(t=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" onclick="go('${t[0]}')"><i>${t[1]}</i>${tr(t[2])}</button>`).join('')}</nav>`;
+// The language is a device preference like the theme, saved with the book so it survives a restart. Applying it
+// means telling the document which way to read; every screen inherits that, which is why RTL needs so little CSS.
+function applyLang(){try{const h=document.documentElement,r=isRTL();h.lang=lang();h.dir=r?'rtl':'ltr';document.body.classList.toggle('ur',r)}catch(e){}}
+const setLang=l=>{S.lang=l;save();applyLang();render();toast(l==='ur'?'زبان: اردو':'Language: English')};
 // ---- export -----------------------------------------------------------------------------------------
 // A screen registers what it is SHOWING as it renders (setExport), and the export button in its header
 // writes that out. One shape for every screen, so a new screen gets a working export by calling setExport

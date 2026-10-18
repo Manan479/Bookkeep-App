@@ -1,7 +1,7 @@
 // platform/persist.js - saves and restores all app data on the device (browser storage).
 // Replace this file with a database or Drive adapter later; the rest of the app only calls save() and load().
 const DB={PRD,PRICE,CO,BQ,BA,BUY,USERS,EMP,SAL,STFP,EMPA,INV,PUR,PAYB,DIST,DCU,DRATE,CUST,SUPP,CUSTD,PAID,ADV,BAL,PAYM,METHODS,ACCTS,ACT,INVD,RET,QUOT,JRN,TRF,STK,LAY,EXP,CATS,COA,ACCT_TYPES,NUMP,COMP,TPL,SET};
-const SKEYS=['n','pn','rn','vn','qn','cn','dnn','jv','jpn','en','theme','cur','title','dist','under','cmp','period','cr','fmt','grp'];
+const SKEYS=['n','pn','rn','vn','qn','cn','dnn','jv','jpn','en','theme','lang','cur','title','dist','under','cmp','period','cr','fmt','grp'];
 const STORE_KEY='bk_v2';
 (function(){try{localStorage.setItem('bk_probe','1');localStorage.removeItem('bk_probe');window.PERSIST=true}catch(e){window.PERSIST=false}})();
 // Everything that is saved, as one object. save() writes it to the device and a backup writes the same

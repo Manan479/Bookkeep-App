@@ -180,3 +180,28 @@ textarea.search{resize:none;font-family:inherit}
 .uv input{flex:1;min-width:0}
 .ut{flex:none;min-width:34px;padding:4px 9px;border-radius:99px;background:var(--pr);color:var(--onpr);font-weight:700;font-size:12px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
+/* ---- Urdu and right-to-left ------------------------------------------------------------------------- */
+/* The document's `dir` is set by applyLang(); everything below is only the handful of places where the default
+   mirrored layout is not quite right. Flex rows, the tab bar and chip rows reverse by themselves. */
+html[dir="rtl"] body{font-family:'Noto Nastaliq Urdu','Plus Jakarta Sans',system-ui,sans-serif;line-height:1.7}
+/* The amount column moves to the left under RTL, so its text must align to the left edge of its own box. */
+html[dir="rtl"] .r{text-align:left}
+/* Numbers are written left to right in every language; isolation stops an amount being reordered around the
+   currency or a trailing percent sign. */
+html[dir="rtl"] .num,html[dir="rtl"] [data-n],html[dir="rtl"] .r .t{unicode-bidi:isolate}
+html[dir="rtl"] .search{text-align:right}
+
+/* ---- Urdu and right-to-left ------------------------------------------------------------------------- */
+/* The document's `dir` is set by applyLang(); everything below is only the handful of places where the default
+   mirrored layout is not quite right. Flex rows, the tab bar and chip rows reverse by themselves. */
+html[dir="rtl"] body{font-family:'Noto Nastaliq Urdu','Plus Jakarta Sans',system-ui,sans-serif;line-height:2.05}
+/* Nastaliq has tall ascenders and deep descenders; rows need a little more air or consecutive lines collide. */
+html[dir="rtl"] .row,html[dir="rtl"] .card,html[dir="rtl"] .hero{padding-top:calc(.25rem + 2px);padding-bottom:calc(.25rem + 2px)}
+/* The amount column moves to the left under RTL, so its text must align to the left edge of its own box. */
+html[dir="rtl"] .r{text-align:left}
+/* Money keeps its own direction: otherwise "$1,260" is laid out as "1,260$", and a trailing % jumps in front. */
+html[dir="rtl"] .num,html[dir="rtl"] [data-n],html[dir="rtl"] .r .t,html[dir="rtl"] .r b,html[dir="rtl"] .hero .num{direction:ltr;unicode-bidi:isolate}
+html[dir="rtl"] .search{text-align:right}
+/* Only real back arrows are mirrored: a bell, a printer or an export icon must stay the way it is drawn. */
+html[dir="rtl"] .ic.flip{transform:scaleX(-1)}

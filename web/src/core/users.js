@@ -33,7 +33,7 @@ function screenAllowed(){const sc=gateScreen();return sc?canScreen(sc):canTab(S.
 const isAdmin=()=>!USERS.length||!!(S.user&&S.user.role==='admin');
 // The More screen's rows, and the capability each one needs, so a cashier is not shown a door they cannot
 // open. A row missing from here needs nothing but the dashboard.
-const MCAP={'Parties':'parties','Payments':'payments','Expenses':'expenses','Returns':'returns','Quotations':'sales','Cash and Bank':'cashbank','Reports':'reports','Accounts':'reports','Distributor':'distributor','Journal':'journal','Notifications':'dash','Company Profile':'settings','Templates':'settings','Users':'users','Settings':'settings','Employees':'employees','Theme':'dash'};
+const MCAP={'Parties':'parties','Payments':'payments','Expenses':'expenses','Returns':'returns','Quotations':'sales','Cash and Bank':'cashbank','Reports':'reports','Accounts':'reports','Distributor':'distributor','Journal':'journal','Notifications':'dash','Company Profile':'settings','Templates':'settings','Users':'users','Settings':'settings','Employees':'employees','Theme':'dash','Language':'dash'};
 // A user is identified by an id, never by their name: a name gets changed, and anything still holding the
 // old one would lose the thread. The name is what a person reads and what is written on each entry.
 const highestId=()=>USERS.reduce((m,u)=>Math.max(m,Number(String(u.id||'').replace(/\D/g,''))||0),0);
