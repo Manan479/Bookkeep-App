@@ -160,10 +160,19 @@ const selOn=()=>selIds().length>0;
 const selAt=()=>S.sel&&S.sel.at?S.sel.at:(S.screen||S.tab);
 const selHere=()=>selOn()&&selAt()===(S.screen||S.tab);
 const selIn=id=>selIds().indexOf(id)>=0;
-function selToggle(id){if(!S.sel)S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;render(false,true)}
-const selClear=()=>{S.sel=null;try{document.querySelectorAll('.selbar').forEach(e=>e.remove())}catch(e){}render(false,true)};
+// Selection changes the look of a row, not the contents of the screen, so it is applied in place: redrawing the
+// whole list destroyed the row under the finger mid-press, which made the tap animation snap back. Only the bar
+// is rebuilt, because which buttons it offers (PDF needs every pick to be a printable document) can change.
+const syncSel=()=>{try{
+  document.querySelectorAll('[data-sel]').forEach(el=>el.classList.toggle('sel',selIn(el.dataset.sel)));
+  document.querySelectorAll('.selbar').forEach(e=>e.remove());
+  const app=document.getElementById('app'),bar=selBar();
+  if(app){app.classList.toggle('selon',bar!=='');if(bar)app.insertAdjacentHTML('beforeend',bar)}
+}catch(e){}};
+function selToggle(id){if(!S.sel)S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;syncSel()}
+const selClear=()=>{S.sel=null;syncSel()};
 // Select every row the list is showing - not every record, which the period filter may well have narrowed.
-const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all,at:S.screen||S.tab}:null;render(false,true)};
+const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all,at:S.screen||S.tab}:null;syncSel()};
 const selCsv=()=>{const rows=(S.selRows||[]).filter(r=>selIn(r.id)).map(r=>r.cells);
  if(!rows.length){toast('Nothing selected');return}setExport('Selected '+(S.selTitle||'rows'),S.selCols||[],rows);exportSheet()};
 const lpRow=e=>{const t=e.target;return (t&&t.closest)?t.closest('[data-sel]'):null};

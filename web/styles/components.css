@@ -25,7 +25,10 @@
 .hero{background:var(--pr);color:var(--onpr);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}
 .hero .num{font-size:28px}
 .hero .lbl{color:inherit;opacity:.8}
-.row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:16px;margin-bottom:8px;width:100%;text-align:left;animation:in .3s backwards}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:16px;margin-bottom:8px;width:100%;text-align:left;animation:in .3s backwards;transition:transform .14s ease}
+/* The transition is what makes the press feel like a press. `.row` was the only tap target without one, so
+   scale(.97) jumped in and out in a single frame while every button and chip eased. Keep it short: a long
+   transition on a list row reads as lag, not polish. */
 /* A long press on a row is the app's own "start selecting" gesture. Without this the WebView also starts a
    native text selection, which paints a grey box over the amount and the status badge (and the box spills
    past the row border), so the row looks like it changed size. It is a tap target, not text. */
