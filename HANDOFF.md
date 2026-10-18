@@ -644,3 +644,11 @@ List screens put their search and filter chips in one `.shead` (sticky, opaque, 
 under it via `headsStuck()`). The title scrolls away; only controls stay. `Expenses` and `Payments` keep their
 total card *below* the band so both chip rows stay together. Only the tapped chip pops (`.chip.pop`, set from
 `S.pop`), and a filter tap lets rows animate while search typing stays still.
+
+## The server database (design only)
+
+`db/schema.sql` is a runnable PostgreSQL schema and `docs/DATABASE_PLAN.md` explains it, maps every saved JSON
+key to a table, and gives the import/verification order. Nothing in the app talks to it yet. The schema was
+executed against a live Postgres and its guarantees exercised (unbalanced entry refused, posted entry and its
+lines immutable, retried `client_uuid` refused, trial balance zero). No pgcrypto is needed: gen_random_uuid()
+is core from PostgreSQL 13.
