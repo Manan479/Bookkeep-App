@@ -48,11 +48,13 @@ function applyAccent(){try{const a=TPL.accent||'#0F5B3F',r=document.documentElem
  r.style.setProperty('--bar2',rgb2hex(shade(a,dark?.5:.5)))}catch(e){}}
 const setAccent=h=>{TPL.accent=h;applyAccent();save();render();toast('Accent colour saved')};
 const accentName=()=>{const a=String(TPL.accent||'').toLowerCase(),f=ACCENTS.filter(x=>x[0].toLowerCase()===a)[0];return f?f[1]:'Your colour'};
-function countUp(){document.querySelectorAll('[data-n]').forEach(e=>{const n=+e.dataset.n,s=performance.now();(function f(t){const p=Math.min(1,(t-s)/700);e.textContent=fmt(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)})}
-function grow(){setTimeout(()=>document.querySelectorAll('.bar').forEach(b=>b.style.height=b.dataset.h+'%'),30)}
+// The count-up is for opening a screen. On a filter change (a soft render) the figures are the same cards with
+// new numbers, and counting them up from zero again made tapping a period chip look like the page reloading.
+function countUp(instant){document.querySelectorAll('[data-n]').forEach(e=>{const n=+e.dataset.n;if(instant){e.textContent=fmt(n);return}const s=performance.now();(function f(t){const p=Math.min(1,(t-s)/700);e.textContent=fmt(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)})}
+function grow(instant){const set=()=>document.querySelectorAll('.bar').forEach(b=>b.style.height=b.dataset.h+'%');if(instant)set();else setTimeout(set,30)}
 function chart(l,v,pv){const m=Math.max(1,...v,...(pv||[0]));return `<div class="chart">${l.map((_,i)=>`<div class="col">${pv?`<div class="bar p" data-h="${pv[i]/m*100}"></div>`:''}<div class="bar" data-h="${v[i]/m*100}"></div></div>`).join('')}</div><div class="xl">${l.map(x=>`<span>${x}</span>`).join('')}</div>`}
 const chips=(arr,cur,fn)=>`<div class="chips">${arr.map(a=>`<button class="chip ${a===cur?'on':''}" onclick="${fn}('${a}')">${a==='Custom'&&S.cr&&cur==='Custom'?fmtS(S.cr[0])+' - '+fmtS(S.cr[1]):a}</button>`).join('')}</div>`;
-const setP=p=>{tick();if(p==='Custom'){pick(null,v=>{S.cr=v.split('|');S.period='Custom';render(true)},false,true);return}S.period=p;render(true)};
+const setP=p=>{tick();if(p==='Custom'){pick(null,v=>{S.cr=v.split('|');S.period='Custom';render(false,true)},false,true);return}S.period=p;render(false,true)};
 const tabs=()=>`<nav class="tabs">${[['dash','▦','Dashboard'],['sales','🧾','Sales'],['pur','🛒','Purchases'],['inv','📦','Inventory'],['more','⋯','More']].filter(t=>canTab(t[0])).map(t=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join('')}</nav>`;
 // ---- export -----------------------------------------------------------------------------------------
 // A screen registers what it is SHOWING as it renders (setExport), and the export button in its header
