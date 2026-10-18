@@ -3,7 +3,7 @@
 // Security posture: the page has no Node access (nodeIntegration off, contextIsolation on, sandbox on). The only
 // things it can ask the shell to do are the two a WebView cannot do on its own: save a file through the system
 // dialog, and print. Everything else - storage, screens, accounting - is the web app.
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, session } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -34,8 +34,23 @@ function createWindow(){
   // it to the temp folder and exits. It changes nothing about how the app runs normally.
   if (process.argv.includes('--smoke')) {
     win.webContents.once('did-finish-load', () => {
+      // --smoke-app signs in and opens the dashboard, so the desktop *layout* can be inspected, not just the
+      // login screen. It exists for verification and changes nothing otherwise.
+      if (process.argv.includes('--smoke-app')) {
+        const tabArg = (process.argv.find(a => a.startsWith('--smoke-tab=')) || '--smoke-tab=dash').split('=')[1];
+        setTimeout(() => {
+          win.webContents.executeJavaScript(
+            "(async()=>{try{if(USERS.length){const r=await signInHashed(USERS[0].id,'1234');if(!r.ok)throw new Error(r.reason)}S.screen=null;S.tab='" + tabArg + "';render()}catch(e){document.title='ERR '+e.message}})()"
+          ).catch(() => {});
+        }, 1200);
+      }
       setTimeout(async () => {
         try {
+          // A one-line layout readout, so a screenshot can be checked against what the CSS actually computed.
+          const info = await win.webContents.executeJavaScript(
+            "(()=>{const c=document.querySelector('.scr .card');const s=c?getComputedStyle(c):null;return {app:document.getElementById('app').className,cardWidth:s&&s.width,marginLeft:s&&s.marginLeft,hasNavClass:document.getElementById('app').className.includes('hasnav')}})()"
+          );
+          console.log('SMOKE_INFO=' + JSON.stringify(info));
           const img = await win.webContents.capturePage();
           const out = path.join(os.tmpdir(), 'bookkeep-desktop-smoke.png');
           fs.writeFileSync(out, img.toPNG());
@@ -45,7 +60,7 @@ function createWindow(){
         } finally {
           app.quit();
         }
-      }, 2500);
+      }, process.argv.includes('--smoke-app') ? 6000 : 2500);
     });
   }
 }
@@ -71,7 +86,10 @@ ipcMain.handle('print-page', async () => {
   });
 });
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  // While developing, a cached stylesheet would hide every change until the profile was wiped. A packaged build
+  // keeps its cache: its files only change when the app is installed again.
+  if (!app.isPackaged) { try { await session.defaultSession.clearCache(); } catch (e) {} }
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: 'Bookkeep', submenu: [
       { role: 'reload' }, { role: 'toggleDevTools' }, { type: 'separator' },

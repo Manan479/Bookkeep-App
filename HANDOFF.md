@@ -718,3 +718,15 @@ app runs the same screens as the phone instead of a stale copy.
 `--smoke` captures the first window to the temp folder and exits. Verified twice: from source, and from the packaged
 exe - both reached the real sign-in screen. Note for this machine only: the harness exports ELECTRON_RUN_AS_NODE=1,
 which makes Electron behave as plain Node; the smoke runs remove it. A normal double-click is unaffected.
+
+## Desktop layout
+
+At 900px and wider the tab bar becomes a left sidebar (or right in Urdu), lists and dashboards use the width
+(3 cards per row, 4 above 1500px), dialogs become centred modals, FABs move to the bottom-right, and no-nav
+screens such as the log-in sit in a centred column. `render()` toggles `#app.hasnav` when a tab screen is showing,
+which is what decides whether the sidebar is reserved - CSS alone cannot know. The phone layout below 900px is
+unchanged. `.row.tap` is forced back to flex: `.tap` came later in the file and turned those rows into blocks,
+which is why the cash/bank amounts used to sit against the label.
+
+The packaged exe was rebuilt after this and smoke-tested with `--smoke-app --smoke-tab=sales`: SMOKE_INFO reported
+app="hasnav", and the capture showed the sidebar layout.

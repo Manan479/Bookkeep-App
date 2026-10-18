@@ -20,7 +20,11 @@ a.querySelectorAll('.scr,.fab,.tabs,.bar-act,.ok,.selbar').forEach(e=>e.remove()
 S.screen=gateScreen();
 const sc=S.screen,ok=screenAllowed();let body;try{body=!ok?noAccess():sc==='login'?loginScr():sc==='users'?usersScr():sc==='stf'?stfScr():sc==='stfp'?stfPageScr():sc==='skd'?skdScr():sc==='th'?thScr():sc==='lg'?lgScr():sc==='bk'?bkScr():sc==='cl'?clScr():sc==='batch'?batchScr():sc==='inv'?inv():sc==='prod'?prodForm():sc==='pay'?payScr():sc==='cust'?custScr():sc==='dl'?distList():sc==='dd'?distDet():sc==='pt'?ptScr():sc==='pd'?pdScr():sc==='co'?coScr():sc==='tp'?tpScr():sc==='st'?stScr():sc==='wz'?wzScr():sc==='rp'?rpScr():sc==='rpt'?rptScr():sc==='ac'?acScr():sc==='acd'?acdScr():sc==='stmt'?stmtScr():sc==='nt'?ntScr():sc==='jl'?jlScr():sc==='jf'?jfScr():sc==='jd'?jdScr():sc==='ex'?exScr():sc==='exf'?exfScr():sc==='exd'?exdScr():sc==='qt'?qtScr():sc==='qd'?qdScr():sc==='cb'?cbScr():sc==='cbd'?cbdScr():sc==='tfr'?tfrScr():sc==='rt'?rtScr():sc==='rtf'?rtfScr():sc==='rtd'?rtdScr():sc==='pm'?pmScr():sc==='pmf'?pmfScr():sc==='pmd'?pmdScr():sc==='prev'?prev():sc==='pl'?pl():({dash,sales:()=>list(INV,'Sales','New Invoice'),pur:()=>list(PUR,'Purchases','New Purchase'),inv:inventory,more})[S.tab]()}catch(err){body=screenError(sc||S.tab,err)}
 const sy=soft?prevTop:(window._sy||0);
-const put=()=>{const chipTap=!!S.pop;let bar='';try{bar=selBar()}catch(e){}try{a.classList.toggle('selon',bar!=='')}catch(e){}a.insertAdjacentHTML('beforeend',body+bar+(sc?'':tabs()));const s=$('.scr');
+const put=()=>{const chipTap=!!S.pop;let bar='';try{bar=selBar()}catch(e){}try{a.classList.toggle('selon',bar!=='')}catch(e){}
+// The tab bar exists only when a tab screen is showing. The desktop layout uses that fact to decide whether to
+// reserve a sidebar, rather than guessing from the width.
+try{a.classList.toggle('hasnav',!sc)}catch(e){}
+a.insertAdjacentHTML('beforeend',body+bar+(sc?'':tabs()));const s=$('.scr');
 // A chip tap is a content change worth animating, so the rows are allowed to play their entrance. Typing in a
 // search box is the same soft render and must stay perfectly still under the thumb, which is what `still` is for.
 if(soft&&s){s.style.animation='none';if(!chipTap)s.classList.add('still');s.scrollTop=sy}
