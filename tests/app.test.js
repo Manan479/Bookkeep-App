@@ -152,3 +152,12 @@ T("and a plain redraw marks none of them",!(chips(["All","Paid"],"Paid","setS").
 // needed it. Every list screen puts its search and chips in one `.shead`, which stays at the top.
 T("every list screen keeps its filters in a sticky band",[list(INV,"Sales","New Invoice"),inventory(),jlScr(),qtScr(),rtScr(),ptScr(),dash()].every(h=>h.includes("class=\"shead\"")));
 T("and the band comes before the rows it filters",(()=>{const h=list([["INV-9001","Test Party","TP",100,"Paid","2026-10-01"]],"Sales","New Invoice");return h.indexOf("class=\"shead\"")>=0&&h.indexOf("class=\"shead\"")<h.indexOf("class=\"row")})());
+
+// ---- All time ----------------------------------------------------------------------------------------------
+// The widest range has to be reachable in one tap, and it has to sit left of the narrower ones so the chip row
+// reads as a widening timeline rather than a random order.
+T("All time is the first filter chip",Object.keys(PER)[0]==="All time");
+(()=>{const was=S.period;S.period="All time";
+  T("and it reaches documents from any year",inP("1999-06-15")&&inP("2099-01-01"));
+  T("while This Month still excludes them",(S.period="This Month",!inP("1999-06-15")));
+  S.period=was;})();

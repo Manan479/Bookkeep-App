@@ -1,6 +1,6 @@
 // core/periods.js - Period ranges and date filtering. No screen code.
 function prange(){const t=new Date(tdy+'T00:00'),y=t.getFullYear(),m=t.getMonth(),P=S.period,D=(yy,mm,dd)=>new Date(yy,mm,dd);let a,b;
-if(P==='Today'){a=t;b=t}else if(P==='This Week'){const w=(t.getDay()+6)%7;a=D(y,m,t.getDate()-w);b=D(y,m,t.getDate()-w+6)}else if(P==='This Month'){a=D(y,m,1);b=D(y,m+1,0)}else if(P==='Last Month'){a=D(y,m-1,1);b=D(y,m,0)}else if(P==='This Quarter'){const q=Math.floor(m/3)*3;a=D(y,q,1);b=D(y,q+3,0)}else if(P==='This Year'){a=D(y,0,1);b=D(y,11,31)}else if(S.cr){a=new Date(S.cr[0]+'T00:00');b=new Date(S.cr[1]+'T00:00')}else{a=D(y,0,1);b=D(y,11,31)}
+if(P==='All time'){a=new Date(1970,0,1);b=new Date(2999,11,31)}else if(P==='Today'){a=t;b=t}else if(P==='This Week'){const w=(t.getDay()+6)%7;a=D(y,m,t.getDate()-w);b=D(y,m,t.getDate()-w+6)}else if(P==='This Month'){a=D(y,m,1);b=D(y,m+1,0)}else if(P==='Last Month'){a=D(y,m-1,1);b=D(y,m,0)}else if(P==='This Quarter'){const q=Math.floor(m/3)*3;a=D(y,q,1);b=D(y,q+3,0)}else if(P==='This Year'){a=D(y,0,1);b=D(y,11,31)}else if(S.cr){a=new Date(S.cr[0]+'T00:00');b=new Date(S.cr[1]+'T00:00')}else{a=D(y,0,1);b=D(y,11,31)}
 return[a.getTime(),b.getTime()+86399999]}
 function inP(ds){const d=new Date(ds).getTime();if(isNaN(d))return true;const r=prange();return d>=r[0]&&d<=r[1]}
 const live=r=>r[4]!=='Draft'&&r[4]!=='Void';

@@ -17,7 +17,8 @@
 
 // Period names only. The invented figures that used to sit beside them drove a synthetic P&L and
 // dashboard; both now read the ledger, so only the names are left.
-const PER={'Today':1,'This Week':1,'This Month':1,'Last Month':1,'This Quarter':1,'This Year':1,'Custom':1};
+// 'All time' sits first because it is the widest range, so the chips read as a widening timeline left to right.
+const PER={'All time':1,'Today':1,'This Week':1,'This Month':1,'Last Month':1,'This Quarter':1,'This Year':1,'Custom':1};
 const INV=[];
 const PUR=[];
 // Quantities are all zero: nothing has been bought yet.
