@@ -107,6 +107,12 @@ S.screen='ex';exScr();S.sel={ids:(S.selRows[0]?[S.selRows[0].id]:['EXP-1'])};
 T('a selection that is not a document is not offered a PDF',!selBar().includes('PDF'));
 T('but can still be exported',selBar().includes('CSV'));
 selClear();T('Cancel clears the selection',!selOn());
+// The click that ends a long press must be swallowed so it does not open the row - but only that click. A flag
+// used to stay set when the phone fired no click, and then ate the next tap: Cancel and deselection each took
+// two taps. The rule is now a timestamp that expires.
+S.lpAt=Date.now();T('the click ending a long press is swallowed',lpSwallow());
+S.lpAt=Date.now()-800;T('but an old long press cannot eat a later tap',!lpSwallow());
+S.lpAt=0;
 
 // ---- the export chooser: CSV, PDF or an image ----------------------------------------------------------
 S.xp={title:'Sales & Co',cols:['Number','Party','Total'],rows:[['INV-1','Smith, Jones',1200],['INV-2','<b>Zara</b>',900]]};

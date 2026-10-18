@@ -168,7 +168,12 @@ const selCsv=()=>{const rows=(S.selRows||[]).filter(r=>selIn(r.id)).map(r=>r.cel
  if(!rows.length){toast('Nothing selected');return}setExport('Selected '+(S.selTitle||'rows'),S.selCols||[],rows);exportSheet()};
 const lpRow=e=>{const t=e.target;return (t&&t.closest)?t.closest('[data-sel]'):null};
 let lpTimer=null;
-const lpDown=e=>{const b=lpRow(e);if(!b)return;clearTimeout(lpTimer);lpTimer=setTimeout(()=>{lpTimer=null;S.lpArmed=1;selToggle(b.dataset.sel)},450)};
+// The release that ends a long press normally fires a click, which would open the row - so exactly that click
+// must be swallowed. A boolean was wrong: a long press on a phone often fires no click at all, and the flag
+// then stayed set and ate the *next* tap instead (the first tap on Cancel, or the tap that takes the only
+// selected row back out, appeared to do nothing). A timestamp expires by itself, so a missing click is harmless.
+const lpSwallow=()=>!!(S.lpAt&&Date.now()-S.lpAt<700);
+const lpDown=e=>{const b=lpRow(e);if(!b)return;clearTimeout(lpTimer);lpTimer=setTimeout(()=>{lpTimer=null;S.lpAt=Date.now();selToggle(b.dataset.sel)},450)};
 const lpUp=()=>{clearTimeout(lpTimer);lpTimer=null};
 root_addLP();
 function root_addLP(){try{
@@ -179,7 +184,7 @@ function root_addLP(){try{
  document.addEventListener('mouseup',lpUp,true);
  document.addEventListener('scroll',lpUp,true);
  document.addEventListener('click',e=>{
-   if(S.lpArmed){S.lpArmed=0;e.preventDefault();e.stopPropagation();return}
+       if(lpSwallow()){S.lpAt=0;e.preventDefault();e.stopPropagation();return}
    if(!selOn())return;
    const b=lpRow(e);if(!b)return;
    e.preventDefault();e.stopPropagation();selToggle(b.dataset.sel);

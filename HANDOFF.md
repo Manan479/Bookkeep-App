@@ -480,7 +480,9 @@ covering the last row of every list. If a screen grows a taller floating button,
 
 **Long press to select** rows, in `ui/kit.js`: any list whose rows carry `data-sel="id"` gets it for free.
 The listeners are on the document because rows are rebuilt from HTML every render, and a long press is
-followed by a real click that would otherwise open the row — so `S.lpArmed` swallows exactly that one click.
+followed by a real click that would otherwise open the row — so `S.lpAt` (a timestamp, not a flag) swallows that
+one click. It is a timestamp because a long press on a phone often fires no click at all: a flag stayed set and
+ate the *next* tap, so Cancel and deselecting the only selected row each needed two taps.
 While a selection is active, a tap adds or removes a row, `#app.selon` hides the floating button, and
 `selBar()` draws the bar: **All** (every row the list is *showing*, not every record — the period filter may
 have narrowed it), **CSV**, **PDF** and **Cancel**.
