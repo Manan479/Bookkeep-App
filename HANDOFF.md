@@ -21,8 +21,11 @@ changed. When two disagree, the later one is right.
 
 1. **One device, one book.** Two devices hold two copies; nothing syncs, and two people cannot work on the
    same books. That is the database job — see `docs/SYNC.md` — and it brings the next four items with it.
-2. **PINs are stored in plain text** and the permission checks run in the browser. Fine as a gate against a
-   casual user; not security. On a server: hash the PIN, and let the server decide every request.
+2. **Permission checks still run in the browser.** PINs are no longer stored in plain text: `core/users.js`
+   keeps a PBKDF2-SHA256 hash with a per-user salt (`pinHash`/`pinSalt`), migrates a book's old plain PINs at
+   boot, login and restore, and the log-in screen verifies asynchronously via `signInHashed`. That stops a PIN
+   being read out of the saved file, but the book beside it is still readable and every screen still decides
+   for itself what a role may open. On a server: Argon2 on the server, and the server decides every request.
 3. **No period locking and no year-end close.** The balance sheet is all-time, the P&L is by period, and
    "earned and kept" is the accumulated result rather than a closed figure.
 4. **A transfer between cash and bank posts nothing**, on purpose: every cash account rolls up into one
@@ -664,3 +667,12 @@ they SHOW but keep the English value in the onclick - translating the value woul
 Translated so far: tab bar, More/Theme/Language, dashboard, and the Sales, Purchases, Expenses, Payments, Parties,
 Inventory, Journal, Quotations and Returns lists (titles, search boxes, status badges, empty states, period and
 status chips). Still English: forms, reports, settings and printed documents.
+
+## PINs are hashed now
+
+`core/users.js` stores `pinHash`/`pinSalt` (PBKDF2-SHA256, 150k rounds, 16-byte salt) and never the digits. A
+book from an older build is upgraded automatically at boot, on `load()` and after a restore (`ensurePinHashes`),
+and opportunistically on the first successful sign-in. The log-in screen uses the async `signInHashed`; the old
+synchronous `signIn` still exists for tests and returns false for a hashed user, so nothing can "verify" a hash by
+string comparison. A blank PIN on an edit keeps the stored hash; the default-PIN hint now follows `wasDefault`.
+Measured: ~60 ms per hash on this desktop, so a phone pays a few hundred ms on sign-in - deliberate.

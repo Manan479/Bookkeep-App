@@ -21,12 +21,12 @@ function applyStore(o){if(!o||typeof o!=='object')return false;
  if(S.user&&!userBy(S.user.id)){S.user=null;S.screen='login'}
  return true}
 function save(){if(window._noSave)return;try{localStorage.setItem(STORE_KEY,JSON.stringify(storePayload()))}catch(e){}}
-function load(){try{const r=localStorage.getItem(STORE_KEY);if(!r)return;if(applyStore(JSON.parse(r)))theme(S.theme||'system')}catch(e){}}
+function load(){try{const r=localStorage.getItem(STORE_KEY);if(!r)return;if(applyStore(JSON.parse(r))){theme(S.theme||'system');ensurePinHashes()}}catch(e){}}
 // A backup is the saved book as a file. A restore says WHY it refused rather than half-loading the file.
 const backupJSON=()=>JSON.stringify(storePayload());
 function restoreJSON(txt){let o=null;try{o=JSON.parse(txt)}catch(e){return 'That file is not readable as a backup'}
  if(!o||typeof o!=='object'||!o.PRD||!o.COA)return 'That file is not a bookkeep backup';
- applyStore(o);save();return ''}
+ applyStore(o);save();ensurePinHashes();return ''}
 window.saveNow=save;
 window.addEventListener('pagehide',save);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});

@@ -3,6 +3,9 @@ load();
 // A fresh install has nothing saved, so load() returns before its repair step: the seeded administrator
 // would have no id until the first reload, and anything posted before then would record an empty one.
 ensureUserIds();
+// A book saved before PINs were hashed still holds the digits. Upgrade it once, in the background: the log-in
+// screen can accept either form, so the owner is never locked out while this runs.
+ensurePinHashes();
 // Nobody is signed in at start-up: S.user is filled by a PIN and is deliberately not part of the saved
 // book, so closing the app signs you out. The wizard only comes after the log-in, so a new phone asks for
 // the administrator PIN before it asks anything about the business.

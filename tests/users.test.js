@@ -118,3 +118,12 @@ T('and with no users at all either',(USERS.length=0,more().indexOf('Sign out')<0
 
 // ---- the book and the session are separate: signing out must not be saved with the books ----------------
 T('the session is not part of the saved book',!SKEYS.includes('user'));
+(function(){USERS.length=0;USERS.push({n:'H',role:'admin',pinHash:'abc',pinSalt:'def',active:true});
+T('a user whose PIN is only a hash cannot be signed in synchronously',signIn('H','anything')===false);
+T('the hashed sign-in is asynchronous, so the check can be slow on purpose',signInHashed('H','anything') instanceof Promise);
+T('a blank PIN on an edit keeps the stored hash',saveUser(0,{n:'H',role:'admin',active:true})&&USERS[0].pinHash==='abc'&&USERS[0].pinSalt==='def');
+T('and that edit is allowed without a PIN',userProblem(0,{n:'H',role:'admin'})==='');
+T('a new user without a PIN is still refused',userProblem(-1,{n:'NoPin',role:'cashier'})==='Set a PIN');
+T('a hashed user has no plain PIN field at all',!('pin' in USERS[0]));
+T('the upgrade sweep exists',typeof ensurePinHashes==='function'&&typeof pinCrypto==='function');
+})();
