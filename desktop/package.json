@@ -5,9 +5,12 @@
   "description": "Desktop shell for bookkeep: the same web app in its own window, with a native save dialog and printing.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "smoke": "electron . --smoke",
+    "dist": "node build.js"
   },
   "devDependencies": {
+    "@electron/packager": "^18.3.6",
     "electron": "^31.0.0"
   }
 }

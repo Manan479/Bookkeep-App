@@ -6,8 +6,15 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 let win = null;
+
+// In development the shell reads ../web directly, so there is never a second copy of the screens. A packaged
+// build carries that folder beside the executable (see build.js), so the same files travel with the app.
+const webIndex = () => app.isPackaged
+  ? path.join(process.resourcesPath, 'web', 'index.html')
+  : path.join(__dirname, '..', 'web', 'index.html');
 
 function createWindow(){
   win = new BrowserWindow({
@@ -21,8 +28,26 @@ function createWindow(){
       sandbox: true
     }
   });
-  win.loadFile(path.join(__dirname, '..', 'web', 'index.html'));
+  win.loadFile(webIndex());
   win.on('closed', () => { win = null; });
+  // --smoke exists so the build can prove the window really loads the app: it captures the first screen, writes
+  // it to the temp folder and exits. It changes nothing about how the app runs normally.
+  if (process.argv.includes('--smoke')) {
+    win.webContents.once('did-finish-load', () => {
+      setTimeout(async () => {
+        try {
+          const img = await win.webContents.capturePage();
+          const out = path.join(os.tmpdir(), 'bookkeep-desktop-smoke.png');
+          fs.writeFileSync(out, img.toPNG());
+          console.log('SMOKE_SCREENSHOT=' + out);
+        } catch (e) {
+          console.log('SMOKE_FAILED ' + e.message);
+        } finally {
+          app.quit();
+        }
+      }, 2500);
+    });
+  }
 }
 
 // Save exactly as the phone's Saver bridge does: the page hands over text or base64 bytes and gets the truth

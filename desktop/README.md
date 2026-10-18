@@ -13,6 +13,21 @@ npm start
 `npm install` downloads Electron once (roughly 100 MB). It is a development dependency only; the app itself still
 has no runtime packages.
 
+## Build a double-clickable app
+
+```
+cd desktop
+npm install
+npm run dist
+```
+
+That writes `desktop/release/Bookkeep-win32-x64/Bookkeep.exe` (the folder name depends on the platform). Double-click
+the executable — no Node, no terminal and no install step is needed. The web screens are bundled beside it in
+`resources/web`, so the packaged app and the phone run the same files.
+
+`npm run smoke` starts the shell, captures the first screen to the temp folder and exits; it is how the build was
+checked without a human at the keyboard.
+
 ## What the shell adds
 
 | Bridge | Used by |

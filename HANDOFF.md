@@ -707,3 +707,14 @@ create it and run `db/supabase.sql`. Setup notes: `docs/CLOUD_SYNC.md`.
 The desktop shell is `desktop/` (Electron, `npm install && npm start`): contextIsolation on, nodeIntegration off,
 and only two bridges - `Saver` (system save dialog) and `Printer`. It loads `../web`, so there is no second copy of
 any screen. Electron itself was not downloaded here, so the shell is syntax-checked, not launched.
+
+## Desktop app: built and launched
+
+`desktop/` is now a real Electron app, not a plan. `npm start` runs it from source; `npm run dist` packages it with
+@electron/packager into `desktop/release/Bookkeep-win32-x64/Bookkeep.exe` (172 MB, double-click, no Node needed).
+The packager places `../web` into `resources/web`, and `main.js` loads that when `app.isPackaged`, so the packaged
+app runs the same screens as the phone instead of a stale copy.
+
+`--smoke` captures the first window to the temp folder and exits. Verified twice: from source, and from the packaged
+exe - both reached the real sign-in screen. Note for this machine only: the harness exports ELECTRON_RUN_AS_NODE=1,
+which makes Electron behave as plain Node; the smoke runs remove it. A normal double-click is unaffected.
