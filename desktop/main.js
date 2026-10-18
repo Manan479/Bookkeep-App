@@ -4,6 +4,7 @@
 // things it can ask the shell to do are the two a WebView cannot do on its own: save a file through the system
 // dialog, and print. Everything else - storage, screens, accounting - is the web app.
 const { app, BrowserWindow, ipcMain, dialog, Menu, session } = require('electron');
+const { execFile } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -112,6 +113,15 @@ ipcMain.handle('print-page', async () => {
   });
 });
 
+// Older builds of this app did not ask for the single-instance lock, so one of their windows can survive and sit
+// behind the new one - which looks like a strip of someone else's UI at the edge of the window. Close any other
+// Bookkeep process that owns a window. Electron's helper processes have no window and are left alone.
+function closeOtherBookkeepWindows(){
+  if (process.platform !== 'win32' || !app.isPackaged) return;
+  const script = 'Get-Process -Name Bookkeep -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -and $_.Id -ne ' + process.pid + ' } | ForEach-Object { $_.CloseMainWindow() | Out-Null }';
+  try { execFile('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { windowsHide: true }, () => {}); } catch (e) {}
+}
+
 // One process, one window. Two copies of the app would each keep their own copy of the book in browser storage
 // and quietly write over each other - and the second one is also what shows as a strip of another window at the
 // edge of the first. A second launch focuses the window that is already open.
@@ -135,6 +145,8 @@ if (!app.requestSingleInstanceLock()) {
       { label: 'View', submenu: [{ role: 'zoomIn' }, { role: 'zoomOut' }, { role: 'resetZoom' }, { type: 'separator' }, { role: 'togglefullscreen' }] }
     ]));
     createWindow();
+    // Give the stale window a moment to close before the new one is painted over it.
+    setTimeout(closeOtherBookkeepWindows, 600);
     app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
   });
 }

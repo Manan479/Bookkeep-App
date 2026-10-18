@@ -746,3 +746,10 @@ capture did. The shell now: disables hardware acceleration, disables `CalculateN
 `backgroundThrottling:false`, paints the first frame before showing the window, repaints after a resize, and keeps
 its own title (`Bookkeep 0.1.0`) instead of letting the page's `<title>` overwrite it. Single-instance lock was
 already added; four `Bookkeep` processes in Task Manager are Electron helpers for one window, not four windows.
+
+## Stale desktop windows
+
+The user's screenshot had the old title "Bookkeep", not "Bookkeep 0.1.0": they were looking at a window from a build
+made before the single-instance lock existed, so the new launch could not displace it. Packaged builds now close any
+other Bookkeep process that owns a window 600ms after start (PowerShell `CloseMainWindow`; helper processes have no
+window and are untouched). Verified: launching twice leaves one window titled "Bookkeep 0.1.0".
