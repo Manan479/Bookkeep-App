@@ -354,3 +354,31 @@ html[dir="rtl"] .ic.flip{transform:scaleX(-1)}
   /* Later than the base hide rule, and more specific, so the desktop action really shows. */
   #app .deskonly{display:inline-flex;align-items:center;justify-content:center}
 }
+
+/* Buttons centre their label by construction, not by luck: a plus sign, an icon and text all sit on one line. */
+.btn,.fab{display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.15}
+.btn{min-height:44px}
+.ut{display:inline-flex;align-items:center;justify-content:center}
+/* The preview header is one row: title on the left, paper size on the right, and the page centred below. */
+.pvhead{margin-bottom:10px}
+@media (min-width:900px){
+  .pvhead{display:flex;align-items:center;gap:16px;max-width:1180px;margin:0 auto 14px;flex-wrap:wrap}
+  .pvhead .top{flex:1;margin:0;max-width:none}
+  .pvhead .sw{margin:0;flex-wrap:nowrap}
+  .pvhead .sw .chip{min-width:72px}
+}
+@media (min-width:900px){
+  /* Print preview is one centred column: back/title, paper size, then the page. Nothing sits on a far edge. */
+  .pvhead{flex-direction:column;align-items:center;gap:12px}
+  .pvhead .top{position:relative;width:100%;max-width:720px;margin:0 auto;padding:0 48px;flex:none}
+  .pvhead .top .ic{position:absolute;left:0;top:0}
+  .pvhead .top h1{text-align:center}
+  .pvhead .sw{justify-content:center;margin:0}
+}
+@media (min-width:900px){
+  /* Back and title sit together as one group on the centre line, not at opposite ends of a column. */
+  .pvhead .top{justify-content:center;gap:10px;padding:0}
+  .pvhead .top .ic{position:static}
+  .pvhead .top h1{flex:none;text-align:center}
+  .pvhead .top>span{display:none}
+}

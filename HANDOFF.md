@@ -794,3 +794,13 @@ headers are real `<th>` with focusable sort buttons, hover is a 120ms background
 replaced on desktop by a header action (`deskonly`) and hidden when `.scr.tablemode` is present. Two UI skill packs
 were installed under `~/.dsh/skills` (ui-ux-pro-max, design-motion-principles and six more); their guidance drove
 the table density, semantics and restrained motion.
+
+## Buttons and the preview workspace
+
+`.btn`, `.fab` and `.ut` are inline-flex with `align-items/justify-content:center` and a 44px minimum, so a "+" glyph,
+an icon and a label sit centred rather than on a font baseline. The full-width "＋" was replaced with "+" everywhere in
+`web/src` (14 files) so the glyph does not carry its own padding.
+
+Preview and document screens wrap their title row and paper-size control in `.pvhead`. On desktop it is one centred
+column: back and title as a group, paper sizes beneath, then the page, then the caption; the action bar keeps its
+right-aligned pair. On the phone `.pvhead` is transparent and the old vertical order is unchanged.
