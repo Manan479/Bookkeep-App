@@ -2,6 +2,10 @@
 const openPN=nm=>{const i=parties().findIndex(p=>p.n===nm);if(i>=0)openParty(i)};
 let NT=[];
 function notifs(){const a=SET.alerts,n=[];
+// A backup that nobody notices is missing is the one failure this app cannot recover from on its own, so the
+// staleness is shown here rather than buried in Settings.
+const bh=bkHealth(bkMeta());
+if(bh.level!=='ok')n.push({g:'Backups',t:bh.days===null?'No backup taken yet':bh.days+' days since the last backup',s:'Snapshots are kept on this device. Open Backups to keep one now.',go:()=>openBackups()});
 if(a.low)PRD.filter(p=>p[2]>=0&&p[2]<p[3]).forEach(p=>n.push({g:'Low stock',t:dn(p),s:p[2]+' left, reorder level '+p[3],go:()=>{S.tab='inv';S.screen=null;S.q='';render()}}));
 if(a.neg)PRD.filter(p=>p[2]<0).forEach(p=>{const nm=dn(p),sh=-p[2],c=stockFallback(nm),kn=CO[nm]!==undefined;n.push({g:'Negative stock',t:nm,s:sh+' sold before it was bought. '+(kn?'Valued at their last cost of '+fmt(c)+' each; record the purchase, or keep that cost.':'Never bought, so no cost is known: the book is assuming '+fmt(c)+' each. Record the purchase.'),go:()=>newPurFor([{n:nm,q:sh,c:c}])})});
 // Salaries that recur: the cost is not posted behind anybody's back, so this is a reminder with the run

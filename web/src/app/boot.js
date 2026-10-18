@@ -12,3 +12,9 @@ ensurePinHashes();
 if(USERS.length&&!S.user)S.screen='login';
 else if(window.PERSIST&&!SET.done)wzInit();
 render();
+// A daily snapshot, taken after the screen is up so it never delays opening the app. The once-a-day rule lives
+// in maybeAutoBackup(), not here.
+setTimeout(function(){try{maybeAutoBackup()}catch(e){}},1500);
+// A phone app is often left open for days, so the daily snapshot is also reconsidered whenever the app comes
+// back to the foreground - the rule itself lives in maybeAutoBackup().
+document.addEventListener('visibilitychange',function(){if(!document.hidden){try{maybeAutoBackup()}catch(e){}}});

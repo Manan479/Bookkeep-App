@@ -676,3 +676,18 @@ and opportunistically on the first successful sign-in. The log-in screen uses th
 synchronous `signIn` still exists for tests and returns false for a hashed user, so nothing can "verify" a hash by
 string comparison. A blank PIN on an edit keeps the stored hash; the default-PIN hint now follows `wasDefault`.
 Measured: ~60 ms per hash on this desktop, so a phone pays a few hundred ms on sign-in - deliberate.
+
+## Automatic backups, the reminder, and a checked restore
+
+`platform/backups.js` keeps the last five snapshots in IndexedDB (falls back to memory with a warning if the
+browser blocks it; `bkIdb` times out rather than hanging on a blocked upgrade). One is taken automatically once a
+day — at boot, and again when the app returns to the foreground — plus before anything that replaces the book
+(load sample, reset, restore from file, restore a snapshot). `platform/backups.js` also owns `bkHealth`, which
+Notifications and Settings read to say "never" / "3 days ago".
+
+The Backups screen is `features/backups.js` (`openBackups()` loads the list asynchronously, then renders `bkScr`).
+A restore keeps the current book in memory first, and if the restored copy does not balance it puts the current
+one back instead of leaving a broken book. Verified against a real IndexedDB (fake-indexeddb in Node):
+storage=indexeddb, snapshot written, restore ok, trial balance 0, pruning to 5. On `file://` the browser gives
+IndexedDB no usable origin, so the screen warns that snapshots are memory-only — the Android shell serves over
+`https://appassets`, where IndexedDB is available.

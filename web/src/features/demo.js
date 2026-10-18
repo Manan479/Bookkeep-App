@@ -7,7 +7,7 @@
 //
 // Six weeks back from today, so "This Month" and "Last Month" both have figures in them, and nothing
 // is left with negative stock.
-const demoSheet=()=>confirmSheet('Load the sample business?','This replaces everything you have entered with six weeks of a small trading business: purchases, sales, distributor invoices, receipts and payments, returns, expenses, a stock adjustment, transfers, journal entries and quotations. Every screen gets something in it, and the books it makes are balanced.','Load it',()=>loadDemo());
+const demoSheet=()=>confirmSheet('Load the sample business?','This replaces everything you have entered with six weeks of a small trading business: purchases, sales, distributor invoices, receipts and payments, returns, expenses, a stock adjustment, transfers, journal entries and quotations. Every screen gets something in it, and the books it makes are balanced.','Load it',async()=>{await snapshotBook('before sample business');loadDemo()});
 function loadDemo(){const was=!!S.quiet;S.quiet=true;
 const D=n=>plus(tdy,-n),st=n=>{const p=PRD.find(x=>dn(x)===n);return p?Math.max(p[2],0):0};
 const item=(n,q,r,tx)=>({n,q,r,d:0,dt:'amt',tx:tx===undefined?defTax():tx,tt:'pct'});
