@@ -161,7 +161,7 @@ const selAt=()=>S.sel&&S.sel.at?S.sel.at:(S.screen||S.tab);
 const selHere=()=>selOn()&&selAt()===(S.screen||S.tab);
 const selIn=id=>selIds().indexOf(id)>=0;
 function selToggle(id){if(!S.sel)S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;render(false,true)}
-const selClear=()=>{S.sel=null;render(false,true)};
+const selClear=()=>{S.sel=null;try{document.querySelectorAll('.selbar').forEach(e=>e.remove())}catch(e){}render(false,true)};
 // Select every row the list is showing - not every record, which the period filter may well have narrowed.
 const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all,at:S.screen||S.tab}:null;render(false,true)};
 const selCsv=()=>{const rows=(S.selRows||[]).filter(r=>selIn(r.id)).map(r=>r.cells);
