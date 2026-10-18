@@ -24,10 +24,12 @@
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:8px 14px;border-radius:99px;background:var(--sf);border:1px solid var(--bd);font-weight:600;font-size:12.5px;transition:all .2s}
-.chip.on{background:var(--pr);color:var(--onpr);border-color:var(--pr);animation:chipIn .22s cubic-bezier(.2,.8,.2,1)}
+.chip.on{background:var(--pr);color:var(--onpr);border-color:var(--pr)}
 /* A filter chip is rebuilt on every render, so a CSS transition could not animate the change - it played the
-   end state at once. A short keyframe on the chosen chip gives the tap its feedback without redrawing the
-   whole screen. `still` (a soft render) suppresses row animations, but must not suppress this one. */
+   end state at once. The chip that was actually tapped gets `pop` for one render; the row is redrawn from
+   scratch, so the keyframe plays once and is gone. Binding it to `.on` instead made every selected chip on the
+   screen dance whenever any filter changed. */
+.chip.pop{animation:chipIn .22s cubic-bezier(.2,.8,.2,1)}
 @keyframes chipIn{from{transform:scale(.9)}to{transform:none}}
 .hero{background:var(--pr);color:var(--onpr);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}
 .hero .num{font-size:28px}

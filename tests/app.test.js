@@ -136,3 +136,13 @@ T('and the currency with the company',coScr().includes('Currency')&&coScr().incl
 T('they are listed in one place, not spelled out twice',CURRENCIES.length===5&&coScr().includes(CURRENCIES[1][1]));
 T('the module explains that the theme stays on the device',thScr().includes('this device only'));
 T('and it opens from the module list',(moreGo('Theme'),S.screen==='th'));
+
+// ---- filter chips: only the one tapped animates, and the list is allowed to animate with it -----------------
+// Every `.chip.on` animated on every redraw, so tapping "Paid" made the period chip dance as well. The tap now
+// marks just that chip with `pop`, which is also how the render loop knows a filter changed rather than a
+// search box being typed into.
+S.pop="Paid";
+const chipHtml=chips(["All","Paid"],"Paid","setS");
+T("only the chip that was tapped is marked to pop",(chipHtml.match(/chip on pop/g)||[]).length===1);
+S.pop=null;
+T("and a plain redraw marks none of them",!(chips(["All","Paid"],"Paid","setS").includes(" pop")));

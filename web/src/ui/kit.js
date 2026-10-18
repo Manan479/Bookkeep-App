@@ -58,7 +58,11 @@ function countUp(instant,prev){document.querySelectorAll('[data-n]').forEach((e,
   const s=performance.now();(function f(t){const p=Math.min(1,(t-s)/260);e.textContent=fmt(from+(n-from)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)})}
 function grow(instant){const set=()=>document.querySelectorAll('.bar').forEach(b=>b.style.height=b.dataset.h+'%');if(instant)set();else setTimeout(set,30)}
 function chart(l,v,pv){const m=Math.max(1,...v,...(pv||[0]));return `<div class="chart">${l.map((_,i)=>`<div class="col">${pv?`<div class="bar p" data-h="${pv[i]/m*100}"></div>`:''}<div class="bar" data-h="${v[i]/m*100}"></div></div>`).join('')}</div><div class="xl">${l.map(x=>`<span>${x}</span>`).join('')}</div>`}
-const chips=(arr,cur,fn)=>`<div class="chips">${arr.map(a=>`<button class="chip ${a===cur?'on':''}" onclick="${fn}('${a}')">${a==='Custom'&&S.cr&&cur==='Custom'?fmtS(S.cr[0])+' - '+fmtS(S.cr[1]):a}</button>`).join('')}</div>`;
+// `S.pop` is the value of the chip that was just tapped, set by the chip itself. Only that chip plays the pop:
+// every `.chip.on` used to animate on every redraw, so tapping "Paid" made the period chip dance too. It also
+// tells the render loop that a filter changed (so the list may animate in) rather than a search box being typed
+// into (where replaying row animations under the thumb is exactly what `still` exists to stop).
+const chips=(arr,cur,fn)=>`<div class="chips">${arr.map(a=>`<button class="chip ${a===cur?'on':''}${a===S.pop?' pop':''}" onclick="S.pop='${a}';${fn}('${a}')">${a==='Custom'&&S.cr&&cur==='Custom'?fmtS(S.cr[0])+' - '+fmtS(S.cr[1]):a}</button>`).join('')}</div>`;
 const setP=p=>{tick();if(p==='Custom'){pick(null,v=>{S.cr=v.split('|');S.period='Custom';render(false,true)},false,true);return}S.period=p;render(false,true)};
 const tabs=()=>`<nav class="tabs">${[['dash','▦','Dashboard'],['sales','🧾','Sales'],['pur','🛒','Purchases'],['inv','📦','Inventory'],['more','⋯','More']].filter(t=>canTab(t[0])).map(t=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join('')}</nav>`;
 // ---- export -----------------------------------------------------------------------------------------
