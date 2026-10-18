@@ -767,3 +767,9 @@ the page is scaled to fit the *height* as well as the width (fitPaper), and the 
 the right with fixed widths instead of stretching. The invoice editor keeps its 720px centred form column with the
 same compact action group. More is a two-column module grid (`modgrid`). Sidebar layout, ready-to-show and the
 single-instance/cleanup rules are unchanged.
+
+## No-nav screens: centred buttons and notes
+
+`display:block` is what makes `max-width` + `margin:auto` centre a button; as inline-blocks they sat left. Standalone
+`.lbl` notes on those screens are now centred too. This is the same class of bug as the log-in button, fixed once for
+every screen without a sidebar (Backups, statements, report notes), rather than per screen.

@@ -309,3 +309,10 @@ html[dir="rtl"] .ic.flip{transform:scaleX(-1)}
   .modgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:1180px;margin:0 auto}
   .modgrid .row{margin:0}
 }
+@media (min-width:900px){
+  /* A button is inline-block by default, so max-width + margin:auto never centred a full-width button on these
+     screens. Making it a block is what actually centres it under the cards. */
+  #app:not(.hasnav) .scr > .btn{display:block}
+  /* Standalone notes (not the labels inside cards) read as centred captions under the column. */
+  #app:not(.hasnav) .scr > .lbl{text-align:center}
+}
