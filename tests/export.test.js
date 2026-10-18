@@ -65,6 +65,11 @@ const other=JSON.parse(file);other.USERS=[{id:'u99',n:'Someone Else',role:'admin
 eq('a book with different users is accepted',restoreJSON(JSON.stringify(other)),'');
 T('and the session is signed out rather than left pointing at a user who is not here',!S.user&&S.screen==='login');
 T('no export is registered before a screen is drawn',(S.xp=null,typeof exportSheet==='function'));
+// The rest of this file drives real screens, and a screen is only drawn for somebody signed in (a selection
+// bar belongs to the screen its rows are on, so a gated log-in screen rightly shows none). Sign back in as the
+// restored book's own user, which is what happens when a real person opens the app.
+signIn(USERS[0].n,USERS[0].pin);
+T('signed back in to carry on',!!S.user);
 // ---- on the phone: the WebView cannot save a file, so it must not claim it did -------------------------
 T('the shell is not detected in a browser',!inShell());
 window.Haptics={tick:function(){}};

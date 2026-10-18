@@ -155,11 +155,15 @@ const doPrint=()=>{toast('Sending to printer');setTimeout(()=>{try{if(window.Pri
 // press still fires a click, which would open the row - so that one click is swallowed.
 const selIds=()=>S.sel?S.sel.ids.slice():[];
 const selOn=()=>selIds().length>0;
+// A selection belongs to the screen it was started on. Without that, the floating bar stayed on every screen
+// the user went to next - including the dashboard - because the rows it referred to had long gone.
+const selAt=()=>S.sel&&S.sel.at?S.sel.at:(S.screen||S.tab);
+const selHere=()=>selOn()&&selAt()===(S.screen||S.tab);
 const selIn=id=>selIds().indexOf(id)>=0;
-function selToggle(id){if(!S.sel)S.sel={ids:[]};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;render()}
+function selToggle(id){if(!S.sel)S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;render()}
 const selClear=()=>{S.sel=null;render()};
 // Select every row the list is showing - not every record, which the period filter may well have narrowed.
-const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all}:null;render()};
+const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all,at:S.screen||S.tab}:null;render()};
 const selCsv=()=>{const rows=(S.selRows||[]).filter(r=>selIn(r.id)).map(r=>r.cells);
  if(!rows.length){toast('Nothing selected');return}setExport('Selected '+(S.selTitle||'rows'),S.selCols||[],rows);exportSheet()};
 const lpRow=e=>{const t=e.target;return (t&&t.closest)?t.closest('[data-sel]'):null};
@@ -184,7 +188,7 @@ function root_addLP(){try{
 // The documents selected, if they are documents this app can print as one file.
 const selDocs=()=>selIds().map(no=>INVD[no]).filter(Boolean);
 const screenError=(where,err)=>`<div class="scr"><div class="top"><h1>This screen did not open</h1><span style="width:38px"></span></div><div class="card"><div class="t">${where} failed to draw.</div><div class="lbl sm" style="margin-top:6px">${String((err&&err.message)||err)}</div></div><button class="btn" style="width:100%;flex:none" onclick="go('dash')">Back to the dashboard</button></div>`;
-const selBar=()=>!selOn()?'':`<div class="selbar"><span class="lbl" style="min-width:22px;text-align:center">${selIds().length}</span><button class="btn" onclick="selAllRows()">All</button><button class="btn" onclick="selCsv()">CSV</button>${selDocs().length===selIds().length?`<button class="btn p" onclick="batchOpen()">PDF</button>`:''}<button class="btn" onclick="selClear()">Cancel</button></div>`;
+const selBar=()=>!selHere()?'':`<div class="selbar"><span class="lbl" style="min-width:22px;text-align:center">${selIds().length}</span><button class="btn" onclick="selAllRows()">All</button><button class="btn" onclick="selCsv()">CSV</button>${selDocs().length===selIds().length?`<button class="btn p" onclick="batchOpen()">PDF</button>`:''}<button class="btn" onclick="selClear()">Cancel</button></div>`;
 function fitPage(p){if(p.classList.contains('t80')||p.classList.contains('t58'))return;const a5=p.classList.contains('a5'),H=a5?794:1123;let pad=a5?11:16;const set=v=>p.querySelectorAll('td').forEach(td=>td.style.padding=v+'px 0');let fs=a5?12:17;const setF=v=>{p.style.fontSize=v+'px';p.querySelectorAll('th').forEach(t=>t.style.fontSize=v*.82+'px');const lg=p.querySelector('.logo,.lgimg');if(lg)lg.style.width=lg.style.height=Math.max(40,v*5.35)+'px'};p.style.minHeight=H+'px';setF(fs);set(pad);while(p.scrollHeight>H&&pad>4){pad--;set(pad)}while(p.scrollHeight>H&&fs>(a5?8:10)){fs-=.5;setF(fs)}while(p.scrollHeight>H&&pad>2){pad--;set(pad)}if(p.scrollHeight>H)p.style.minHeight=Math.ceil(p.scrollHeight/H)*H+'px'}
 function fitPaper(){const w=document.querySelector('.paperwrap'),p=w&&w.firstElementChild;if(!p)return;fitPage(p);const s=Math.min(1,(w.parentElement.clientWidth-32)/p.offsetWidth);p.style.transform='scale('+s+')';w.style.width=p.offsetWidth*s+'px';w.style.height=p.offsetHeight*s+'px'}
 window.addEventListener('resize',fitPaper);

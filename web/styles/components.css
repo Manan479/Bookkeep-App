@@ -26,6 +26,10 @@
 .hero .num{font-size:28px}
 .hero .lbl{color:inherit;opacity:.8}
 .row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:16px;margin-bottom:8px;width:100%;text-align:left;animation:in .3s backwards}
+/* A long press on a row is the app's own "start selecting" gesture. Without this the WebView also starts a
+   native text selection, which paints a grey box over the amount and the status badge (and the box spills
+   past the row border), so the row looks like it changed size. It is a tap target, not text. */
+.row,.chip,.tab,.btn,.fab,.ut,.selbar,.badge,.av{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 /* `backwards`, not `both`: filling forwards leaves a transform on every row for ever, which puts each one in
    its own layer and makes lists shimmer against the rest of the screen while they scroll. */
 .dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);padding:0;flex:none;transition:transform .15s;background:var(--sf2)}
