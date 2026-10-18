@@ -146,3 +146,9 @@ const chipHtml=chips(["All","Paid"],"Paid","setS");
 T("only the chip that was tapped is marked to pop",(chipHtml.match(/chip on pop/g)||[]).length===1);
 S.pop=null;
 T("and a plain redraw marks none of them",!(chips(["All","Paid"],"Paid","setS").includes(" pop")));
+
+// ---- sticky filter bands -----------------------------------------------------------------------------------
+// A long list used to scroll its own filters away, so the thing you were filtering by vanished exactly when you
+// needed it. Every list screen puts its search and chips in one `.shead`, which stays at the top.
+T("every list screen keeps its filters in a sticky band",[list(INV,"Sales","New Invoice"),inventory(),jlScr(),qtScr(),rtScr(),ptScr(),dash()].every(h=>h.includes("class=\"shead\"")));
+T("and the band comes before the rows it filters",(()=>{const h=list([["INV-9001","Test Party","TP",100,"Paid","2026-10-01"]],"Sales","New Invoice");return h.indexOf("class=\"shead\"")>=0&&h.indexOf("class=\"shead\"")<h.indexOf("class=\"row")})());

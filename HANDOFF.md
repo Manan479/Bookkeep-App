@@ -637,3 +637,10 @@ to the rolled-up ledger account and the same movement is applied to that account
 is stored on the entry as `rec.cash`, and `revJournal()` moves it back on reversal, so a reversed cash
 journal leaves nothing behind. Probed: opening 1000 cash and 5000 in the bank, a journal crediting Cash 250
 now leaves the cash screen at 750 and the book at 5750 — and 750 + 5000 = 5750.
+
+## Sticky filter bands and chip feedback
+
+List screens put their search and filter chips in one `.shead` (sticky, opaque, shadow only once rows pass
+under it via `headsStuck()`). The title scrolls away; only controls stay. `Expenses` and `Payments` keep their
+total card *below* the band so both chip rows stay together. Only the tapped chip pops (`.chip.pop`, set from
+`S.pop`), and a filter tap lets rows animate while search typing stays still.

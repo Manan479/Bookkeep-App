@@ -66,6 +66,9 @@ const chips=(arr,cur,fn)=>`<div class="chips">${arr.map(a=>`<button class="chip 
 // Fade only the side the row can actually scroll to. Scroll position is asked for, not guessed, so a row that
 // fits on the screen keeps crisp edges.
 function chipFades(){document.querySelectorAll('.chips').forEach(c=>{try{const max=c.scrollWidth-c.clientWidth;c.classList.toggle('fade-l',c.scrollLeft>2);c.classList.toggle('fade-r',max>2&&c.scrollLeft<max-2)}catch(e){}})}
+// A sticky filter band only needs its shadow once rows are actually passing underneath it, which is when its
+// top has reached the top of its scrolling screen. Asked of the browser, not guessed from a scroll count.
+function headsStuck(){document.querySelectorAll('.shead').forEach(h=>{try{const sc=h.closest('.scr');if(!sc)return;const a=h.getBoundingClientRect(),b=sc.getBoundingClientRect();h.classList.toggle('stuck',a.top<=b.top+1)}catch(e){}})}
 const setP=p=>{tick();if(p==='Custom'){pick(null,v=>{S.cr=v.split('|');S.period='Custom';render(false,true)},false,true);return}S.period=p;render(false,true)};
 const tabs=()=>`<nav class="tabs">${[['dash','▦','Dashboard'],['sales','🧾','Sales'],['pur','🛒','Purchases'],['inv','📦','Inventory'],['more','⋯','More']].filter(t=>canTab(t[0])).map(t=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" onclick="go('${t[0]}')"><i>${t[1]}</i>${t[2]}</button>`).join('')}</nav>`;
 // ---- export -----------------------------------------------------------------------------------------
@@ -259,4 +262,4 @@ const fmtCls=f=>f==='A4'?'':f==='A5'?'a5':f==='80mm'?'t80':'t58';
 const fmtChips=f=>`<div class="sw">${['A4','A5','80mm','58mm'].map(x=>`<button class="chip ${f===x?'on':''}" onclick="S.fmt='${x}';render(false,true)">${x}</button>`).join('')}</div>`;
 const sizeCap=f=>'<div class="lbl sm" style="text-align:center;margin-top:8px">'+({A4:'A4 - 210 x 297 mm',A5:'A5 - 148 x 210 mm','80mm':'Thermal roll - 80 mm wide','58mm':'Thermal roll - 58 mm wide'})[f]+'</div>';
 function compImg(inp,max,cb){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/png'))};im.src=r.result};r.readAsDataURL(f)}
-document.addEventListener('scroll',e=>{const t=e.target;if(!t||!t.classList)return;if(t.classList.contains('scr'))window._sy=t.scrollTop;if(t.classList.contains('chips'))chipFades()},true);
+document.addEventListener('scroll',e=>{const t=e.target;if(!t||!t.classList)return;if(t.classList.contains('scr')){window._sy=t.scrollTop;headsStuck()}if(t.classList.contains('chips'))chipFades()},true);

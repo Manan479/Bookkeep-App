@@ -27,5 +27,6 @@ if(soft&&s){s.style.animation='none';if(!chipTap)s.classList.add('still');s.scro
 // Put the chip rows back where they were, then let them decide which edges deserve a fade.
 try{const cs=[...a.querySelectorAll('.chips')];if(soft)cs.forEach((c,i)=>{if(prevChips[i]!=null)c.scrollLeft=prevChips[i]})}catch(e){}
 try{chipFades()}catch(e){}
+try{headsStuck()}catch(e){}
 countUp(soft,prevN);grow(soft&&!chipTap);S.pop=null;fitPaper();if(window.saveNow)window.saveNow()};
 if(skel){a.insertAdjacentHTML('beforeend','<div class="scr">'+'<div class="skel"></div>'.repeat(5)+'</div>');setTimeout(()=>{a.querySelector('.scr').remove();put()},350)}else put()}
