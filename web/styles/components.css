@@ -1,7 +1,7 @@
 /* components.css - buttons, cards, rows, chips, sheets, calendar, forms, tab bar, animations. */
 .scr{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 176px;animation:in .25s ease}
 /* 176px, not 110: the New Invoice button sits above the tab bar and was covering the last row of every list. */
-.row.sel{border-color:var(--pr);background:var(--prt)}
+.row.sel{border-color:var(--pr);background:var(--prt);animation:none!important}
 .selbar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:12;display:flex;gap:8px;align-items:center}
 .selbar .btn{flex:1;padding:11px 6px;font-size:12.5px}
 /* Nothing to add while rows are being picked: the New button would sit on top of the selection bar. */
