@@ -1,0 +1,13 @@
+{
+  "name": "bookkeep-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Desktop shell for bookkeep: the same web app in its own window, with a native save dialog and printing.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

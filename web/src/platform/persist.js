@@ -20,7 +20,10 @@ function applyStore(o){if(!o||typeof o!=='object')return false;
  // Restoring somebody else's file must not leave this session signed in as a user who is not in it.
  if(S.user&&!userBy(S.user.id)){S.user=null;S.screen='login'}
  return true}
-function save(){if(window._noSave)return;try{localStorage.setItem(STORE_KEY,JSON.stringify(storePayload()))}catch(e){}}
+function save(){if(window._noSave)return;try{localStorage.setItem(STORE_KEY,JSON.stringify(storePayload()))}catch(e){}
+  // If cloud sync is configured, a save is also the moment to notice there is something to upload. cloudTouch
+  // ignores saves that did not actually change the book, so rendering a screen does not upload anything.
+  try{if(typeof cloudTouch==='function')cloudTouch()}catch(e){}}
 function load(){try{const r=localStorage.getItem(STORE_KEY);if(!r)return;if(applyStore(JSON.parse(r))){theme(S.theme||'system');ensurePinHashes()}}catch(e){}}
 // A backup is the saved book as a file. A restore says WHY it refused rather than half-loading the file.
 const backupJSON=()=>JSON.stringify(storePayload());

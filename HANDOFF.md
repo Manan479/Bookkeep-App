@@ -691,3 +691,19 @@ one back instead of leaving a broken book. Verified against a real IndexedDB (fa
 storage=indexeddb, snapshot written, restore ok, trial balance 0, pruning to 5. On `file://` the browser gives
 IndexedDB no usable origin, so the screen warns that snapshots are memory-only — the Android shell serves over
 `https://appassets`, where IndexedDB is available.
+
+## Cloud sync (Supabase) and the desktop shell - first slice
+
+`db/supabase.sql` creates `sync_books`, `sync_members` and `sync_state` with row-level security and a
+`create_sync_book()` RPC. `platform/cloud.js` implements sign-up/sign-in/refresh, book adoption, pull, push and the
+version rule (`cloudVersionState`); `features/cloud.js` is the screen (Settings → Cloud sync). Every push is
+`PATCH ... where version = N`; a mismatch is a conflict, never an overwrite, and the user chooses which copy wins.
+`cloudTouch()` is called from `save()` but hashes the payload first, so rendering a screen does not upload.
+
+Verified against a local stand-in that follows the same PostgREST rules: push v1, pull "From the phone", conflict at
+v2 with local edits, force-upload to v4. NOT yet run against a real Supabase project - that needs the owner to
+create it and run `db/supabase.sql`. Setup notes: `docs/CLOUD_SYNC.md`.
+
+The desktop shell is `desktop/` (Electron, `npm install && npm start`): contextIsolation on, nodeIntegration off,
+and only two bridges - `Saver` (system save dialog) and `Printer`. It loads `../web`, so there is no second copy of
+any screen. Electron itself was not downloaded here, so the shell is syntax-checked, not launched.
