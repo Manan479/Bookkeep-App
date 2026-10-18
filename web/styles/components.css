@@ -1,7 +1,7 @@
 /* components.css - buttons, cards, rows, chips, sheets, calendar, forms, tab bar, animations. */
 .scr{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 176px;animation:in .25s ease}
 /* 176px, not 110: the New Invoice button sits above the tab bar and was covering the last row of every list. */
-.row.sel{border-color:var(--pr);background:var(--prt);animation:none!important}
+.row.sel{border-color:var(--pr);background:var(--prt)}
 .selbar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:12;display:flex;gap:8px;align-items:center}
 .selbar .btn{flex:1;padding:11px 6px;font-size:12.5px}
 /* Nothing to add while rows are being picked: the New button would sit on top of the selection bar. */
@@ -135,8 +135,11 @@
 .btn:disabled{opacity:.4}
 .gh{display:flex;justify-content:space-between;margin:14px 2px 8px;color:var(--tx2);font-weight:700;font-size:12.5px}
 .gh span{font-variant-numeric:tabular-nums}
-.sel{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;font-weight:600;padding:2px 0}
-.sel.search{margin:0;padding:12px 14px}
+/* The button that skins a <select>. It used to be called `.sel`, which collided with a selected row's `row sel`
+   and stole its padding - a selected row lost its 14px side padding and shrank 12px top and bottom, so the
+   amount and the status badge sat on the border. `.skl` cannot be picked up by a row. */
+.skl{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;font-weight:600;padding:2px 0}
+.skl.search{margin:0;padding:12px 14px}
 .top .ic{position:relative}
 .dot{position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;border-radius:99px;font-size:10px;min-width:16px;height:16px;display:grid;place-items:center;padding:0 3px}
 textarea.search{resize:none;font-family:inherit}

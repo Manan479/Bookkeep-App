@@ -160,10 +160,10 @@ const selOn=()=>selIds().length>0;
 const selAt=()=>S.sel&&S.sel.at?S.sel.at:(S.screen||S.tab);
 const selHere=()=>selOn()&&selAt()===(S.screen||S.tab);
 const selIn=id=>selIds().indexOf(id)>=0;
-function selToggle(id){if(!S.sel)S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;render()}
-const selClear=()=>{S.sel=null;render()};
+function selToggle(id){if(!S.sel)S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;render(false,true)}
+const selClear=()=>{S.sel=null;render(false,true)};
 // Select every row the list is showing - not every record, which the period filter may well have narrowed.
-const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all,at:S.screen||S.tab}:null;render()};
+const selAllRows=()=>{const all=(S.selRows||[]).map(r=>r.id);S.sel=all.length?{ids:all,at:S.screen||S.tab}:null;render(false,true)};
 const selCsv=()=>{const rows=(S.selRows||[]).filter(r=>selIn(r.id)).map(r=>r.cells);
  if(!rows.length){toast('Nothing selected');return}setExport('Selected '+(S.selTitle||'rows'),S.selCols||[],rows);exportSheet()};
 const lpRow=e=>{const t=e.target;return (t&&t.closest)?t.closest('[data-sel]'):null};
@@ -202,7 +202,7 @@ o.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{const v=x.dataset.d;if(
 o.querySelectorAll('[data-t]').forEach(x=>x.onclick=()=>{const t=x.dataset.t;o.remove();if(t==='today'){if(!range)cb(tdy)}else if(t==='clear')cb('');else cb(a+'|'+b)})};
 o.onclick=e=>{if(e.target===o)o.remove()};draw();$('#app').append(o)}
 function pd(key,k){const cur=key==='exp'?S.items[k].exp:S.d[key];pick(cur,v=>{if(key==='exp')S.items[k].exp=v;else S.d[key]=v;render(false,true)},key==='exp')}
-function skinSelects(){document.querySelectorAll('select').forEach(sel=>{if(sel.dataset.sk)return;sel.dataset.sk=1;sel.style.display='none';const b=document.createElement('button');b.type='button';b.className='sel'+(sel.classList.contains('search')?' search':'');
+function skinSelects(){document.querySelectorAll('select').forEach(sel=>{if(sel.dataset.sk)return;sel.dataset.sk=1;sel.style.display='none';const b=document.createElement('button');b.type='button';b.className='skl'+(sel.classList.contains('search')?' search':'');
 const txt=()=>{const op=sel.options[sel.selectedIndex];b.innerHTML='<span'+(op&&op.value===''?' class="lbl"':'')+'>'+(op?op.text:'')+'</span><span class="lbl">⌄</span>'};txt();sel.after(b);b.onclick=()=>choose(sel,txt)})}
 function choose(sel,txt){const opts=[...sel.options],o=document.createElement('div');o.className='ov';
 const pv=sel.previousElementSibling,title=sel.dataset.title||(sel.closest('label')&&sel.closest('label').querySelector('small')&&sel.closest('label').querySelector('small').textContent)||(pv&&pv.classList.contains('lbl')?pv.textContent:'Choose');
