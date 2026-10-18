@@ -20,7 +20,37 @@ const setS=s=>{S.st=s;tick();render(false,true)};
 const upd=(k,f,v)=>{S.items[k][f]=+v;render(false,true)};
 const addItem=()=>pickProd();
 const scan=()=>toast('Scanner opens here');
-function invMenu(){const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="sheet"><div class="grab"></div><b style="font-size:17px">Invoice actions</b><div style="margin-top:12px"><button class="row" data-a="print"><span>🖨</span><span class="grow t">${S.editPosted?'Update and print':'Post and print'}</span></button><button class="row" data-a="dup"><span>⧉</span><span class="grow t">Duplicate</span></button><button class="row" data-a="del"><span>🗑</span><span class="grow t red">${S.editPosted?'Discard changes':'Discard draft'}</span></button></div></div>`;o.onclick=e=>{if(e.target===o)o.remove()};o.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a;o.remove();if(a==='print')post(true);else if(a==='dup'){if(S.editNo&&INVD[S.editNo])dupInv(S.editNo);else toast('Save the invoice first, then duplicate it')}else{const no=S.editNo;if(no&&INVD[no]&&INVD[no].draft){[INV,PUR].forEach(x=>{const i=x.findIndex(y=>y[0]===no);if(i>=0)x.splice(i,1)});delete INVD[no]}S.screen=null;S.items=null;S.editNo=null;S.editPosted=false;render();toast(S.editPosted?'Changes discarded':'Discarded')}});$('#app').append(o)}
+function invMenu(){const canVoid=S.editPosted&&S.editNo&&INVD[S.editNo]&&!INVD[S.editNo].draft&&!INVD[S.editNo].void&&isAdmin();
+ const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="sheet"><div class="grab"></div><b style="font-size:17px">Invoice actions</b><div style="margin-top:12px"><button class="row" data-a="print"><span>🖨</span><span class="grow t">${S.editPosted?'Update and print':'Post and print'}</span></button><button class="row" data-a="dup"><span>⧉</span><span class="grow t">Duplicate</span></button>${canVoid?'<button class="row" data-a="void"><span>⛔</span><span class="grow t red">Void this '+ (S.itype==='pur'?'purchase':'invoice') +'</span></button>':''}<button class="row" data-a="del"><span>🗑</span><span class="grow t red">${S.editPosted?'Discard changes':'Discard draft'}</span></button></div></div>`;o.onclick=e=>{if(e.target===o)o.remove()};o.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a;o.remove();if(a==='print')post(true);else if(a==='dup'){if(S.editNo&&INVD[S.editNo])dupInv(S.editNo);else toast('Save the invoice first, then duplicate it')}else if(a==='void'){voidDocAsk(S.editNo)}else{const no=S.editNo;if(no&&INVD[no]&&INVD[no].draft){[INV,PUR].forEach(x=>{const i=x.findIndex(y=>y[0]===no);if(i>=0)x.splice(i,1)});delete INVD[no]}S.screen=null;S.items=null;S.editNo=null;S.editPosted=false;render();toast(S.editPosted?'Changes discarded':'Discarded')}});$('#app').append(o)}
+
+// ---- Voiding a posted document -------------------------------------------------------------------------------
+// A posted invoice is not deleted: deleting it would leave the ledger, stock and cost pool describing a document
+// that no longer exists. Voiding reverses those effects, keeps the record with status Void, and is limited to an
+// administrator. Payments and returns must be voided first, because the money and the stock they describe are
+// separate documents.
+function voidDocAsk(no){const d=INVD[no];if(!d)return;
+ confirmSheet('Void '+no+'?','The '+ (d.type==='pur'?'purchase':'invoice') +' is kept in the register and marked Void. Its stock, ledger entry and payable/receivable are reversed. It cannot be undone; post a new '+ (d.type==='pur'?'purchase':'invoice') +' instead.','Void',()=>{
+   const ok=voidDoc(no);if(!ok)return;jumpAfterVoid(d.type==='pur');})}
+
+function voidDoc(no){
+  if(!isAdmin()){toast('Only an administrator can void a document');return false}
+  const d=INVD[no],row=INV.find(x=>x[0]===no)||PUR.find(x=>x[0]===no);
+  if(!row||!d||d.void||row[4]==='Void')return false;
+  if(RET.some(r=>r.inv===no&&!r.void)){toast('Void its returns first');return false}
+  if(PAYM.some(p=>!p.void&&p.alloc&&p.alloc[no]!==undefined)||(PAID[no]||0)>0){toast('Void its payments first');return false}
+  const isP=d.type==='pur';
+  // Stock and the cost pool go back exactly as an edit takes them back.
+  d.items.forEach(i=>{const p=PRD.find(x=>dn(x)===i.n);if(!p)return;const L=lay(i.n);
+    if(isP){p[2]-=i.q;buyOut(i.n,i.q,lineCost(i));let need=i.q;while(need>0&&L.length){const q=Math.min(need,L[L.length-1].q);L[L.length-1].q-=q;need-=q;if(L[L.length-1].q<=0)L.pop()}}
+    else{p[2]+=i.q;L.push({q:i.q,c:ccost(i)})}
+    STK.unshift({d:tdy,n:i.n,q:isP?-i.q:i.q,t:'Void',ref:no})});
+  if(d.type==='dist'){const x=DIST.find(y=>y.n===d.dsel);if(x){x.owed-=d.owed;x.sold-=Math.round(d.T.g)}}
+  if(isP){const ix=PAYB.findIndex(x=>x[2]===no&&x[0]==='Suppliers');if(ix>=0)PAYB.splice(ix,1)}
+  ledReverse(no,'Void '+no);
+  row[4]='Void';d.void=true;d.status='Void';
+  if(EXP.some(e=>e.inv===no&&!e.void))toast('Voided; an expense linked to it is still posted');
+  return true}
+const jumpAfterVoid=pur=>{S.screen=null;S.items=null;S.editNo=null;S.editPosted=false;S.tab=pur?'pur':'sales';render();toast('Voided. The book and stock are back as they were.')};
 const previewInv=()=>{S.posted=false;S.screen='prev';render()};
 const prevBack=()=>{if(S.prevTo){S.screen=S.prevTo;S.prevTo=null;S.posted=false;render();return}if(S.posted){S.posted=false;S.items=null;S.screen=null;S.tab='sales'}else S.screen='inv';render()};
 const tog=(k,f)=>{const i=S.items[k];i[f]=i[f]==='pct'?'amt':'pct';tick();render(false,true)};

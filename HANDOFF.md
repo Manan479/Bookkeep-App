@@ -773,3 +773,14 @@ single-instance/cleanup rules are unchanged.
 `display:block` is what makes `max-width` + `margin:auto` centre a button; as inline-blocks they sat left. Standalone
 `.lbl` notes on those screens are now centred too. This is the same class of bug as the log-in button, fixed once for
 every screen without a sidebar (Backups, statements, report notes), rather than per screen.
+
+## Admin-only voiding of documents and payments
+
+A posted invoice/purchase cannot be deleted without breaking the ledger, so `voidDoc(no)` in `features/invoices.js`
+reverses its ledger entry, stock, cost pool, distributor balance and supplier payable, marks the row and snapshot
+`Void`, and leaves the record in the register. `invMenu()` offers "Void this invoice/purchase" only when
+`isAdmin()`, the document is posted and not already void. `voidDoc` itself refuses a non-admin, and refuses while
+payments or returns reference the document (they must be voided first). Payment void (`voidPm`) now also checks
+`isAdmin()` and its button is hidden for other roles. `tests/void.test.js` proves: sale void restores stock and
+ledger and keeps the trial balance at 0; purchase void removes its payable and takes stock out; a paid invoice is
+refused; a manager is refused; payment void is admin-only.

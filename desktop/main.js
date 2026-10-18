@@ -75,12 +75,14 @@ function createWindow(){
         const preview = process.argv.includes('--smoke-preview') ? 'true' : 'false';
         const invoice = process.argv.includes('--smoke-invoice') ? 'true' : 'false';
         const backups = process.argv.includes('--smoke-backups') ? 'true' : 'false';
+        const menu = process.argv.includes('--smoke-menu') ? 'true' : 'false';
         setTimeout(() => {
           win.webContents.executeJavaScript(
             "(async()=>{try{if(USERS.length){const r=await signInHashed(USERS[0].id,'1234');if(!r.ok)throw new Error(r.reason)}S.screen=null;S.tab='" + tabArg + "';render();" +
             "if(" + preview + "&&typeof INV!=='undefined'&&INV.length){openInv(INV[0][0]);S.screen='prev';render();}" +
             "if(" + invoice + "){openScr('inv','sale');}" +
             "if(" + backups + "){await openBackups();}" +
+            "if(" + menu + "&&typeof INV!=='undefined'&&INV.length){openInv(INV[0][0]);invMenu();}" +
             "}catch(e){document.title='ERR '+e.message}})()"
           ).catch(() => {});
         }, 1200);
