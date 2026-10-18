@@ -24,7 +24,11 @@
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:8px 14px;border-radius:99px;background:var(--sf);border:1px solid var(--bd);font-weight:600;font-size:12.5px;transition:all .2s}
-.chip.on{background:var(--pr);color:var(--onpr);border-color:var(--pr)}
+.chip.on{background:var(--pr);color:var(--onpr);border-color:var(--pr);animation:chipIn .22s cubic-bezier(.2,.8,.2,1)}
+/* A filter chip is rebuilt on every render, so a CSS transition could not animate the change - it played the
+   end state at once. A short keyframe on the chosen chip gives the tap its feedback without redrawing the
+   whole screen. `still` (a soft render) suppresses row animations, but must not suppress this one. */
+@keyframes chipIn{from{transform:scale(.9)}to{transform:none}}
 .hero{background:var(--pr);color:var(--onpr);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}
 .hero .num{font-size:28px}
 .hero .lbl{color:inherit;opacity:.8}
@@ -46,7 +50,7 @@
 .dot.pick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;padding:0;cursor:pointer}
 /* A soft render (typing in a search box, tapping a chip) redraws the same screen. Without this, every row
    replays its entry animation and the whole list appears to jump under your thumb. */
-.scr.still,.scr.still *{animation:none!important}
+.scr.still,.scr.still *:not(.chip){animation:none!important}
 .av{width:42px;height:42px;border-radius:50%;background:var(--prt);color:var(--pr);display:grid;place-items:center;font-weight:700;flex:none}
 .grow{flex:1;min-width:0}
 .t{font-weight:700}
