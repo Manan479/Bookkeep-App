@@ -12,7 +12,6 @@ const os = require('os');
 // Some Windows GPUs leave a strip of an old frame along a window edge after maximise/resize. The page itself is
 // correct (a page capture never shows it), so this is the compositor, not the app. This shell draws simple
 // 2D screens; software rendering costs nothing visible and removes that class of artefact.
-app.disableHardwareAcceleration();
 app.setAppUserModelId('com.bookkeep.desktop');
 // Windows' "native window occlusion" tells Chromium a covered or partly off-screen window needs no painting. On
 // some drivers it decides wrong and leaves a strip of the previous frame along an edge - visible in a screen

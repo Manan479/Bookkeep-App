@@ -784,3 +784,13 @@ payments or returns reference the document (they must be voided first). Payment 
 `isAdmin()` and its button is hidden for other roles. `tests/void.test.js` proves: sale void restores stock and
 ledger and keeps the trial balance at 0; purchase void removes its payable and takes stock out; a paid invoice is
 refused; a manager is refused; payment void is admin-only.
+
+## Desktop lists are tables (design skills applied)
+
+`list()` in `features/invoices.js` renders the filtered rows twice: cards for the phone (`.listcards`) and a
+semantic `<table class="dtable">` for desktop (`.tablewrap`), with CSS choosing by width so they cannot disagree.
+Columns are sortable via `toggleSort`/`sortDocs` (date desc by default); rows are keyboard-openable with Enter,
+headers are real `<th>` with focusable sort buttons, hover is a 120ms background change. The floating New button is
+replaced on desktop by a header action (`deskonly`) and hidden when `.scr.tablemode` is present. Two UI skill packs
+were installed under `~/.dsh/skills` (ui-ux-pro-max, design-motion-principles and six more); their guidance drove
+the table density, semantics and restrained motion.

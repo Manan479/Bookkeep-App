@@ -161,3 +161,17 @@ T("All time is the first filter chip",Object.keys(PER)[0]==="All time");
   T("and it reaches documents from any year",inP("1999-06-15")&&inP("2099-01-01"));
   T("while This Month still excludes them",(S.period="This Month",!inP("1999-06-15")));
   S.period=was;})();
+
+// ---- desktop lists are tables -----------------------------------------------------------------------------
+// The same filtered rows are rendered twice: cards for the phone, a sortable table for the desktop. Both must
+// agree, and sorting must be a real order rather than a visual arrow.
+const _d=[['INV-9002','Zed Traders','ZT',200,'Paid','2 Oct 2026'],['INV-9001','Alpha Store','AS',100,'Unpaid','1 Oct 2026']];
+eq("sorting by number ascending",sortDocs(_d,{key:'number',dir:1})[0][0],'INV-9001');
+eq("sorting by total descending",sortDocs(_d,{key:'total',dir:-1})[0][0],'INV-9002');
+eq("sorting by party",sortDocs(_d,{key:'party',dir:1})[0][0],'INV-9001');
+S.lsort={key:'total',dir:-1};toggleSort('total');
+eq("pressing the same column reverses it",S.lsort.dir,1);
+S.lsort=null;
+const _h=list(_d,"Sales","New Invoice");
+T("the desktop table and the phone cards are both rendered",_h.includes("tablewrap")&&_h.includes("listcards"));
+T("the primary action moves into the header on desktop",_h.includes("deskonly"));
