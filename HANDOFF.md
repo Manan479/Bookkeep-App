@@ -28,12 +28,12 @@ Source checkpoint before this documentation update: **`a0ac0a2`**, on branch `ma
 
 After the APK build, the user reported excessive empty space above the dashboard and below navigation. Android was padding the native surface but forwarding the same insets to WebView; CSS also reserved safe areas at the root and again on bottom controls. The native listener now consumes handled insets, `.native-theme` disables web safe-area padding, and bottom controls use ordinary spacing inside the already safe viewport. Browser safe areas remain at the root once. Keyboard padding still uses the larger of the keyboard/navigation insets.
 
-Shared HTML and packaged desktop web resources were refreshed. **The APK listed below predates this correction. Ask before rebuilding it.** Native device verification remains outstanding; do not claim the reported phone layout has been verified from a desktop render.
+Shared HTML and packaged desktop web resources were refreshed. **The user then approved rebuilding: the APK below now includes this correction; Gradle assembleDebug succeeded.** Native device verification remains outstanding; do not claim the reported phone layout has been verified from a desktop render.
 
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.
-- `dist/Bookkeep-android-debug.apk`: latest explicitly requested debug APK, built successfully on 21 October 2026; approximately 3.8 MB. Gradle `:app:assembleDebug` succeeded using the installed JDK 21. No device install/run was performed in that build task.
+- `dist/Bookkeep-android-debug.apk`: latest explicitly requested debug APK, built successfully on 21 October 2026; approximately 3.8 MB, including the mobile inset correction from `dcbd9c1`. Gradle `:app:assembleDebug` succeeded using the installed JDK 21. No device install/run was performed in that build task.
 - `desktop/release/Bookkeep-win32-x64/Bookkeep.exe`: existing packaged desktop application. Its `resources/web` was refreshed after the date-field fix. This did not repackage the executable.
 - `dist/invoice-date-fields.png`: visual evidence from the focused date-field check.
 

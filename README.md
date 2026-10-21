@@ -81,7 +81,7 @@ gradle -p android :app:assembleDebug
 Copy-Item android\app\build\outputs\apk\debug\app-debug.apk dist\Bookkeep-android-debug.apk -Force
 ```
 
-The latest local debug APK was built successfully on **21 October 2026**, including the invoice date-field alignment fix. It is available as `dist/Bookkeep-android-debug.apk`; generated APKs are not committed. This is a debug build, not a release-store package.
+The latest local debug APK was built successfully on **21 October 2026**, including the invoice date-field alignment fix and the correction for duplicated mobile system-bar spacing. It is available as `dist/Bookkeep-android-debug.apk`; generated APKs are not committed. This is a debug build, not a release-store package.
 
 **Contributor workflow:** ask before building an APK unless the user explicitly requests one. Commit completed changes to Git. See `HANDOFF.md` for current machine commands and preferences.
 
