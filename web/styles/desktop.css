@@ -87,3 +87,12 @@ button.ic>.ui-icon{display:none}
  #app .employee-list>.shead{margin-bottom:12px}
 }
 #app .employee-list .employee-row-end{display:flex;align-items:center;gap:12px;flex-shrink:0}
+
+/* Editing columns stay comfortable on wide monitors, with or without the sidebar. */
+@media screen and (min-width:900px){
+ #app.bounded-workspace{--workspace-column:840px}
+ #app.bounded-workspace .scr>*{max-width:var(--workspace-column)!important;margin-inline:auto!important}
+ #app.bounded-workspace .scr>.f,#app.bounded-workspace .scr>.top,#app.bounded-workspace .scr>.card,#app.bounded-workspace .scr>.gh{width:100%;min-width:0}
+ #app.bounded-workspace>.bar-act{padding-inline:max(40px,calc((100% - var(--workspace-column))/2));justify-content:flex-end}
+ #app.bounded-workspace .item .ed{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

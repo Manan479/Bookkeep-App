@@ -31,6 +31,9 @@ const put=()=>{const chipTap=!!S.pop;let bar='';try{bar=selBar()}catch(e){}try{a
 // Desktop keeps its sidebar inside modules; phone forms keep their full width without bottom tabs.
 const navigation=sc==='login'||sc==='wz'?'':tabs(!sc);
 try{a.classList.toggle('hasnav',!!navigation)}catch(e){}
+// Forms and text-led detail screens need a readable column even when the sidebar stays open.
+const boundedRoutes=['inv','prod','pmf','exf','rtf','tfr','jf','co','tp','st','cl','wz','jd','exd','pmd','qd','rtd','stfp','pd','dd'];
+a.classList.toggle('bounded-workspace',boundedRoutes.includes(sc));
 a.insertAdjacentHTML('beforeend',body+bar+navigation);a.querySelectorAll('.scr .bar-act').forEach(toolbar=>a.append(toolbar));const actionBar=a.querySelector(':scope > .bar-act');a.classList.toggle('has-actions',!!actionBar);a.style.setProperty('--action-bar-height',actionBar?actionBar.offsetHeight+'px':'0px');mountRegisterActions();syncSel();syncUiIcons();const s=$('.scr');
 // A chip tap is a content change worth animating, so the rows are allowed to play their entrance. Typing in a
 // search box is the same soft render and must stay perfectly still under the thumb, which is what `still` is for.

@@ -50,6 +50,12 @@ Long-press selection ignores the outer 28 CSS px on either side, multi-touch, no
 
 Render compares the old displayed route (including entity detail) with the new route and discards selection on navigation, even where features assign S.screen directly. Invoice batch previews capture their document snapshots before leaving the list, so they work without retaining selection state or its toolbar. No APK or functional/browser/device checks were run for this change; syntax checking and shared HTML generation were performed. Shared packaged desktop web resources were refreshed. The user is still reporting further UX issues.
 
+## Bounded desktop editing and detail columns
+
+The desktop/HTML invoice form was spanning the whole workspace whenever the sidebar was present. Router now applies `bounded-workspace` to invoice/quotation/purchase editors, product/payment/expense/return/transfer/journal forms, company/templates/settings/cloud/setup pages and text-led record detail screens. Desktop CSS centres direct screen sections in an 840 px column and aligns persistent action groups with its right edge, including RTL. Registers, dashboards and report tables retain their existing wider layouts; mobile sizes and printed paper are not changed by this screen-only rule. Existing modal forms were already width-constrained.
+
+Source syntax and shared build completed; browser/native checks and APK generation were not performed. Shared desktop resources were refreshed. Preserve this route-based distinction when adding forms instead of applying a narrow global max-width to every screen.
+
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.
