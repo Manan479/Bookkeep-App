@@ -333,8 +333,9 @@ function fitPaper(){document.querySelectorAll('.paperwrap').forEach(w=>{
  if(p.querySelector('.invoice-lines'))w._paperSource=p.outerHTML;
  fitPage(p);p.style.transform='none';const pages=paginateInvoicePaper(p);
  const wide=window.matchMedia&&window.matchMedia('(min-width:900px)').matches,thermal=p.classList.contains('t80')||p.classList.contains('t58');
+ const isZoom=S.pvZoom&&!wide;
  const pageHeight=p.classList.contains('a5')?794:1123,availH=wide?Math.max(400,window.innerHeight-210):1e9;
- const available=Math.max(1,w.parentElement.clientWidth-32),scale=Math.min(1,available/pages[0].offsetWidth,thermal?1:availH/pageHeight);
+ const available=Math.max(1,w.parentElement.clientWidth-32),scale=isZoom?1:Math.min(1,available/pages[0].offsetWidth,thermal?1:availH/pageHeight);
  let top=0;
  pages.forEach(page=>{page.style.transform='scale('+scale+')';page.style.position='absolute';page.style.left='0';page.style.top=top+'px';top+=page.offsetHeight*scale+16});
  w.style.width=pages[0].offsetWidth*scale+'px';w.style.height=Math.max(0,top-16)+'px';

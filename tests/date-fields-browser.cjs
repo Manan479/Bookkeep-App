@@ -8,6 +8,7 @@ await page.evaluate(()=>{USERS.length=0;S.user=null;S.quiet=true;loadDemo();USER
 let checks=0;
 for(const width of [1440,1024,390])for(const type of ['sale','pur','qt'])for(const noDue of [false,true]){
 await page.setViewportSize({width,height:1000});await page.evaluate(({type,noDue})=>{openScr('inv',type);S.noDue=noDue;render()},{type,noDue});
+await page.waitForFunction(()=>document.getAnimations().every(a=>a.playState!=='running'));
 const fields=page.locator('.invoice-date-field');assert.equal(await fields.count(),2);
 const a=await fields.nth(0).locator('.dbtn').boundingBox(),b=await fields.nth(1).locator('.dbtn').boundingBox();
 assert(Math.abs(a.y-b.y)<1,JSON.stringify({width,type,noDue,a,b}));assert.equal(await fields.nth(1).locator('.dbtn').isDisabled(),noDue);

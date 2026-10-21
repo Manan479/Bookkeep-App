@@ -9,7 +9,7 @@
 .selbar .btn{flex:1;min-width:0;padding:11px 4px;font-size:11.5px;white-space:nowrap}
 .selbar .btn:first-of-type{flex:1.35}
 /* Nothing to add while rows are being picked: the New button would sit on top of the selection bar. */
-#app.selon .fab{display:none}
+#app.selon .fab,#app.selon .mobile-nav{display:none}
 .docpick{display:inline-flex;align-items:center;justify-content:center;position:relative;width:44px;height:44px;flex:none;cursor:pointer}
 .docpick input{appearance:auto;accent-color:var(--pr);width:20px;height:20px;margin:0;cursor:pointer}
 .docpick input:focus-visible{outline:3px solid var(--pr);outline-offset:5px}
@@ -145,7 +145,7 @@
 .tg.on:after{transform:translateX(18px)}
 .ov{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;animation:fd .2s}
 @keyframes fd{from{opacity:0}}
-.sheet{background:var(--sf);border-radius:24px 24px 0 0;width:100%;padding:16px 16px 24px;animation:up .3s cubic-bezier(.2,.9,.3,1.1)}
+.sheet{background:var(--sf);border-radius:24px 24px 0 0;width:100%;max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 24px;animation:up .3s cubic-bezier(.2,.9,.3,1.1)}
 @keyframes up{from{transform:translateY(100%)}}
 /* Closing. Every sheet, confirmation and success panel leaves the way it arrived: the sheet slides back
    down while the overlay fades out, and `forwards` holds that end state because the element is removed a
@@ -163,10 +163,10 @@
 .ok circle{fill:var(--prt)}
 .ok path{stroke:var(--pr);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:70;stroke-dashoffset:70;animation:dr .5s .15s forwards}
 @keyframes dr{to{stroke-dashoffset:0}}
-.toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 20px;border-radius:14px;font-weight:600;font-size:13.5px;max-width:calc(100% - 40px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:40;animation:tin .22s ease-out}
+.toast{position:absolute;left:50%;top:calc(var(--safe-top,0px) + 20px);transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 20px;border-radius:14px;font-weight:600;font-size:13.5px;max-width:calc(100% - 40px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:40;animation:tin .22s ease-out}
 /* The toast is centred with a transform, so its own animation must repeat that transform in BOTH frames.
    Sharing the generic 'in' keyframe dropped the translateX and made it jump sideways as it appeared. */
-@keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%)}}
 .sw{display:flex;gap:6px;margin-bottom:12px}
 .sw .chip{flex:1;text-align:center;padding:9px 0}
 .tbl .tr{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
@@ -518,14 +518,14 @@ textarea::placeholder{color:var(--tx2)}
 
 /* Optional date actions share a header row so both date values stay aligned. */
 .f .invoice-date-field{min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 12px}
-.invoice-date-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:32px}
-.invoice-date-heading small{min-width:0}
-.date-optional{flex:none;background:transparent;color:var(--pr);font:inherit;font-size:12px;font-weight:600;min-height:32px;padding:4px 6px;border-radius:6px;cursor:pointer}
+.invoice-date-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;height:32px;min-height:32px;box-sizing:border-box}
+.invoice-date-heading small{min-width:0;line-height:1.2}
+.date-optional{flex:none;background:transparent;color:var(--pr);font:inherit;font-size:12px;font-weight:600;height:24px;min-height:24px;padding:0 6px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center}
 .date-optional:hover{background:var(--prt)}
 .date-optional:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
-.invoice-date-field .dbtn{min-height:32px}
+.invoice-date-field .dbtn{height:32px;min-height:32px}
 .invoice-date-field .dbtn:disabled{opacity:.45;cursor:default}
-@media(pointer:coarse){.invoice-date-heading,.date-optional,.invoice-date-field .dbtn{min-height:44px}}
+@media(pointer:coarse){.invoice-date-heading,.invoice-date-field .dbtn{height:44px;min-height:44px}.date-optional{height:32px;min-height:32px}}
 
 /* Mobile selection replaces the avatar rather than taking width from the row text. */
 @media(max-width:899px){
@@ -539,3 +539,15 @@ textarea::placeholder{color:var(--tx2)}
  html[dir="rtl"] #app .doccard:has(.av)>.docpick{right:20px}
  html[dir="rtl"] #app.selon .doccard:not(:has(.av))>.docpick{right:0;transform:translate(20%,-20%)}
 }
+
+/* Touch-friendly icon tap areas without altering computed 38px dimensions */
+@media(pointer:coarse){
+ .ic{position:relative}
+ .ic::before{content:'';position:absolute;inset:-4px;border-radius:inherit}
+}
+
+/* Financial report tables horizontal scrolling */
+.card.report-table-card{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* Preview paper container scrolling when zoomed */
+.paperwrap{position:relative;margin:0 auto;overflow:auto;-webkit-overflow-scrolling:touch}
