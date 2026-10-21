@@ -3,7 +3,7 @@
 // Long-press a few invoices, then PDF: every one of them on its own page, in one file. The paper each
 // document prints on is the same invPaper() the preview uses, rebuilt here from the saved snapshot.
 const batchOpen=()=>{if(!selDocs().length)return;S.batchDocuments=selectedDocuments();S.screen='batch';S.sel=null;render()};
-function batchDocs(){return S.batchDocuments||[]}
+function batchDocs(){return (S.batchDocuments&&S.batchDocuments.length)?S.batchDocuments:selectedDocuments()}
 function batchScr(){const f=S.fmt||SET.fmt||'A4',docs=batchDocs();
  return `<div class="scr full"><div class="pvhead"><div class="top"><button class="ic" onclick="S.screen=null;render()">‹</button><h1>${docs.length} document${docs.length===1?'':'s'}</h1><span style="width:38px"></span></div>${fmtChips(f)}</div>
  <div class="paperbatch">${docs.map(d=>'<div class="paperwrap">'+invPaper(d,f)+'</div>').join('')}</div>
