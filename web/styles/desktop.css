@@ -96,3 +96,13 @@ button.ic>.ui-icon{display:none}
  #app.bounded-workspace>.bar-act{padding-inline:max(40px,calc((100% - var(--workspace-column))/2));justify-content:flex-end}
  #app.bounded-workspace .item .ed{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+@media screen and (min-width:900px){
+ /* Inline-flex boxes ignore auto side margins; standalone actions need block-level flex. */
+ #app.bounded-workspace .scr>.btn{display:flex;width:100%;justify-content:center}
+ #app.bounded-workspace .scr>img{display:block;object-fit:contain}
+ /* The sticky band's background bleeds outward, but its controls share the list's column. */
+ #app .scr>.search,#app .shead>.search{display:block;width:100%;max-width:1180px;margin-inline:auto}
+ #app.bounded-workspace .shead>.search{max-width:var(--workspace-column)}
+ #app .employee-list>.shead{padding-top:0}
+}

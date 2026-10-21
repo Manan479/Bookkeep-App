@@ -551,3 +551,6 @@ textarea::placeholder{color:var(--tx2)}
 
 /* Preview paper container scrolling when zoomed */
 .paperwrap{position:relative;margin:0 auto;overflow:auto;-webkit-overflow-scrolling:touch}
+
+/* Full-row help text is a grid item too, not only full-row labels. */
+.f>.w{grid-column:1/-1}

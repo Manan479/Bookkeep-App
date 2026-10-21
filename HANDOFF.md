@@ -56,6 +56,12 @@ The desktop/HTML invoice form was spanning the whole workspace whenever the side
 
 Source syntax and shared build completed; browser/native checks and APK generation were not performed. Shared desktop resources were refreshed. Preserve this route-based distinction when adding forms instead of applying a narrow global max-width to every screen.
 
+## Follow-up alignment fixes
+
+The user showed two remaining desktop defects: the expense receipt-upload button sat left of the centred form, and employee search sat left of the surrounding list/cards. Shared rules now make bounded standalone action buttons block-level flex boxes (auto margins can centre them), centre direct/sticky-band search inputs as block boxes within the same list width, and display standalone receipt images as blocks. Employee search drops an extra top-padding gap. `.f > .w` now spans both columns for explanatory text as well as labels, including employee-reimbursement guidance. The same standalone-button rule covers journal add-line, quotation conversion and party/distributor actions on bounded screens.
+
+Source inspection and shared generation completed; no browser/device suite or APK build was performed. Packaged desktop web resources were refreshed. Keep looking for controls whose inline display or sticky negative margins bypass their parent column.
+
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.
