@@ -30,3 +30,60 @@
 /* Several documents printed at once: each paper has to follow the last instead of stacking on the first. */
 .paperbatch .paper{position:relative!important;page-break-after:always}
 .paperbatch .paperwrap{height:auto!important}}
+
+/* Shared document preferences: used by preview, PDF capture and printing. */
+.paper td{padding:var(--invoice-row-padding,16px) 0}
+.paper-style-clean td{border-bottom:0}
+.paper-style-clean th{border-bottom:1px solid #cbd5d0}
+.paper-style-bold th{background:var(--invoice-accent);color:white;padding:9px 5px!important}
+.paper-style-bold tr:nth-child(even) td{background:#f3f6f4}
+.paper-status{text-transform:uppercase;letter-spacing:.12em;border:2px solid #9b2332;color:#9b2332;padding:4px 10px;align-self:flex-start;margin-top:8px;font-weight:700}
+
+/* A compact brand lockup: the slogan belongs to the name, not the address. */
+.paper .company-name{display:block;line-height:1.15;margin:0}
+.paper .company-heading-copy .slogan{font-size:.82em;font-style:italic;font-weight:500;letter-spacing:.015em;color:#555;margin:1px 0 8px;line-height:1.2}
+.paper .company-heading>.lgimg{object-fit:contain;flex-shrink:0;width:116px;height:116px}
+.paper.a5 .company-heading>.lgimg{width:82px;height:82px}
+.paper.t80 .company-heading>.lgimg,.paper.t58 .company-heading>.lgimg{width:64px;height:64px}
+.invoice-signatures{display:flex;justify-content:space-between;gap:24px;margin-top:24px;break-inside:avoid}
+.signature-field{width:44%;min-width:0}
+.signature-space{height:140px;display:flex;align-items:flex-end;justify-content:flex-end;gap:8px;padding-bottom:8px}
+.signature-label{border-top:1px solid #777;padding-top:5px}
+.authorized-field .signature-label{text-align:right}
+.invoice-stamp{max-width:100px;max-height:110px;object-fit:contain}
+.invoice-signature{max-width:150px;max-height:75px;object-fit:contain}
+.paper.a5 .signature-space{height:110px}
+.paper.a5 .invoice-stamp{max-width:65px;max-height:85px}
+.paper.a5 .invoice-signature{max-width:95px;max-height:60px}
+
+/* Paper dimensions and signing space must survive app styles and PDF capture. */
+.paper{flex-shrink:0;max-width:none;box-sizing:border-box}
+.paper>*{flex-shrink:0}
+.paper [data-paper-footer]{break-inside:avoid;page-break-inside:avoid}
+.paper .invoice-signatures{margin-top:18px;break-inside:avoid;page-break-inside:avoid}
+.paper .signature-space{height:160px;min-height:160px;flex:none;padding-bottom:10px}
+.paper.a5 .signature-space{height:125px;min-height:125px}
+.paper .signature-label{min-height:26px}
+@media print{
+ .paper{overflow:visible;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .invoice-signatures,.signature-field{break-inside:avoid;page-break-inside:avoid}
+}
+
+.paper .invoice-meta{gap:24px;align-items:flex-start}
+.paper .invoice-meta>div{min-width:0;flex:1;overflow-wrap:anywhere}
+.paper .invoice-party-contact{font-size:.88em;line-height:1.4;margin:4px 0 6px;color:#333}
+.paper.t80 .invoice-meta,.paper.t58 .invoice-meta{display:block}
+
+/* Keep a short A4 invoice, full contact block and 42 mm signing area on one page. */
+.paper{padding:38px;line-height:1.38}
+.paper.a5{padding:28px}
+.paper:not(.t80):not(.t58) .terms{margin-top:16px;padding:10px 14px;line-height:1.5}
+.paper:not(.t80):not(.t58) td{padding:var(--invoice-row-padding,12px) 0}
+.paper .company-heading{gap:12px!important}
+.paper [data-paper-footer]{font-size:.88em;line-height:1.35}
+.paper .signature-label{font-size:1.05em}
+
+.paper-table table{table-layout:fixed}
+.paper-table th,.paper-table td{overflow-wrap:anywhere;word-break:break-word;white-space:normal;text-align:left!important}
+.paper-table th{background:#edf1ee;color:#111}
+.paper-table tr{break-inside:avoid}

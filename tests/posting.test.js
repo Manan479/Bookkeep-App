@@ -57,29 +57,29 @@ eq('and landed in cost of goods sold',ledBal('Cost of goods sold'),600);
 eq('the sale entry balances',ledTotals(ledFor(saleNo)[0]).diff,0);
 
 // ---- F1: a total with a fraction in it must still balance -----------------------------------------
-// 1 x 100.50 at 5% is 105.525, which rounds to 106. Sales keeps 100.50 and tax takes 5.50.
+// 1 x 100.50 at 5% is 105.525, which rounds to 105.53. Sales keeps 100.50 and tax takes 5.03.
 openScr('inv','sale');S.cust='Acme Stores';
 S.items=[{n:'Widget',q:1,r:100.50,d:0,dt:'amt',tx:5,tt:'pct',s:10}];
 post();
 const fracNo=S.lastNo;
 eq('the fractional invoice still balances',ledTotals(ledFor(fracNo)[0]).diff,0);
-eq('its receivable is the rounded total',INV.find(x=>x[0]===fracNo)[3],106);
+eq('its receivable is the rounded total',INV.find(x=>x[0]===fracNo)[3],105.53);
 eq('sales kept the unrounded line figure',ledBal('Sales'),1000+100.50);
-eq('tax absorbed the rounding difference',ledBal('Tax payable'),50+5.50);
+eq('tax absorbed the rounding difference',ledBal('Tax payable'),50+5.03);
 eq('inventory came down by another unit',ledBal('Inventory'),600-60);
 
 // ---- F3: a receipt splits into what was applied and what is kept ----------------------------------
 newPay('in','Acme Stores');S.pm.amt='50';S.pm.alloc={[fracNo]:40};savePm();
 eq('cash moved by the amount received',ledBal('Cash and bank'),1050);
 eq('the ledger cash matches the app accounts',ledBal('Cash and bank'),accCash());
-eq('receivable came down by what was applied',ledBal('Accounts receivable'),1156-40);
+eq('receivable came down by what was applied',ledBal('Accounts receivable'),1155.53-40);
 eq('the rest is held as an advance',ledBal('Advances from customers'),10);
 eq('the ledger receivable matches the open invoices',ledBal('Accounts receivable'),accAr());
 
 // Spending an advance instead of keeping one moves the advance the other way out of the same number.
 newPay('in','Acme Stores');S.pm.amt='0';S.pm.useAdv=true;S.pm.alloc={[fracNo]:10};savePm();
 eq('the advance went the other way',ledBal('Advances from customers'),0);
-eq('receivable came down again',ledBal('Accounts receivable'),1156-50);
+eq('receivable came down again',ledBal('Accounts receivable'),1155.53-50);
 eq('no cash moved this time',ledBal('Cash and bank'),1050);
 
 // ---- editing a posted invoice reverses the book first, then re-posts -------------------------------
@@ -358,8 +358,9 @@ revJournal(mj2.id);
 eq('a reversal records who reversed it',mj2.voidBy,'Owner');
 T('and the screen says so',jdScr().includes('Reversed by'));
 signOut();
+const signedOutEntries=JRN.length;
 openScr('inv','sale');S.cust='Acme Stores';S.items=[{n:'Widget',q:1,r:100,d:0,dt:'amt',tx:0,tt:'pct',s:8}];post();
-eq('with nobody signed in the author is empty, not a wrong name',JRN[JRN.length-1].by,'');
+eq('signed-out users cannot post an invoice',JRN.length,signedOutEntries);
 signIn('Owner',me.pin);
 T('an account page shows the author of each line',(S.acct='Stock adjustments',acdScr().includes('Entered by')));
 

@@ -75,6 +75,7 @@ function createWindow(){
         const invoice = process.argv.includes('--smoke-invoice') ? 'true' : 'false';
         const backups = process.argv.includes('--smoke-backups') ? 'true' : 'false';
         const menu = process.argv.includes('--smoke-menu') ? 'true' : 'false';
+        const payments = process.argv.includes('--smoke-payments') ? 'true' : 'false';
         setTimeout(() => {
           win.webContents.executeJavaScript(
             "(async()=>{try{if(USERS.length){const r=await signInHashed(USERS[0].id,'1234');if(!r.ok)throw new Error(r.reason)}S.screen=null;S.tab='" + tabArg + "';render();" +
@@ -82,6 +83,7 @@ function createWindow(){
             "if(" + invoice + "){openScr('inv','sale');}" +
             "if(" + backups + "){await openBackups();}" +
             "if(" + menu + "&&typeof INV!=='undefined'&&INV.length){openInv(INV[0][0]);invMenu();}" +
+            "if(" + payments + "){openScr('pm');}" +
             "}catch(e){document.title='ERR '+e.message}})()"
           ).catch(() => {});
         }, 1200);
@@ -90,7 +92,7 @@ function createWindow(){
         try {
           // A one-line layout readout, so a screenshot can be checked against what the CSS actually computed.
           const info = await win.webContents.executeJavaScript(
-            "(()=>{const c=document.querySelector('.scr .card');const s=c?getComputedStyle(c):null;const b=document.querySelector('.deskonly');let box=null;if(b){const br=b.getBoundingClientRect();const rg=document.createRange();rg.selectNodeContents(b);const tr=rg.getBoundingClientRect();box={buttonW:br.width,textW:tr.width,left:tr.left-br.left,right:br.right-tr.right,top:tr.top-br.top,bottom:br.bottom-tr.bottom,display:getComputedStyle(b).display,justify:getComputedStyle(b).justifyContent,text:b.textContent}}return {app:document.getElementById('app').className,cardWidth:s&&s.width,marginLeft:s&&s.marginLeft,hasNavClass:document.getElementById('app').className.includes('hasnav'),button:box}})()"
+            "(()=>{const c=document.querySelector('.scr .card');const s=c?getComputedStyle(c):null;const b=document.querySelector('.deskonly');let box=null;if(b){const br=b.getBoundingClientRect();const rg=document.createRange();rg.selectNodeContents(b);const tr=rg.getBoundingClientRect();box={buttonW:br.width,textW:tr.width,left:tr.left-br.left,right:br.right-tr.right,top:tr.top-br.top,bottom:br.bottom-tr.bottom,display:getComputedStyle(b).display,justify:getComputedStyle(b).justifyContent,text:b.textContent}}return {screen:typeof S!=='undefined'?S.screen:'?',tab:typeof S!=='undefined'?S.tab:'?',app:document.getElementById('app').className,cardWidth:s&&s.width,marginLeft:s&&s.marginLeft,hasNavClass:document.getElementById('app').className.includes('hasnav'),accent:(typeof TPL!=='undefined'?TPL.accent:null),bg:getComputedStyle(document.documentElement).getPropertyValue('--bg'),button:box}})()"
           );
           console.log('SMOKE_INFO=' + JSON.stringify(info));
           const img = await win.webContents.capturePage();

@@ -55,6 +55,16 @@ For Android, open the `android` folder in Android Studio (see `android/README.md
 
 ## Be aware
 
+- **Invoice appearance is in Settings → Invoice appearance and templates.** Text size, font, style,
+  spacing and visibility settings are shared by Preview, saved PDFs and printing. Removal now offers
+  Void or Delete permanently, with confirmation and retained audit history for posted documents.
+- **Select invoices and purchases with their checkboxes on desktop or phone.** The action bar can
+  save/share a combined PDF or separate PDFs, print, export a summary, or delete drafts/void posted
+  documents together. See `docs/BULK_DOCUMENTS.md` for permissions, sharing support and checks.
+- **Invoice and payment posting now commits locally as one operation.** Posting, invoice edits and
+  invoice/payment voids roll back if storage or ledger validation fails. Settings → Posting history
+  shows new operations and their document/ledger versions. See `docs/POSTING_TRANSACTIONS.md` for
+  coverage and limits; run `node tests/restart.js` for the fresh-start persistence check.
 - **There is a double-entry ledger, and it is the source of truth.** Every posted document writes a balanced
   entry, and the trial balance, balance sheet, profit and loss, cash flow, dashboard and every account page
   read that book rather than adding up records. The ledger is `web/src/core/ledger.js`; the shape of each

@@ -21,7 +21,7 @@ const can=c=>!USERS.length||!!(S.user&&(CAPS[S.user.role]||[]).indexOf(c)>=0);
 // Which capability each screen needs. A screen missing from this map needs nothing (the log-in screen, a
 // preview, a sheet), so the map only has to name what is restricted.
 const SCREEN_CAP={inv:'sales',prod:'inventory',pay:'purchases',cust:'parties',dl:'distributor',dd:'distributor',pt:'parties',pd:'parties',co:'settings',tp:'settings',st:'settings',wz:'settings',users:'users',stf:'employees',stfp:'employees',skd:'employees',rp:'reports',rpt:'reports',ac:'reports',acd:'reports',stmt:'reports',pl:'reports',jl:'journal',jf:'journal',jd:'journal',ex:'expenses',exf:'expenses',exd:'expenses',qt:'sales',qd:'sales',cb:'cashbank',cbd:'cashbank',tfr:'cashbank',rt:'returns',rtf:'returns',rtd:'returns',pm:'payments',pmf:'payments',pmd:'payments'};
-const canScreen=sc=>!USERS.length||!SCREEN_CAP[sc]||can(SCREEN_CAP[sc]);
+const canScreen=sc=>sc==='record'?can(S.recordKind==='tf'?'cashbank':'employees'):!USERS.length||!SCREEN_CAP[sc]||can(SCREEN_CAP[sc]);
 const TAB_CAP={dash:'dash',sales:'sales',pur:'purchases',inv:'inventory'};
 const canTab=t=>!USERS.length||!TAB_CAP[t]||can(TAB_CAP[t]);
 // What the renderer must draw right now, and whether the role may have it. These two live here, pure, so the

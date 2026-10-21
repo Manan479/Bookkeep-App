@@ -64,20 +64,22 @@ const ledLines=ls=>ls.filter(l=>!!l);
 // Writes one entry into JRN. Returns the entry, or null if it was rejected.
 // A rejected entry is never written: an unbalanced book is worse than a missing entry.
 function postEntry(e){
-  if(!e||!Array.isArray(e.lines))return null;
+  const reject=()=>{if(typeof bookTransactionActive!=='undefined'&&bookTransactionActive)throw new Error('The ledger entry was refused.');return null};
+  if(!e||!Array.isArray(e.lines))return reject();
   const lines=[];
   for(const l of (e.lines||[])){
     if(!l)continue;                        // a blank line from ledLines(): drop it, never throw
+    if(!Number.isFinite(Number(l.dr||0))||!Number.isFinite(Number(l.cr||0)))return reject();
     const dr=r2(l.dr),cr=r2(l.cr);
     if(dr===0&&cr===0)continue;            // blank line: drop it rather than book a zero
-    if(dr<0||cr<0)return null;             // a negative side is a sign error, not a credit
-    if(dr>0&&cr>0)return null;             // a line is one side or the other, never both
-    if(!isAcct(l.acc))return null;         // unknown account: fail loudly at the source
+    if(dr<0||cr<0)return reject();             // a negative side is a sign error, not a credit
+    if(dr>0&&cr>0)return reject();             // a line is one side or the other, never both
+    if(!isAcct(l.acc))return reject();         // unknown account: fail loudly at the source
     lines.push({acc:l.acc,dr:dr,cr:cr});
   }
-  if(lines.length<2)return null;
+  if(lines.length<2)return reject();
   const t=ledTotals({lines:lines});
-  if(t.dr<=0||t.diff!==0)return null;
+  if(t.dr<=0||t.diff!==0)return reject();
   // Its own counter, never the manual one, and persisted with the rest of S so a reload cannot
   // reissue a number. pad4() needs an integer, so this is floored rather than passed as a float.
   const n=Math.floor((Number(S.jpn)||1));
@@ -92,8 +94,8 @@ function postEntry(e){
   S.jpn=n+1;
   // noSave lets a multi-entry operation (a reversal) write all of its entries and save once at the
   // end, instead of persisting a half-finished book between them.
-  if(!e.noSave)save();
   JRN.push(rec);
+  if(!e.noSave)save();
   return rec;
 }
 

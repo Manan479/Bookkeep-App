@@ -14,8 +14,8 @@ function bkScr(){const list=S.bkList||[],h=bkHealth(bkMeta()),mem=S.bkWhere==='m
  <button class="btn p" style="width:100%;flex:none;margin-bottom:12px" onclick="bkNow()">Back up now</button>
  ${list.map(r=>`<div class="card" style="margin-bottom:8px"><div class="row" style="border:0;padding:0;margin:0;background:none">
    <div class="grow"><div class="t">${bkStamp(r.at)}</div><div class="lbl sm">${r.reason||'manual'} · ${bkSize(r.bytes||0)}${r.counts?' · '+r.counts.invoices+' invoices, '+r.counts.journal+' entries':''}</div></div>
-   <button class="ut" onclick="bkAskRestore('${r.id}')">Restore</button>
-   <button class="ut" style="background:var(--bad);color:#fff" onclick="bkAskDelete('${r.id}')">✕</button>
+   <button class="ut" onclick="bkAskRestore(${docAttr(JSON.stringify(r.id))})">Restore</button>
+   <button class="ut" style="background:var(--bad);color:#fff" onclick="bkAskDelete(${docAttr(JSON.stringify(r.id))})">✕</button>
  </div></div>`).join('')||'<div class="card" style="text-align:center;padding:26px"><div class="t">No snapshots yet</div><div class="lbl">One will be taken the next time the app opens with a book in it.</div></div>'}
  <div class="lbl sm" style="margin-top:10px">A snapshot is restored into this device only. To move the book to another phone, use “Back up all data” in Settings, which saves a file.</div></div>`}
 

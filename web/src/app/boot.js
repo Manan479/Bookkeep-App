@@ -12,6 +12,11 @@ ensurePinHashes();
 if(USERS.length&&!S.user)S.screen='login';
 else if(window.PERSIST&&!SET.done)wzInit();
 render();
+installUiIcons();
+// System mode must follow a phone/desktop appearance change while the app stays open.
+try{const appearance=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)');
+ if(appearance&&appearance.addEventListener)appearance.addEventListener('change',()=>{if(!S.theme||S.theme==='system'){applyAccent();render(false,true)}});
+}catch(e){}
 // A daily snapshot, taken after the screen is up so it never delays opening the app. The once-a-day rule lives
 // in maybeAutoBackup(), not here.
 setTimeout(function(){try{maybeAutoBackup()}catch(e){}},1500);

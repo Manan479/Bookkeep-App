@@ -1,0 +1,36 @@
+const previous=bookClone(storePayload()),state=bookClone(S),setItem=localStorage.setItem;
+try{
+ T('Theme contains no sample invoice preview',!thScr().includes('theme-live-preview')&&!thScr().includes('Sample invoice'));
+ T('Settings links to document appearance',stScr().includes('Invoice appearance and templates'));
+ T('Templates exposes font, size, style and spacing',['Invoice text size','Invoice font style','Invoice document style','Invoice row spacing'].every(label=>tpScr().includes(label)));
+ TPL.textScale=1.2;TPL.font='serif';TPL.paperStyle='bold';TPL.density='spacious';TPL.descriptions=false;
+ const prefs=invoiceAppearance('A4');eq('custom text size is respected',prefs.size,20.4);
+ eq('custom font is respected',prefs.font,'Georgia, serif');eq('custom row spacing is respected',prefs.padding,20);
+ const document={title:'Invoice',no:'TEST',date:tdy,seller:{n:'Company',a:'',p:'',t:'',own:false},partyLabel:'Customer',party:'Buyer',items:[{n:'Item',desc:'Hidden description',q:1,r:10,d:0,dt:'amt'}],T:{sub:10,dis:0,tax:0,g:10}};
+ const html=invPaper(document,'A4');T('paper shares chosen style and font',html.includes('paper-style-bold')&&html.includes('Georgia, serif'));
+ T('description visibility applies to paper',!html.includes('Hidden description'));
+ save();TPL.font='mono';load();eq('document preferences survive restart',TPL.font,'serif');
+ wipeData();USERS.length=0;S.user=null;SET.negStock='allow';CUST.push('Delete buyer');
+ PRD.length=0;PRD.push(['Delete product','D',0,0,'']);
+ openScr('inv','sale');S.cust='Delete buyer';S.items=[{n:'Delete product',q:2,r:10,d:0,dt:'amt',tx:0,tt:'pct',s:0}];post();
+ const no=S.lastNo,before=backupJSON();
+ PAYM.push({id:'DELETE-BLOCK',void:false,alloc:{[no]:1}});
+ T('linked payments block permanent deletion',!bulkRemove([no],'delete').ok&&!!INVD[no]);PAYM.pop();
+ localStorage.setItem=(key,value)=>{if(key===STORE_KEY)throw new Error('Storage full');setItem(key,value)};
+ T('permanent deletion fails safely if storage is full',!bulkRemove([no],'delete').ok);
+ eq('failed permanent deletion restores the complete book',backupJSON(),before);
+ localStorage.setItem=setItem;
+ const result=bulkRemove([no],'delete');
+ T('permanent deletion succeeds',result.ok&&result.value.deleted===1&&result.value.voided===0);
+ T('permanent deletion removes invoice and snapshot',!INVD[no]&&!INV.some(row=>row[0]===no));
+ eq('permanent deletion restores the stock movement',PRD[0][2],0);
+ T('permanent deletion retains an audit record',AUDIT.some(entry=>entry.ref===no&&entry.action==='Delete invoice permanently'&&entry.before));
+ T('deleted invoice has no active accounting effect',!JRN.some(entry=>entry.ref===no&&!entry.void));
+ const after=backupJSON();load();eq('permanent deletion survives restart',backupJSON(),after);
+ openScr('inv','sale');S.cust='Delete buyer';S.invNoOv=no;S.items=[{n:'Delete product',q:1,r:10,d:0,dt:'amt',tx:0,tt:'pct',s:0}];
+ T('deleted document numbers cannot be reused',post()===false&&!INVD[no]);
+ openScr('inv','sale');S.invNoOv='';S.cust='Delete buyer';S.items=[{n:'Delete product',q:1,r:10,d:0,dt:'amt',tx:0,tt:'pct',s:0}];post();
+ const voided=S.lastNo;T('a document can be voided before deletion',voidDoc(voided));const stock=PRD[0][2];
+ T('a previously voided document can be deleted',bulkRemove([voided],'delete').ok&&!INVD[voided]);
+ eq('deleting a voided invoice cannot reverse stock twice',PRD[0][2],stock);
+}finally{localStorage.setItem=setItem;applyStore(previous);Object.keys(S).forEach(key=>delete S[key]);Object.assign(S,state);save()}

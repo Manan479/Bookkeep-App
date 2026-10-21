@@ -6,7 +6,7 @@ function loginScr(){const u=USERS.filter(x=>x.active!==false);
  // desktop. Before this the notes were left-aligned against the window while the card sat in the middle.
  return `<div class="scr"><div class="auth"><div class="top"><h1>Sign in</h1><span style="width:38px"></span></div>
  <div class="card" style="margin-bottom:12px"><div class="t">${COMP.name}</div><div class="lbl sm">Enter your PIN to open the books.</div></div>
- ${u.length?`<div class="f"><label class="w"><small>User</small><select id="lu">${u.map(x=>`<option value="${x.id||x.n}" ${S.lu===(x.id||x.n)?'selected':''}>${x.n} · ${ROLE_LABEL[x.role]||x.role}</option>`).join('')}</select></label>
+ ${u.length?`<div class="f"><label class="w"><small>User</small><select id="lu">${u.map(x=>`<option value="${docAttr(x.id||x.n)}" ${S.lu===(x.id||x.n)?'selected':''}>${x.n} · ${ROLE_LABEL[x.role]||x.role}</option>`).join('')}</select></label>
  <label class="w"><small>PIN</small><input id="lp" type="password" inputmode="numeric" placeholder="••••" onkeydown="if(event.key==='Enter')tryPin()"></label></div>
  <button class="btn p" style="width:100%;flex:none;margin-top:12px" onclick="tryPin()">Sign in</button>
  ${defaultPin()?`<div class="lbl sm" style="margin-top:12px;text-align:center">First run: the administrator PIN is ${DEFAULT_PIN}. Change it under Users once you are in.</div>`:''}
@@ -36,9 +36,9 @@ function usersScr(){return `<div class="scr full"><div class="top"><button class
 function userForm(k){const u=k<0?{n:'',role:'cashier',pin:'',active:true}:USERS[k];if(!u)return;
  const o=document.createElement('div');o.className='ov';
  o.innerHTML=`<div class="sheet"><div class="grab"></div><b style="font-size:17px">${k<0?'Add user':'Edit user'}</b>
- <div class="f" style="margin-top:10px"><label class="w"><small>Name</small><input id="un" value="${u.n}"></label>
- <label class="w"><small>Role</small><select id="ur">${ROLES.map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}</select></label>
- <label class="w"><small>PIN</small><input id="up" inputmode="numeric" value="${u.pin||''}" placeholder="${u.pinHash?'Leave blank to keep it':'New PIN'}"></label>
+ <div class="f" style="margin-top:10px"><label class="w"><small>Name</small><input id="un" value="${docAttr(u.n)}"></label>
+ <label class="w"><small>Role</small><select id="ur">${ROLES.map(r=>`<option value="${docAttr(r)}" ${u.role===r?'selected':''}>${ROLE_LABEL[r]}</option>`).join('')}</select></label>
+ <label class="w"><small>PIN</small><input id="up" inputmode="numeric" value="${docAttr(u.pin||'')}" placeholder="${u.pinHash?'Leave blank to keep it':'New PIN'}"></label>
  <label class="w"><small>Can sign in</small><select id="ua"><option value="1" ${u.active!==false?'selected':''}>Yes</option><option value="0" ${u.active===false?'selected':''}>No</option></select></label></div>
  <div class="lbl sm" style="margin-top:8px">The PIN is saved as a hash, not the digits. It still keeps out a casual user, not somebody who owns the phone and copies the saved file.</div>
  <div class="bar-row" style="margin-top:12px">${k<0?'':'<button class="btn" id="ud" style="background:var(--bad);border-color:var(--bad);color:#fff">Delete</button>'}<button class="btn" id="uc">Cancel</button><button class="btn p" id="us">Save</button></div></div>`;

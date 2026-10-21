@@ -1,0 +1,89 @@
+/* A single desktop scale. Screen-only rules keep invoice paper and mobile styling independent. */
+.ui-icon{width:20px;height:20px;display:inline-block;vertical-align:middle;flex:none}
+button.ic>.ui-icon{display:none}
+[data-ui-icon]:not(button)>.ui-icon{display:none}
+@media screen and (min-width:900px){
+ :root{
+  --desktop-caption:12px;--desktop-body:14px;--desktop-section:18px;
+  --desktop-title:24px;--desktop-metric:28px;--desktop-icon:20px;
+  --desktop-control:40px;--desktop-radius:10px;
+ }
+ body:not(.ur){font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif}
+ #app .scr,#app .sheet{font-size:var(--desktop-body);line-height:1.5}
+ #app .scr h1,#app .theme-heading h1{font-size:var(--desktop-title);line-height:1.25;font-weight:700;letter-spacing:-.025em}
+ #app .scr h2,#app .sheet h2{font-size:var(--desktop-section);line-height:1.35;font-weight:600}
+ #app .t{font-size:var(--desktop-body);line-height:1.5;font-weight:600}
+ #app .lbl,#app .sm,#app .f small,#app .item .w2,#app .item .ed label,#app .xl span,#app .alert span,
+ #app .appearance-section-heading p,#app .custom-accent small,#app .live-preview-kicker,
+ #app .appearance-note,#app .theme-heading p{font-size:var(--desktop-caption);line-height:1.5}
+ #app .gh{font-size:var(--desktop-caption);line-height:1.5;font-weight:600}
+ #app .num{font-size:var(--desktop-section);font-weight:700;line-height:1.3}
+ #app .hero .num{font-size:var(--desktop-metric)}
+ #app .btn,#app .fab,#app .chip,#app .ut,#app .select-start{
+  font-size:var(--desktop-body)!important;font-weight:600;line-height:1.25;
+  min-height:var(--desktop-control);border-radius:var(--desktop-radius);
+  padding:9px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ }
+ #app .chip{padding:8px 12px;min-height:36px}
+ #app .scr.tablemode~.fab{display:none}
+ #app .ut{min-height:32px;padding:6px 10px}
+ #app .ic,#app .theme-heading .ic{
+  width:var(--desktop-control);height:var(--desktop-control);min-width:var(--desktop-control);
+  flex:none;border-radius:var(--desktop-radius);padding:0;line-height:1;
+ }
+ button.ic>.ui-icon{display:block}
+ button.ic>.icon-original{display:none}
+ [data-ui-icon]:not(button)>.icon-original{display:none}
+ [data-ui-icon]:not(button)>.ui-icon{display:inline-block}
+ #app .av{width:40px;height:40px;font-size:var(--desktop-body)}
+ #app .ui-empty-icon{font-size:0!important;line-height:1;min-height:32px;margin-bottom:12px;display:grid;place-items:center}
+ #app .ui-empty-icon>.ui-icon{width:32px;height:32px}
+ #app .ui-icon,#app .desktop-nav .ui-icon{width:var(--desktop-icon);height:var(--desktop-icon)}
+ #app .top{gap:12px;margin-bottom:20px;min-height:var(--desktop-control)}
+ #app .f{gap:12px}
+ #app .f label,#app .f .invoice-date-field{padding:10px 12px;border-radius:var(--desktop-radius)}
+ #app .f input,#app .f select,#app .skl,#app .dbtn,#app .search,#app .item .ed input{
+  font-size:var(--desktop-body);font-weight:400;line-height:1.5;
+ }
+ #app .search{min-height:var(--desktop-control);padding:9px 12px;border-radius:var(--desktop-radius)}
+ #app .dtable{font-size:var(--desktop-body)}
+ #app .dtable th,#app .badge{font-size:var(--desktop-caption);line-height:1.35}
+ #app .dtable td{font-size:var(--desktop-body);padding:12px 16px}
+ #app .dtable .pickcell{padding:0!important}
+ #app .desktop-nav .tab{
+  font-size:var(--desktop-body);line-height:1.4;font-weight:500;min-height:var(--desktop-control);
+  padding:9px 12px;gap:12px;border-radius:var(--desktop-radius);
+ }
+ #app .desktop-nav .nav-module{padding-inline-start:12px}
+ #app .desktop-nav .tab.on{font-weight:600}
+ #app .desktop-nav .nav-brand{font-size:20px;line-height:1.4;font-weight:700;padding-inline:12px}
+ #app .desktop-nav .nav-section{font-size:var(--desktop-caption);line-height:1.4;letter-spacing:.05em;padding-inline:12px}
+ #app .desktop-nav .nav-appearance-shortcut{gap:12px;padding:9px 12px}
+ #app .sheet>b:first-of-type{font-size:var(--desktop-section)!important;font-weight:600;line-height:1.4}
+ #app .sheet input,#app .sheet textarea{font-size:var(--desktop-body);line-height:1.5}
+ #app .selbar .btn,#app .selbar .selcount{font-size:var(--desktop-body)}
+ #app .mode-label,#app .custom-accent b,#app .live-preview-sample strong{font-size:var(--desktop-body);line-height:1.5}
+ #app .accent-current,#app .custom-hex,#app .live-preview-label{font-size:var(--desktop-caption)}
+ #app .appearance-section h2{font-size:var(--desktop-section)}
+ #app .theme-heading{margin-bottom:24px}
+ #app .bar-act .btn{min-width:140px}
+}
+
+/* Shared layout corrections for records, summaries and persistent actions. */
+#app.has-actions .scr{padding-bottom:calc(var(--action-bar-height,90px) + 32px);scroll-padding-bottom:calc(var(--action-bar-height,90px) + 24px)}
+#app>.bar-act{flex-wrap:wrap}
+@media(min-width:900px){
+ #app .grid{grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:16px;margin-bottom:20px}
+ #app .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #app .grid>.card{margin:0;width:100%;min-width:0;max-width:none;box-sizing:border-box}
+ #app>.bar-act{left:0;right:0;max-width:none;margin:0;border-radius:0;box-sizing:border-box;padding:14px 40px}
+ #app.hasnav>.bar-act{left:232px}
+ html[dir="rtl"] #app.hasnav>.bar-act{left:0;right:232px}
+ html[dir="rtl"] #app:not(.hasnav)>.bar-act{left:0;right:0}
+ #app .employee-detail>.card.tbl{max-width:760px;margin-left:0;margin-right:0}
+ #app .employee-detail .tbl .tr{gap:24px;align-items:baseline}
+ #app .employee-detail .tbl .tr>span:last-child{text-align:right;overflow-wrap:anywhere}
+ #app .employee-list .salary-notice .btn{width:auto!important;display:inline-flex;margin-top:12px!important}
+ #app .employee-list>.shead{margin-bottom:12px}
+}
+#app .employee-list .employee-row-end{display:flex;align-items:center;gap:12px;flex-shrink:0}

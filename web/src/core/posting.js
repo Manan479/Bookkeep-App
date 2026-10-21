@@ -1,8 +1,7 @@
 // core/posting.js - Turns one posted document into one balanced ledger entry. No screen code.
 //
-// The feature file still changes its own records first; this file only mirrors that change into the
-// book. Every amount here is the same tax-inclusive rupee figure the record already stores, so the
-// two can never drift apart on rounding.
+// Invoice and payment actions run inside bookTransaction: records and ledger entries commit together.
+// Other feature callers still own their persistence. Amounts use the document's rounding rules.
 //
 // One document, one entry: the ref groups every line the document posted, and ledReverse(ref) undoes
 // the whole thing when the document is edited or voided.
@@ -46,7 +45,7 @@ function postSaleLedger(o){
 function postPurchaseLedger(o){
   const tot=r2(o.total);
   return ledCommit({date:o.date,src:'purchase',ref:o.ref,narr:o.narr||('Purchase '+o.ref)},
-    [ledSide('Inventory',tot),ledSide('Accounts payable',tot)]);
+    [ledSide('Inventory',r2(tot-(o.charges||0))),ledSide('Expenses',r2(o.charges||0)),ledSide('Accounts payable',tot)]);
 }
 
 // ---- money in and money out -------------------------------------------------------------------------
@@ -123,7 +122,7 @@ function postReturnLedger(o){
     ls.push(ledSide('Inventory',-A));
     if(extra>0)ls.push(o.settle==='refund'?ledSide('Cash and bank',extra):ledSide('Advances paid to suppliers',extra));
   }else{
-    ls.push(ledSide('Sales',-r2(o.net)));
+    ls.push(ledSide(o.incomeAcct||'Sales',-r2(o.net)));
     if(r2(o.tax)!==0)ls.push(ledSide('Tax payable',-r2(o.tax)));
     if(applied!==0)ls.push(ledSide('Accounts receivable',-applied));
     if(extra>0)ls.push(o.settle==='refund'?ledSide('Cash and bank',-extra):ledSide('Advances from customers',extra));

@@ -63,7 +63,7 @@ const invRows0=INV.length;openInv('INV-9999');T('an unknown invoice number opens
 S.itype='sale';S.items=[{n:'X',q:1,r:10,d:0,dt:'amt',tx:0,tt:'pct'}];S.posted=true;S.lastNo='INV-1';const pv2=prev();T('received by label',pv2.includes('Received by')&&!pv2.includes('Customer signature'));
 // ---- expenses
 const c0=BAL.Cash;newExp();S.ef.amt='1000';S.ef.payee='Stationery';S.ef.cat='Other';saveExp();T('exp paid',EXP[0].id==='EXP-0001'&&BAL.Cash===c0-1000);
-newExp();S.ef.amt='2500';S.ef.payee='Internet';S.ef.acct='Pay later';S.ef.inv='INV-0001';saveExp();T('exp later',PAYB.some(x=>x[2]==='EXP-0002'));
+newExp();S.ef.amt='2500';S.ef.payee='Internet';S.ef.acct='Pay later';S.ef.inv='INV-0001';S.ef.billToInvoice=false;saveExp();T('exp later',PAYB.some(x=>x[2]==='EXP-0002'));
 S.xk=EXP[0];chk('exd',exdScr());S.xk=EXP[1];chk('exd2',exdScr());chk('exScr',exScr());newExp();chk('exf',exfScr());voidExp(EXP[0]);T('exp void',EXP[0].void&&!PAYB.some(x=>x[2]==='EXP-0002'));voidExp(EXP[1]);T('exp void cash',BAL.Cash===c0);
 // ---- cash & bank
 newTransfer();S.tf.from='Cash';S.tf.to='Meezan Bank';S.tf.amt='500';const m0=BAL['Meezan Bank'];saveTransfer();T('transfer',BAL['Meezan Bank']===m0+500);chk('tfr',tfrScr());chk('cb',cbScr());S.ac='Cash';chk('cbd',cbdScr());
@@ -112,13 +112,13 @@ T('and nonsense does not throw',hex2rgb('').length===3);
 const accBefore=TPL.accent;
 setAccent('#00BCD4');
 eq('choosing one takes effect',TPL.accent,'#00BCD4');
-T('and the picker shows which is chosen',thScr().includes('Accent colour')&&thScr().includes('✓ '));
+T('and the picker shows which is chosen',thScr().includes('Accent colour')&&thScr().includes('accent-swatch chosen')&&thScr().includes('aria-pressed="true"'));
 T('the picker names the chosen colour',thScr().includes('Green')||thScr().includes(accentName()));
-T('and still offers any colour at all',thScr().includes('dot pick'));
-T('every swatch carries its name, so one cannot render as an invisible circle',ACCENTS.every(x=>thScr().includes('>'+x[1]+'</button>')||thScr().includes('✓ '+x[1]+'</button>')));
+T('and still offers any colour at all',thScr().includes('type="color"')&&thScr().includes('Custom colour'));
+T('every swatch has an accessible name',ACCENTS.every(x=>thScr().includes('aria-label="'+x[1]+'"')));
 T('drawing a screen does not throw with a custom accent',(S.tab='more',render(),true));
-T('and the printed document uses it',invPaper({title:'Invoice',no:'x',date:tdy,partyLabel:'Customer',party:'P',items:[],T:{sub:0,dis:0,tax:0,g:0},seller:{n:'C',a:'',p:'',t:'',own:false}},'A4').includes('#00BCD4'));
-T('a colour of your own ticks no preset',(setAccent('#123456'),!thScr().includes('✓ '),thScr().includes('Your colour')));
+TPL.useAccentOnPaper=true;T('and the printed document uses it when enabled',invPaper({title:'Invoice',no:'x',date:tdy,partyLabel:'Customer',party:'P',items:[],T:{sub:0,dis:0,tax:0,g:0},seller:{n:'C',a:'',p:'',t:'',own:false}},'A4').includes('#00BCD4'));
+T('a colour of your own ticks no preset',(setAccent('#123456'),!thScr().includes('accent-swatch chosen')&&thScr().includes('Your colour')));
 setAccent(accBefore);
 
 T('a soft render marks the screen so animations do not replay',(S.tab='more',render(false,true),true));
@@ -151,7 +151,7 @@ T("and a plain redraw marks none of them",!(chips(["All","Paid"],"Paid","setS").
 // A long list used to scroll its own filters away, so the thing you were filtering by vanished exactly when you
 // needed it. Every list screen puts its search and chips in one `.shead`, which stays at the top.
 T("every list screen keeps its filters in a sticky band",[list(INV,"Sales","New Invoice"),inventory(),jlScr(),qtScr(),rtScr(),ptScr(),dash()].every(h=>h.includes("class=\"shead\"")));
-T("and the band comes before the rows it filters",(()=>{const h=list([["INV-9001","Test Party","TP",100,"Paid","2026-10-01"]],"Sales","New Invoice");return h.indexOf("class=\"shead\"")>=0&&h.indexOf("class=\"shead\"")<h.indexOf("class=\"row")})());
+T("and the band comes before the rows it filters",(()=>{const h=list([["INV-9001","Test Party","TP",100,"Paid","2026-10-01"]],"Sales","New Invoice");return h.indexOf("class=\"shead\"")>=0&&h.indexOf("class=\"shead\"")<h.indexOf("class=\"listcards\"")})());
 
 // ---- All time ----------------------------------------------------------------------------------------------
 // The widest range has to be reachable in one tap, and it has to sit left of the narrower ones so the chip row

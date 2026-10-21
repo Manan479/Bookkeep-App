@@ -9,6 +9,30 @@
 .selbar .btn:first-of-type{flex:1.35}
 /* Nothing to add while rows are being picked: the New button would sit on top of the selection bar. */
 #app.selon .fab{display:none}
+.docpick{display:inline-flex;align-items:center;justify-content:center;position:relative;width:44px;height:44px;flex:none;cursor:pointer}
+.docpick input{appearance:auto;accent-color:var(--pr);width:20px;height:20px;margin:0;cursor:pointer}
+.docpick input:focus-visible{outline:3px solid var(--pr);outline-offset:5px}
+.doccard{gap:4px;padding:8px}
+@media(max-width:899px){
+  #app:not(.selon) .listcards .docpick{display:none}
+  #app:not(.selon) .doccard{padding:10px 12px}
+}
+.docopen{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-align:start;background:none;color:inherit;padding:8px;border:0;cursor:pointer}
+.docopen .grow{min-width:0;overflow-wrap:anywhere}
+.select-start{flex:none!important;width:auto;min-height:44px;font-size:12px;padding:8px 12px!important}
+.top .deskonly{display:none}
+@media(min-width:900px){.top .deskonly{display:inline-flex}}
+.pickcell{width:48px;padding:0!important}
+.dtable tr.sel,.dtable tr.sel:hover{background:var(--prt);box-shadow:inset 3px 0 var(--pr)}
+.selbar{flex-wrap:wrap}
+.selbar .selcount{flex-basis:100%;text-align:start;font-size:13px;font-weight:700}
+.selbar .btn{flex:1 0 auto;min-width:72px;min-height:44px;padding:9px 12px}
+.selbar .bulk-danger{color:var(--bad)}
+.exportchooser h2{margin:4px 0;font-size:18px}
+.exportchooser .row .lbl{display:block;margin-top:5px;line-height:1.5}
+.exportchooser .row.sel{border-color:var(--pr);background:var(--prt)}
+#app.selon .scr{padding-bottom:260px}
+@media(min-width:900px){.selbar{width:auto!important;max-width:calc(100% - 280px)!important}.selbar .selcount{flex-basis:auto;margin-inline-end:10px}}
 .scr.full{padding-bottom:150px}
 @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -390,3 +414,114 @@ html[dir="rtl"] .ic.flip{transform:scaleX(-1)}
 /* Same total padding, 2px taken from the top and given to the bottom: the line box rises, so the ink (which sits
    low inside the font's em box) lands on the button's optical centre. Height is unchanged. */
 .btn{padding-top:12px;padding-bottom:14px;line-height:1}
+@media (min-width:900px){
+  /* List screens without a sidebar (Payments, Expenses, Parties) share the table column, not the 720px form column. */
+  #app:not(.hasnav) .scr.tablemode > .top{max-width:1180px;margin:0 auto}
+  #app:not(.hasnav) .scr.tablemode > .shead{max-width:1180px;margin:0 auto;padding:12px 0 0;top:-28px}
+  #app:not(.hasnav) .scr.tablemode > .grid{max-width:1180px;margin:0 auto 10px}
+  .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Desktop exposes the complete module navigation; phones retain their compact More tab. */
+.desktop-nav{display:none}
+@media(min-width:900px){
+  .tabs.mobile-nav{display:none}
+  .tabs.desktop-nav{display:flex;overflow-y:auto;overscroll-behavior:contain;gap:2px;padding:20px 12px;scrollbar-width:thin}
+  .desktop-nav .tab{font-size:13px;min-height:40px;padding:9px 14px;text-align:start;border-radius:9px}
+  .desktop-nav .nav-module{padding-inline-start:22px}
+  .nav-brand{font-size:20px;font-weight:800;padding:0 14px 16px}
+  .nav-section{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);padding:20px 14px 6px}
+  .nav-session{margin-top:20px;border-top:1px solid var(--bd);padding-top:12px}
+  .nav-session>.lbl{display:block;padding:0 14px 6px}
+  .nav-session .tab{width:100%;color:var(--bad)}
+  .desktop-nav .tab:focus-visible{outline:2px solid var(--pr);outline-offset:-2px}
+}
+
+/* Appearance: small previews and swatches keep the colour choice quiet and legible. */
+.theme-workspace{max-width:720px;margin:0 auto}
+.theme-heading{display:flex;align-items:flex-start;gap:14px;margin:4px 0 26px}
+.theme-heading .ic{flex:none;width:42px;height:42px}
+.theme-heading h1{font-size:26px;line-height:1.25;margin:0 0 7px;letter-spacing:-.04em}
+.theme-heading p{font-size:13px;line-height:1.5;color:var(--tx2);margin:0}
+.appearance-section{background:var(--sf);border:1px solid var(--bd);border-radius:20px;padding:20px;margin-bottom:16px}
+.appearance-section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
+.appearance-section h2{font-size:15px;font-weight:700;letter-spacing:-.015em;margin:0 0 6px}
+.appearance-section-heading p{font-size:12px;line-height:1.5;color:var(--tx2);margin:0}
+.appearance-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mode-choice{min-width:0;padding:0;text-align:start;border-radius:12px}
+.mode-preview{display:flex;position:relative;overflow:hidden;height:76px;border:1px solid var(--bd);border-radius:10px;padding:8px;background:var(--mini-bg);gap:7px}
+.preview-light{--mini-bg:#f4f6f5;--mini-rail:#e4e9e6;--mini-line:#d1d9d4;--mini-tile:#ffffff}
+.preview-dark{--mini-bg:#19221e;--mini-rail:#303c35;--mini-line:#536158;--mini-tile:#2d3b32}
+.preview-system{--mini-bg:linear-gradient(110deg,#f4f6f5 48%,#19221e 49%);--mini-rail:#d5ddd8;--mini-line:#99a99e;--mini-tile:linear-gradient(110deg,#fff 40%,#2d3b32 41%)}
+.preview-rail{width:15%;background:var(--mini-rail);border-radius:3px}
+.preview-content{flex:1;padding-top:5px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.preview-line{display:block;height:4px;width:80%;border-radius:4px;background:var(--mini-line)}
+.preview-line.short{width:52%}
+.preview-tile{display:block;position:relative;flex:1;border-radius:4px;background:var(--mini-tile);margin-top:3px}
+.preview-tile:after{content:'';position:absolute;left:6px;top:7px;width:43%;height:5px;border-radius:4px;background:var(--pr)}
+.mode-choice.chosen .mode-preview{border-color:var(--pr);box-shadow:0 0 0 2px var(--pr)}
+.mode-label{display:flex;justify-content:space-between;align-items:center;gap:4px;font-size:12px;font-weight:600;padding-top:12px;min-height:36px}
+.choice-radio{display:grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--tx2);flex:none}
+.chosen .choice-radio{border-color:var(--pr)}
+.choice-radio>span{width:7px;height:7px;background:var(--pr);border-radius:50%}
+.accent-current{font-size:11px;line-height:1.6;font-weight:600;color:var(--pr);background:var(--prt);padding:4px 9px;border-radius:8px;white-space:nowrap}
+.accent-swatches{display:grid;grid-template-columns:repeat(6,minmax(44px,1fr));gap:7px;margin:-3px -4px 16px}
+.accent-swatch{min-width:44px;min-height:44px;display:grid;place-items:center;padding:4px;border-radius:50%}
+.swatch-dot{display:grid;place-items:center;width:28px;height:28px;background:var(--swatch);color:var(--swatch-ink);border-radius:50%;border:1px solid rgba(0,0,0,.1)}
+.swatch-dot svg{width:15px;height:15px}
+.accent-swatch.chosen .swatch-dot{outline:2px solid var(--swatch);outline-offset:4px}
+.custom-accent{position:relative;display:flex;align-items:center;gap:12px;min-height:70px;border-top:1px solid var(--bd);padding-top:16px;cursor:pointer}
+.custom-colour-dot{width:31px;height:31px;border:1px solid var(--bd);border-radius:9px;flex:none}
+.custom-accent b{display:block;font-size:12px;font-weight:600}
+.custom-accent small{display:block;font-size:11px;color:var(--tx2);margin-top:5px}
+.custom-hex{font-family:ui-monospace,monospace;font-size:11px;color:var(--tx2)}
+.custom-accent input[type=color]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.custom-accent:focus-within{outline:2px solid var(--pr);outline-offset:5px;border-radius:8px}
+.mode-choice:focus-visible,.accent-swatch:focus-visible,.appearance-shortcut:focus-visible{outline:2px solid var(--pr);outline-offset:5px}
+.theme-live-preview{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:18px 20px;margin-top:22px}
+.live-preview-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);font-weight:700;margin-bottom:18px}
+.live-preview-sample{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.live-preview-kicker{display:block;font-size:11px;color:var(--tx2);margin-bottom:6px}
+.live-preview-sample strong{font-size:14px;letter-spacing:-.02em}
+.preview-action{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--pr);color:var(--onpr);flex:none}
+.preview-action svg{width:18px;height:18px}
+.live-preview-line{display:block;width:100%;height:3px;border-radius:4px;background:var(--prt);margin-top:18px;overflow:hidden}
+.live-preview-line:before{content:'';display:block;width:60%;height:100%;background:var(--pr);border-radius:4px}
+.appearance-note{display:flex;align-items:flex-start;gap:9px;color:var(--tx2);font-size:11px;line-height:1.7;margin:18px 4px}
+.appearance-note svg{width:15px;height:15px;flex:none;margin-top:2px}
+.appearance-shortcut{display:flex;align-items:center;gap:14px;text-align:start;width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:0 0 18px}
+.appearance-shortcut b{display:block;font-size:14px}
+.appearance-shortcut small{display:block;color:var(--tx2);font-size:12px;margin-top:5px}
+.appearance-shortcut-icon{display:grid;place-items:center;background:var(--prt);color:var(--pr);border-radius:12px;width:42px;height:42px;flex:none}
+.appearance-shortcut-icon svg{width:22px;height:22px}
+@media(max-width:359px){.appearance-section{padding:16px}.accent-swatches{grid-template-columns:repeat(5,minmax(44px,1fr));gap:6px}.appearance-modes{gap:10px}.mode-preview{height:66px}.custom-hex{font-size:10px}}
+@media(min-width:900px){
+ .theme-heading{margin:4px 0 30px}.theme-heading h1{font-size:30px}.theme-heading p{font-size:14px}
+ .theme-workspace{max-width:640px}.appearance-section{padding:24px}.mode-preview{height:104px}.mode-label{font-size:13px}
+ .accent-swatches{grid-template-columns:repeat(12,minmax(36px,1fr));gap:7px}.accent-swatch{min-width:36px}
+ .desktop-nav .nav-appearance-shortcut{margin:12px 0 0;border:1px solid var(--bd);padding:10px 14px;display:flex;gap:12px}
+ .nav-appearance-shortcut svg{width:18px;height:18px;flex:none}
+}
+
+.register-card .docopen{width:100%}
+.register-card .docpick{margin-inline-end:4px}
+@media(max-width:899px){#app:not(.selon) .register-card>.docpick{display:none}}
+#app.selon .employee-detail~.bar-act{display:none}
+
+textarea{color:var(--tx);background:var(--sf);font:inherit}
+textarea::placeholder{color:var(--tx2)}
+.top h1{min-width:0;overflow-wrap:anywhere}
+@media(max-width:599px){.top{flex-wrap:wrap}.top h1{flex:1}.bar-act .btn{min-width:0}.sheet .bar-row{flex-wrap:wrap}}
+
+.ov.off,.ok.off{pointer-events:none}
+
+/* Optional date actions share a header row so both date values stay aligned. */
+.f .invoice-date-field{min-width:0;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:8px 12px}
+.invoice-date-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:32px}
+.invoice-date-heading small{min-width:0}
+.date-optional{flex:none;background:transparent;color:var(--pr);font:inherit;font-size:12px;font-weight:600;min-height:32px;padding:4px 6px;border-radius:6px;cursor:pointer}
+.date-optional:hover{background:var(--prt)}
+.date-optional:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+.invoice-date-field .dbtn{min-height:32px}
+.invoice-date-field .dbtn:disabled{opacity:.45;cursor:default}
+@media(pointer:coarse){.invoice-date-heading,.date-optional,.invoice-date-field .dbtn{min-height:44px}}

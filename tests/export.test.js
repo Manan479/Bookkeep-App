@@ -88,7 +88,7 @@ T('and says what its columns are',S.selCols.length===5&&S.selTitle==='Sales');
 T('nothing is selected to start with',!selOn()&&selBar()==='');
 selToggle(S.selRows[0].id);
 T('a row can be selected',selOn()&&selIds().length===1&&selIn(S.selRows[0].id));
-T('and the bar appears with what can be done',selBar().includes('CSV')&&selBar().includes('Cancel'));
+T('and the bar appears with what can be done',selBar().includes('Export')&&selBar().includes('Cancel'));
 selToggle(S.selRows[1].id);
 eq('a second row joins it',selIds().length,2);
 selToggle(S.selRows[1].id);
@@ -106,10 +106,10 @@ eq('with the list columns',S.xp.cols.length,5);
 S.sel={ids:[selIds()[0],selIds()[1]]};
 S.screen='batch';chk('the batch print view',batchScr());
 eq('one paper per selected document',(batchScr().match(/class="paperwrap"/g)||[]).length,2);
-T('and it has its own Print button',batchScr().includes('Print or save as PDF'));
+T('and it has its own Print button',batchScr().includes('doPrint()')&&batchScr().includes('Save / share PDFs'));
 S.screen='ex';exScr();S.sel={ids:(S.selRows[0]?[S.selRows[0].id]:['EXP-1'])};
-T('a selection that is not a document is not offered a PDF',!selBar().includes('PDF'));
-T('but can still be exported',selBar().includes('CSV'));
+T('expense selections offer their printable documents',selBar().includes('PDF'));
+T('but can still be exported',selBar().includes('Export'));
 selClear();T('Cancel clears the selection',!selOn());
 // The click that ends a long press must be swallowed so it does not open the row - but only that click. A flag
 // used to stay set when the phone fired no click, and then ate the next tap: Cancel and deselection each took
@@ -121,7 +121,7 @@ S.lpAt=0;
 // ---- the export chooser: CSV, PDF or an image ----------------------------------------------------------
 S.xp={title:'Sales & Co',cols:['Number','Party','Total'],rows:[['INV-1','Smith, Jones',1200],['INV-2','<b>Zara</b>',900]]};
 T('CSV is the table as a spreadsheet',csvText(S.xp.cols,S.xp.rows).split('\r\n').length===3);
-T('PDF is a printable page',pdfTableHtml(S.xp).includes('<table')&&pdfTableHtml(S.xp).includes('class="paper"'));
+T('PDF is a printable page',pdfTableHtml(S.xp).includes('<table')&&pdfTableHtml(S.xp).includes('class="paper paper-table"'));
 T('and it escapes what people typed',pdfTableHtml(S.xp).includes('&lt;b&gt;Zara&lt;/b&gt;')&&pdfTableHtml(S.xp).includes('Sales &amp; Co'));
 T('the PDF names the company and the row count',pdfTableHtml(S.xp).includes('rows'));
 T('an image cannot be drawn where there is no canvas, and says so rather than throwing',tableImage(S.xp)===null);

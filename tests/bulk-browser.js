@@ -1,0 +1,101 @@
+// Optional real-browser integration check. Requires Playwright and installed Microsoft Edge.
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const {pathToFileURL}=require('url');
+const {chromium}=require(require.resolve('playwright',{paths:[process.env.BOOKKEEP_NODE_MODULES||process.cwd()]}));
+const {PDFDocument}=require(require.resolve('pdf-lib',{paths:[process.env.BOOKKEEP_NODE_MODULES||process.cwd()]}));
+const JSZip=require(require.resolve('jszip',{paths:[process.env.BOOKKEEP_NODE_MODULES||process.cwd()]}));
+const root=path.join(__dirname,'..'),out=path.join(root,'dist','bulk-qa');fs.mkdirSync(out,{recursive:true});
+(async()=>{
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  try{
+    const page=await browser.newPage({viewport:{width:1440,height:960},acceptDownloads:true});
+    const errors=[];page.on('pageerror',e=>errors.push(e.message));
+    await page.route('https://fonts.googleapis.com/**',route=>route.abort());
+    await page.goto(pathToFileURL(path.join(root,'dist/bookkeep.html')).href);
+    await page.evaluate(()=>{
+      wipeData();USERS.length=0;S.user=null;S.quiet=true;SET.negStock='allow';
+      COMP.name='Bookkeep bulk export check';COMP.addr='Lahore';
+      CUST.push('Bulk browser buyer');
+      for(let k=0;k<3;k++){
+        openScr('inv','sale');S.cust='Bulk browser buyer';
+        S.items=[{n:'Invoice product '+k,q:2,r:100,d:5,dt:'pct',tx:5,tt:'pct',s:0}];post();
+      }
+      S.quiet=false;S.screen=null;S.tab='sales';S.period='All time';S.st='All';S.q='';render();
+    });
+    const checks=page.locator('.tablewrap [data-doc-check]');
+    await checks.nth(0).check();await checks.nth(1).check();
+    assert.equal(await page.evaluate(()=>selIds().length),2);
+    assert.equal(await page.evaluate(()=>S.screen),null,'checkbox does not open invoice');
+    assert.equal(await page.locator('.tablewrap tr.sel').count(),2);
+    assert.equal(await page.locator('[data-doc-all]').evaluate(e=>e.indeterminate),true);
+    await page.screenshot({path:path.join(out,'desktop-selection.png')});
+    await page.locator('.selbar').getByText('PDF / Share',{exact:true}).click();
+    await page.locator('[data-doc-save]').waitFor();
+    await page.waitForFunction(()=>!document.querySelector('[data-doc-save]').disabled);
+    const combinedDownload=page.waitForEvent('download');await page.locator('[data-doc-save]').click();
+    const combined=await combinedDownload;await combined.saveAs(path.join(out,'combined.pdf'));
+    assert.equal((await PDFDocument.load(fs.readFileSync(path.join(out,'combined.pdf')))).getPageCount(),2);
+    await page.locator('[data-doc-export="separate"]').click();
+    await page.waitForFunction(()=>document.querySelector('[data-doc-save]').textContent==='Save ZIP'&&!document.querySelector('[data-doc-save]').disabled);
+    const zipDownload=page.waitForEvent('download');await page.locator('[data-doc-save]').click();
+    const zipFile=await zipDownload;await zipFile.saveAs(path.join(out,'separate.zip'));
+    const zip=await JSZip.loadAsync(fs.readFileSync(path.join(out,'separate.zip')));
+    const names=Object.keys(zip.files);assert.equal(names.length,2);
+    for(const name of names)assert.equal((await PDFDocument.load(await zip.file(name).async('uint8array'))).getPageCount(),1);
+    await page.evaluate(()=>Object.defineProperty(navigator,'share',{value:undefined,configurable:true}));
+    await page.locator('[data-doc-share]').click();
+    await page.waitForFunction(()=>document.querySelector('[data-export-status]').textContent.includes('cannot share files directly'));
+    assert.match(await page.locator('[data-export-status]').innerText(),/cannot share files directly|Sharing|Choose/);
+    await page.locator('[data-doc-close]').click();
+    await page.locator('.ov.off').waitFor({state:'detached'});
+    await page.locator('.selbar').getByText('Cancel',{exact:true}).click();
+    const row=page.locator('.tablewrap tbody tr').first();await row.focus();await page.keyboard.press('Space');
+    assert.equal(await page.evaluate(()=>selIds().length),1,'keyboard Space selects row');
+    await page.evaluate(()=>selClear());
+    await page.setViewportSize({width:390,height:844});
+    assert.equal(await page.locator('.listcards [data-doc-check]').nth(0).isVisible(),false,'mobile checkboxes hidden before selecting');
+    await page.waitForFunction(()=>document.querySelectorAll('.toast').length===0&&document.getAnimations().every(a=>a.playState!=='running'));
+    await page.screenshot({path:path.join(out,'mobile-normal.png')});
+    await page.locator('.select-start').click();
+    assert.equal(await page.evaluate(()=>selIds().length),0,'Select starts without choosing invoices');
+    assert.equal(await page.locator('.listcards [data-doc-check]').nth(0).isVisible(),true,'Select reveals mobile checkboxes');
+    assert.equal(await page.locator('.selbar').getByText('PDF / Share',{exact:true}).count(),0,'no bulk actions until an invoice is selected');
+    await page.locator('.listcards [data-doc-check]').nth(0).check();
+    await page.locator('.listcards .docopen').nth(1).click();
+    assert.equal(await page.evaluate(()=>selIds().length),2,'mobile card tap extends selection');
+    await page.waitForFunction(()=>document.querySelectorAll('.toast').length===0);
+    await page.screenshot({path:path.join(out,'mobile-selection.png')});
+    const bounds=await page.locator('.selbar').boundingBox();assert(bounds.x>=0&&bounds.x+bounds.width<=390);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=390),true,'mobile actions do not overflow');
+    await page.locator('.selbar').getByText('PDF / Share',{exact:true}).click();
+    await page.waitForFunction(()=>!document.querySelector('[data-doc-save]').disabled);
+    await page.waitForFunction(()=>document.getAnimations().every(a=>a.playState!=='running'));
+    assert.equal(await page.locator('[data-doc-share]').evaluate(button=>{
+      const r=button.getBoundingClientRect();return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===button;
+    }),true,'share action is not covered by the selection bar');
+    await page.screenshot({path:path.join(out,'mobile-export.png')});
+    await page.locator('[data-doc-close]').click();
+    const longFile=await page.evaluate(async()=>{
+      const docs=selectedDocuments().slice(0,1);
+      docs[0].items=Array.from({length:65},(_,i)=>({n:'Long invoice row '+i+' — اردو',q:1,r:10,d:0,dt:'amt',tx:0,tt:'pct'}));
+      docs[0].T={sub:650,dis:0,tax:0,g:650};
+      return Array.from(await makeInvoicePdf(docs));
+    });
+    fs.writeFileSync(path.join(out,'long-invoice.pdf'),Buffer.from(longFile));
+    assert((await PDFDocument.load(Uint8Array.from(longFile))).getPageCount()>1,'long invoices paginate');
+    await page.locator('.ov.off').waitFor({state:'detached'});
+    await page.locator('.selbar').getByText('Cancel',{exact:true}).click();
+    assert.equal(await page.locator('.listcards [data-doc-check]').nth(0).isVisible(),false,'Cancel hides mobile checkboxes');
+    const card=await page.locator('.listcards .docopen').first().boundingBox();
+    await page.mouse.move(card.x+card.width/2,card.y+card.height/2);await page.mouse.down();
+    await page.waitForFunction(()=>selOn());await page.mouse.up();
+    assert.equal(await page.evaluate(()=>S.screen),null,'long press selects without opening invoice');
+    assert.equal(await page.locator('.listcards [data-doc-check]').nth(0).isVisible(),true,'long press reveals mobile checkboxes');
+    assert.equal(await page.evaluate(()=>window.appBack()),true,'Android back exits selection first');
+    assert.equal(await page.locator('.listcards [data-doc-check]').nth(0).isVisible(),false,'back hides mobile checkboxes');
+    await page.setViewportSize({width:1440,height:960});
+    assert.equal(await checks.nth(0).isVisible(),true,'desktop checkboxes remain visible');
+    assert.deepEqual(errors,[]);
+    console.log('Desktop/mobile selection, keyboard, combined PDF, separate PDF ZIP, sharing fallback and pagination passed.');
+  }finally{await browser.close()}
+})().catch(error=>{console.error(error);process.exit(1)});

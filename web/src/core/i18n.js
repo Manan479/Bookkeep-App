@@ -25,6 +25,10 @@ const UR={
  // ---- theme screen
  'Light or dark':'روشن یا تاریک','System':'سسٹم','Light':'روشن','Dark':'تاریک',
  'Accent colour':'نمایاں رنگ','Any other colour — tap the circle':'کوئی بھی دوسرا رنگ — دائرے پر ٹیپ کریں',
+ 'Use app accent on invoices':'انوائس پر ایپ کا منتخب رنگ استعمال کریں',
+ 'Off uses neutral ink in previews, PDFs and print.':'بند ہونے پر پیش منظر، پی ڈی ایف اور پرنٹ میں غیر رنگین سیاہی استعمال ہوتی ہے۔',
+ 'Used for buttons and highlights.':'بٹن اور نمایاں حصوں کے لیے استعمال ہوتا ہے۔',
+ 'Saved automatically. Display mode stays on this device only. Invoice colours are optional.':'خود محفوظ ہوتا ہے۔ ڈسپلے کا انداز صرف اس ڈیوائس پر رہتا ہے۔ انوائس کے رنگ اختیاری ہیں۔',
  'Used by the buttons, the tab bar and your printed invoices.':'بٹن، ٹیب بار اور آپ کے پرنٹ شدہ انوائسز میں استعمال ہوتا ہے۔',
  'The theme is saved on this device only, so a phone and a computer can look different. The invoice title and the currency live with your documents and your company.':'تھیم صرف اسی ڈیوائس پر محفوظ ہوتی ہے، اس لیے فون اور کمپیوٹر مختلف دکھ سکتے ہیں۔ انوائس کا عنوان اور کرنسی آپ کے دستاویزات اور کمپنی کے ساتھ محفوظ ہیں۔',
 
@@ -90,7 +94,22 @@ const UR={
  'New entry':'نیا اندراج','New quotation':'نیا کوٹیشن','New return':'نئی واپسی'
 };
 
+Object.assign(UR,{
+ 'Appearance':'ظاہری انداز',
+ 'Appearance and colours':'ظاہری انداز اور رنگ',
+ 'Make your workspace comfortable.':'اپنے کام کی جگہ کو اپنی پسند کے مطابق بنائیں۔',
+ 'Light or dark. Or let your device decide.':'روشن، گہرا، یا ڈیوائس کی ترتیب کے مطابق۔',
+ 'Used for buttons, highlights and invoices.':'بٹنوں، نمایاں حصوں اور انوائس کے لیے۔',
+ 'Custom colour':'اپنی پسند کا رنگ',
+ 'Choose any shade':'کوئی بھی رنگ منتخب کریں',
+ 'Live preview':'براہِ راست پیش نظارہ',
+ 'Sample invoice':'نمونہ انوائس',
+ 'Saved automatically. Display mode stays on this device only; your accent also colours printed invoices.':'تبدیلیاں خود محفوظ ہوتی ہیں۔ ڈسپلے کا انداز صرف اس ڈیوائس پر رہتا ہے؛ منتخب رنگ پرنٹ شدہ انوائس پر بھی استعمال ہوتا ہے۔'
+});
+
 const lang=()=>S.lang==='ur'?'ur':'en';
 const isRTL=()=>lang()==='ur';
 // Look a phrase up. A phrase with no entry stays English, which is the safe way round for a shopkeeper.
 const tr=s=>lang()==='ur'?(UR[s]||s):s;
+
+Object.assign(UR,{'Run salaries':'تنخواہیں درج کریں','Advance recovered':'وصول شدہ پیشگی رقم','Monthly advance recovery':'پیشگی رقم کی ماہانہ وصولی','Employee payment':'ملازم کو ادائیگی','Employee payments':'ملازمین کو ادائیگیاں','Employee advance':'ملازم کو پیشگی رقم','Employee advances':'ملازمین کی پیشگی رقوم','Record actions':'ریکارڈ کے اختیارات','Edit':'ترمیم','Export':'برآمد کریں','Delete / Void':'حذف / منسوخ','Delete permanently':'مستقل حذف کریں','Void':'منسوخ','Save changes':'تبدیلیاں محفوظ کریں','Save payment':'ادائیگی محفوظ کریں','Save expense':'خرچ محفوظ کریں','Add expense':'خرچ شامل کریں','Payment status':'ادائیگی کی حالت','Paid by company':'کمپنی نے ادا کیا','Paid personally by employee':'ملازم نے ذاتی طور پر ادا کیا','Unpaid — pay later':'غیر ادا شدہ — بعد میں ادائیگی','Company cash / bank account':'کمپنی کا نقد / بینک کھاتہ','Employee who paid personally':'ذاتی ادائیگی کرنے والا ملازم','Related sales invoice (optional)':'متعلقہ فروخت کا انوائس (اختیاری)','Charge name':'اضافی رقم کا نام','Amount':'رقم','Additional charge':'اضافی رقم','Add charge':'اضافی رقم شامل کریں','Remove charge':'اضافی رقم ہٹائیں','Tax (%)':'ٹیکس (%)','Subtotal':'ذیلی کل','Discount':'رعایت','Grand total':'مجموعی رقم','Balance due':'واجب الادا رقم','Salary runs':'تنخواہوں کے اندراجات','Advances':'پیشگی رقوم','Advance outstanding':'باقی پیشگی رقم','Owed to staff':'ملازمین کی واجب الادا رقم','Advances out':'دی گئی پیشگی رقوم','Monthly recovery':'ماہانہ وصولی','Transfers':'کھاتوں میں منتقلی','Transfer':'منتقلی','From':'سے','To':'کو','Paid from':'ادائیگی کا کھاتہ','Notes':'نوٹس','Employee':'ملازم','Date':'تاریخ','Category':'زمرہ','Designation':'عہدہ','Joined':'شمولیت','Basic':'بنیادی تنخواہ','Bonus':'اضافی تنخواہ','Net pay':'خالص تنخواہ','Scan or enter product code':'اسکین کریں یا پروڈکٹ کوڈ لکھیں','Barcode / product code':'بارکوڈ / پروڈکٹ کوڈ','Use camera':'کیمرہ استعمال کریں','Add product':'پروڈکٹ شامل کریں','Select employee':'ملازم منتخب کریں','Invoice title':'انوائس کا عنوان','Text size':'متن کا سائز','Font style':'فونٹ کا انداز','Document style':'دستاویز کا انداز','Row spacing':'قطاروں کا فاصلہ','Typography and layout':'متن اور ترتیب','Invoice templates':'انوائس کے نمونے','Company profile':'کمپنی کی معلومات','Edit notes':'نوٹس میں ترمیم','Phone':'فون','Email':'ای میل','Back':'واپس','Close':'بند کریں','Preview':'پیش نظارہ','Print':'پرنٹ','Save PDF':'پی ڈی ایف محفوظ کریں','Share':'شیئر کریں'});

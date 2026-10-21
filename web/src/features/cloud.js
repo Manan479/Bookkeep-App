@@ -11,8 +11,8 @@ function clScr(){const cfg=cloudCfg(),auth=cloudAuth(),meta=cloudMeta(),r=S.clou
  return `<div class="scr full"><div class="top"><button class="ic" onclick="S.screen='st';render()">‹</button><h1>Cloud sync</h1><span style="width:38px"></span></div>
  ${S.cloudErr?'<div class="alert a2" style="margin-bottom:10px">'+S.cloudErr+'</div>':''}
  ${status==='setup'?`<div class="card"><div class="t">Connect a Supabase project</div><div class="lbl sm" style="margin:6px 0 10px">Create a free project at supabase.com, open its SQL editor and run <b>db/supabase.sql</b>, then paste the Project URL and the <b>anon</b> key from Project Settings → API. The anon key is public by design; row-level security is what protects the data.</div>
-  <div class="f"><label class="w"><small>Project URL</small><input id="cu" placeholder="https://xxxx.supabase.co" value="${cfg?cfg.url:''}"></label>
-  <label class="w"><small>Anon key</small><input id="ck" placeholder="eyJhbGci..." value="${cfg?cfg.key:''}"></label></div>
+  <div class="f"><label class="w"><small>Project URL</small><input id="cu" placeholder="https://xxxx.supabase.co" value="${docAttr(cfg?cfg.url:'')}"></label>
+  <label class="w"><small>Anon key</small><input id="ck" placeholder="eyJhbGci..." value="${docAttr(cfg?cfg.key:'')}"></label></div>
   <button class="btn p" style="width:100%;flex:none;margin-top:10px" onclick="clSaveCfg()">Save and continue</button>
   <div class="lbl sm" style="margin-top:10px">Without this the app works exactly as before, entirely on this device.</div></div>`:''}
  ${status==='signin'?`<div class="card"><div class="t">Sign in for ${cfg.url.replace(/^https?:\/\//,'')}</div>

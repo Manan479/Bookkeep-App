@@ -36,14 +36,14 @@ if (process.env.BUNDLE) {   // BUNDLE=1 node tests/run.js  tests the single-file
   catch (e) { problems.push('LOAD ERROR in bundle: ' + e.message); }
 } else for (const s of scripts) {
   try { vm.runInThisContext(fs.readFileSync(path.join(web, s), 'utf8'), { filename: s }); }
-  catch (e) { problems.push('LOAD ERROR in ' + s + ': ' + e.message); break; }
+  catch (e) { problems.push('LOAD ERROR in ' + s + ': ' + e.stack); break; }
 }
 
 // 4. Tests
 if (!problems.length) {
   for (const f of fs.readdirSync(__dirname).filter(f => f.endsWith('.test.js')).sort()) {
     try { vm.runInThisContext('(function(){' + fs.readFileSync(path.join(__dirname, f), 'utf8') + '\n})()', { filename: f }); }
-    catch (e) { problems.push('TEST ERROR in ' + f + ': ' + e.message); }
+    catch (e) { problems.push('TEST ERROR in ' + f + ': ' + e.stack); }
   }
 }
 outs.forEach(o => problems.push(o));
