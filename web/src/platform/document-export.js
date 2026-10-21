@@ -6,9 +6,12 @@ async function invoicePdfPages(d){
  try{
   if(document.fonts&&document.fonts.ready)await document.fonts.ready;
   const paper=host.querySelector('.paper');if(!paper)throw new Error('The document preview is not available.');
-  paper.style.transform='none';paper.style.boxShadow='none';paper.style.margin='0';
+  paper.style.transform='none';paper.style.boxShadow='none';paper.style.margin='0';paper.style.position='relative';paper.style.left='0';paper.style.top='0';
   await Promise.all(Array.from(paper.querySelectorAll('img')).map(image=>image.complete?Promise.resolve():new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('The invoice logo could not be loaded.'))})));
   fitPage(paper);
+  const pages=[];
+  for(const sheet of paginateInvoicePaper(paper)){
+  const paper=sheet;
   const width=Math.ceil(paper.getBoundingClientRect().width),height=Math.ceil(paper.getBoundingClientRect().height);
   const thermal=f==='80mm'||f==='58mm',pageHeight=thermal?height:f==='A5'?794:1123;
   // Capture at high resolution with the loaded fonts and the actual preview template.
@@ -19,7 +22,7 @@ async function invoicePdfPages(d){
   const keepTogether=Array.from(paper.querySelectorAll('tr,.terms,[data-paper-footer]')).map(element=>{
    const rect=element.getBoundingClientRect();return {top:rect.top-origin,bottom:rect.bottom-origin};
   }).filter(rect=>rect.bottom-rect.top<pageHeight);
-  const pages=[];let offset=0;
+  let offset=0;
   while(offset<height){
    let end=Math.min(offset+pageHeight,height);
    if(!thermal&&end<height){
@@ -32,6 +35,7 @@ async function invoicePdfPages(d){
    ctx.drawImage(rendered,0,offset*2,width*2,(end-offset)*2,0,0,width*2,(end-offset)*2);
    const dimensions=f==='A5'?[419.53,595.28]:f==='80mm'?[226.77,pageHeight*.75]:f==='58mm'?[164.41,pageHeight*.75]:[595.28,841.89];
    pages.push({image:canvas.toDataURL('image/png'),width:dimensions[0],height:dimensions[1]});offset=end;
+  }
   }
   return pages;
  }finally{host.remove()}
@@ -48,7 +52,8 @@ function shareVisiblePaper(){
  const paper=document.querySelector('.paper');if(!paper){toast('Open the document preview first');return}
  const heading=document.querySelector('.pvhead h1');
  const no=S.screen==='prev'?pno():heading?heading.textContent:'Document';
- documentActions([{no,html:paper.outerHTML,format:S.fmt||SET.fmt||'A4'}]);
+ const wrapper=paper.closest('.paperwrap');
+ documentActions([{no,html:wrapper&&wrapper._paperSource||paper.outerHTML,format:S.fmt||SET.fmt||'A4'}]);
 }
 
 async function prepareDocumentFiles(docs,mode){

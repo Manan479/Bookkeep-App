@@ -30,6 +30,14 @@ After the APK build, the user reported excessive empty space above the dashboard
 
 Shared HTML and packaged desktop web resources were refreshed. **The user then approved rebuilding: the APK below now includes this correction; Gradle assembleDebug succeeded.** Native device verification remains outstanding; do not claim the reported phone layout has been verified from a desktop render.
 
+## Invoice density, page breaks and printing update
+
+Invoice rows now reduce vertical padding from the selected spacing down to a 4 px minimum (or retain a smaller explicitly selected setting). Beyond that, `paginateInvoicePaper` creates separate A4/A5 sheets with repeated invoice/column headers. Final rows are kept with the totals, terms and footer where possible. Preview and PDF invoke the same paginator; sharing from preview uses its full source rather than only the first sheet. Thermal paper retains continuous flow. Extremely tall individual rows or an oversized final section can still require overflow handling; avoid claiming every content combination was verified.
+
+The footer is raised by extra bottom paper padding; the blank stamp/signature area is retained. Print styles clear preview offsets/scaling, app backgrounds and chrome. Android's new `Printer.printDocument(job, format)` selects A4/A5 or thermal dimensions with zero requested margins; `printPage(job)` remains as the compatibility path. Printing must not default a selected A4 invoice to Letter.
+
+Source syntax checks and standalone generation were performed; functional/browser/device checks were not run for this change. Shared HTML and packaged desktop web resources were refreshed. **The existing APK predates these pagination/print changes. Ask before building it.**
+
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.

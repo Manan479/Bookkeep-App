@@ -141,11 +141,24 @@ class MainActivity : AppCompatActivity() {
     // window.print() does nothing in a WebView. Android's own print dialog does, and it offers "Save as PDF".
     inner class Printer {
         @JavascriptInterface
-        fun printPage(job: String) {
+        fun printPage(job: String) = printDocument(job, "A4")
+
+        @JavascriptInterface
+        fun printDocument(job: String, format: String) {
             runOnUiThread {
                 try {
                     val pm = getSystemService(Context.PRINT_SERVICE) as PrintManager
-                    pm.print(job, web.createPrintDocumentAdapter(job), PrintAttributes.Builder().build())
+                    val paper = when (format) {
+                        "A5" -> PrintAttributes.MediaSize.ISO_A5
+                        "80mm" -> PrintAttributes.MediaSize("BOOKKEEP_80", "80 mm", 3150, 11693)
+                        "58mm" -> PrintAttributes.MediaSize("BOOKKEEP_58", "58 mm", 2283, 11693)
+                        else -> PrintAttributes.MediaSize.ISO_A4
+                    }
+                    val attributes = PrintAttributes.Builder()
+                        .setMediaSize(paper)
+                        .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
+                        .build()
+                    pm.print(job, web.createPrintDocumentAdapter(job), attributes)
                 } catch (e: Exception) {
                 }
             }

@@ -196,7 +196,7 @@ function exportSheet(){const x=S.xp;if(x&&x.invoiceIds){invoiceExportSheet(x.inv
  (o.querySelectorAll?o.querySelectorAll('[data-x]'):[]).forEach(b=>b.onclick=()=>{const k=b.dataset.x;o.remove();
   if(k==='csv')exportCsv();else if(k==='pdf')exportPdf();else exportImage()});
  $('#app').append(o)}
-const doPrint=()=>{toast('Sending to printer');setTimeout(()=>{try{if(window.Printer&&window.Printer.printPage)window.Printer.printPage(document.title||'Bookkeep');else window.print()}catch(e){}},400)};
+const doPrint=()=>{fitPaper();toast('Sending to printer');setTimeout(()=>{try{const format=S.fmt||SET.fmt||'A4';let style=document.getElementById('document-print-size');if(!style){style=document.createElement('style');style.id='document-print-size';document.head.appendChild(style)}style.textContent='@page{size:'+({'A4':'A4','A5':'A5','80mm':'80mm 297mm','58mm':'58mm 297mm'}[format]||'A4')+';margin:0}';if(window.Printer&&window.Printer.printDocument)window.Printer.printDocument(document.title||'Bookkeep',format);else if(window.Printer&&window.Printer.printPage)window.Printer.printPage(document.title||'Bookkeep');else window.print()}catch(e){}},400)};
 
 // ---- long press to select rows ------------------------------------------------------------------------
 // Any list that gives its rows data-sel="id" gets this for nothing: press and hold starts a selection, a
@@ -270,22 +270,59 @@ function fitPage(p){
  if(p.classList.contains('paper-table')){p.style.fontSize='12px';p.querySelectorAll('td,th').forEach(c=>{c.style.padding='6px';c.style.fontSize='12px';c.style.overflowWrap='anywhere'});p.style.minHeight='1123px';return}
  if(f==='80mm'||f==='58mm'){p.style.minHeight='0px';return}
  const H=f==='A5'?794:1123;
- // Never round a fractional overflow up to another full blank sheet. The paper grows only
- // when its content needs room; PDF pagination then handles real additional pages.
+ // Measure at the selected paper size before reducing row gaps and creating sheets.
  p.style.minHeight=H+'px';
  const lg=p.querySelector('.company-heading>.lgimg,.company-heading>.logo');
  if(lg)lg.style.width=lg.style.height=Math.round(Math.min(f==='A5'?120:170,Math.max(f==='A5'?82:116,(p.querySelector('.company-heading-copy')||{}).offsetHeight||0)))+'px';
 }
+// Reduce item padding first; only then create real sheets with repeated invoice headers.
+function paginateInvoicePaper(p){
+ const table=p.querySelector('.invoice-lines');if(!table||p.classList.contains('t80')||p.classList.contains('t58'))return [p];
+ const H=p.classList.contains('a5')?794:1123,requested=invoiceAppearance(p.classList.contains('a5')?'A5':'A4').padding;
+ const fits=page=>page.offsetHeight<=H+1&&page.scrollHeight<=H+1;
+ let padding=requested;
+ while(!fits(p)&&padding>Math.min(4,requested)){
+  padding=Math.max(Math.min(4,requested),padding-1);
+  p.querySelectorAll('td').forEach(td=>td.style.padding=padding+'px 0');
+ }
+ if(fits(p)){p.style.height=H+'px';return [p]}
+ const rows=Array.from(table.querySelectorAll('tbody>tr')),summary=p.querySelector('.invoice-summary'),footer=p.querySelector('[data-paper-footer]');
+ if(!summary||!footer||!rows.length)return [p];
+ const template=p.cloneNode(true);template.querySelector('tbody').innerHTML='';template.querySelector('.invoice-summary').remove();template.querySelector('[data-paper-footer]').remove();
+ const pages=[];
+ function sheet(){const page=template.cloneNode(true);page.style.height='auto';p.parentNode.insertBefore(page,p);pages.push(page);return page}
+ let page=sheet();
+ for(const row of rows){
+  let body=page.querySelector('tbody');body.appendChild(row);
+  if(!fits(page)&&body.children.length>1){row.remove();page=sheet();page.querySelector('tbody').appendChild(row)}
+ }
+ page.append(summary,footer);
+ if(!fits(page)){
+  const previous=page;summary.remove();footer.remove();page=sheet();page.append(summary,footer);
+  const source=previous.querySelector('tbody'),target=page.querySelector('tbody');
+  // Keep as many of the final items as possible with totals, terms and signing fields.
+  while(source.lastElementChild){const row=source.lastElementChild;target.prepend(row);if(!fits(page)){source.appendChild(row);break}}
+  if(!source.children.length){previous.remove();pages.splice(pages.indexOf(previous),1)}
+ }
+ p.remove();
+ pages.forEach((page,index)=>{if(fits(page))page.style.height=H+'px';const number=document.createElement('div');number.className='invoice-page-number';number.textContent=(index+1)+' / '+pages.length;page.appendChild(number)});
+ return pages;
+}
 function fitPaper(){document.querySelectorAll('.paperwrap').forEach(w=>{
- const p=w.querySelector(':scope > .paper');if(!p)return;fitPage(p);
+ if(w._paperSource)w.innerHTML=w._paperSource;
+ const p=w.querySelector(':scope > .paper');if(!p)return;
+ if(p.querySelector('.invoice-lines'))w._paperSource=p.outerHTML;
+ fitPage(p);p.style.transform='none';const pages=paginateInvoicePaper(p);
  const wide=window.matchMedia&&window.matchMedia('(min-width:900px)').matches,thermal=p.classList.contains('t80')||p.classList.contains('t58');
  const pageHeight=p.classList.contains('a5')?794:1123,availH=wide?Math.max(400,window.innerHeight-210):1e9;
- const parent=w.parentElement,available=Math.max(1,parent.clientWidth-32);
- const scale=Math.min(1,available/p.offsetWidth,thermal?1:availH/pageHeight);
- p.style.transform='scale('+scale+')';w.style.width=p.offsetWidth*scale+'px';w.style.height=p.offsetHeight*scale+'px';
+ const available=Math.max(1,w.parentElement.clientWidth-32),scale=Math.min(1,available/pages[0].offsetWidth,thermal?1:availH/pageHeight);
+ let top=0;
+ pages.forEach(page=>{page.style.transform='scale('+scale+')';page.style.position='absolute';page.style.left='0';page.style.top=top+'px';top+=page.offsetHeight*scale+16});
+ w.style.width=pages[0].offsetWidth*scale+'px';w.style.height=Math.max(0,top-16)+'px';
 })}
 
 window.addEventListener('resize',fitPaper);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitPaper);
 function pick(cur,cb,clr,range){const base=new Date((cur||tdy)+'T00:00');let y=base.getFullYear(),m=base.getMonth(),a=null,b=null;const o=document.createElement('div');o.className='ov';
 const draw=()=>{const first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),iso=d=>y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');let h='';for(let i=0;i<first;i++)h+='<span></span>';
 for(let d=1;d<=n;d++){const k=iso(d),on=range?(k===a||k===b):k===cur,inr=range&&a&&b&&k>a&&k<b;h+='<button class="cd'+(on?' on':'')+(inr?' inr':'')+(k===tdy?' td':'')+'" data-d="'+k+'">'+d+'</button>'}

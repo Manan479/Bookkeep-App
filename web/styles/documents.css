@@ -87,3 +87,31 @@
 .paper-table th,.paper-table td{overflow-wrap:anywhere;word-break:break-word;white-space:normal;text-align:left!important}
 .paper-table th{background:#edf1ee;color:#111}
 .paper-table tr{break-inside:avoid}
+
+/* Keep the signing lines above the paper edge without reducing the blank stamp area. */
+.paper:not(.a5):not(.t80):not(.t58){padding-bottom:64px}
+.paper.a5{padding-bottom:46px}
+.paper .invoice-lines{table-layout:fixed}
+.paper .invoice-lines th:first-child{width:44%}
+.paper .invoice-lines td{overflow-wrap:anywhere}
+.invoice-page-number{position:absolute;bottom:16px;left:0;right:0;text-align:center;color:#666;font-size:10px}
+
+/* Printing must discard the centred, scaled screen preview and app chrome entirely. */
+@media print{
+ @page{size:A4;margin:0}
+ html,body{margin:0!important;padding:0!important;height:auto!important;background:white!important}
+ #app{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;position:static!important}
+ #app .scr,#app .paperbatch,#app .ov,#app .sheet{position:static!important;inset:auto!important;display:block!important;overflow:visible!important;width:auto!important;max-width:none!important;height:auto!important;max-height:none!important;margin:0!important;padding:0!important;transform:none!important;background:white!important;border:0!important;box-shadow:none!important;animation:none!important}
+ .pvhead,.bar-act,.tabs,.desktop-nav,.selbar,.fab,.sizecap,.toast,[data-close-print]{display:none!important}
+ #app .scr>:not(.paperwrap):not(.paperbatch){display:none!important}
+ body>.pdf-render-host{display:none!important}
+ #app .paperwrap{position:static!important;width:auto!important;height:auto!important;margin:0!important;padding:0!important;overflow:visible!important}
+ #app .paper{position:relative!important;inset:auto!important;transform:none!important;margin:0!important;box-shadow:none!important;border-radius:0!important;break-after:page;page-break-after:always;break-inside:avoid;width:210mm!important;min-height:297mm!important}
+ #app .paper[style*="height: 1123px"]{height:297mm!important}
+ #app .paper.a5{width:148mm!important;min-height:210mm!important}
+ #app .paper.a5[style*="height: 794px"]{height:210mm!important}
+ #app .paper.t80{width:80mm!important;min-height:0!important;height:auto!important;break-inside:auto}
+ #app .paper.t58{width:58mm!important;min-height:0!important;height:auto!important;break-inside:auto}
+ .paper thead{display:table-header-group}
+ .paper tr,.invoice-summary{break-inside:avoid;page-break-inside:avoid}
+}
