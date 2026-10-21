@@ -198,13 +198,14 @@ class MainActivity : AppCompatActivity() {
         surface = FrameLayout(this)
         surface.addView(web, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
         setContentView(surface)
-        // Keep controls clear of the clock, camera cutout, gesture area and keyboard. The surface
-        // paints behind the transparent system bars with exactly the same colour as the web screen.
+        // This surface owns system/keyboard insets. Consume them after padding so the WebView
+        // does not reserve the same status/gesture areas again through CSS safe-area values.
+        // The surface paints behind the transparent bars with the web screen's background.
         ViewCompat.setOnApplyWindowInsetsListener(surface) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             val keyboard = insets.getInsets(WindowInsetsCompat.Type.ime())
             view.setPadding(bars.left, bars.top, bars.right, maxOf(bars.bottom, keyboard.bottom))
-            insets
+            WindowInsetsCompat.CONSUMED
         }
         ViewCompat.requestApplyInsets(surface)
         val initiallyDark = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES

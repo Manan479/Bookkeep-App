@@ -1,9 +1,11 @@
 /* theme.css - colour tokens (light and dark), base elements, page shell. Screens use these tokens only. */
-:root{--bg:#F1F4F2;--sf:#fff;--sf2:#F4F7F5;--bd:#E3E9E5;--tx:#13201A;--tx2:#6B7A72;--pr:#0F5B3F;--prt:#E1F2E9;--onpr:#fff;--ok:#1E8E5A;--bad:#D23B3B;--warn:#D98A0B;--info:#3A6FD8;--mut:#8A958F;--bar2:#B7DCC8;--sh:0 1px 3px rgba(15,50,35,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#F1F4F2;--sf:#fff;--sf2:#F4F7F5;--bd:#E3E9E5;--tx:#13201A;--tx2:#6B7A72;--pr:#0F5B3F;--prt:#E1F2E9;--onpr:#fff;--ok:#1E8E5A;--bad:#D23B3B;--warn:#D98A0B;--info:#3A6FD8;--mut:#8A958F;--bar2:#B7DCC8;--sh:0 1px 3px rgba(15,50,35,.08);box-sizing:border-box;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B120F;--sf:#131D18;--sf2:#18251F;--bd:#223029;--tx:#E8EFEB;--tx2:#8FA096;--pr:#4FC08A;--prt:rgba(79,192,138,.14);--onpr:#06190F;--ok:#4FC08A;--bad:#EE7A7A;--warn:#E9B04A;--info:#7FA2EE;--mut:#7A877F;--bar2:#2C5A45;--sh:none}}
 :root[data-theme="dark"]{--bg:#0B120F;--sf:#131D18;--sf2:#18251F;--bd:#223029;--tx:#E8EFEB;--tx2:#8FA096;--pr:#4FC08A;--prt:rgba(79,192,138,.14);--onpr:#06190F;--ok:#4FC08A;--bad:#EE7A7A;--warn:#E9B04A;--info:#7FA2EE;--mut:#7A877F;--bar2:#2C5A45;--sh:none}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
+/* Android pads the native viewport; browsers reserve safe areas here, once. */
+:root.native-theme{--safe-top:0px;--safe-bottom:0px}
 .native-theme body{transition:none}
 body{background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;transition:background .3s,color .3s}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}

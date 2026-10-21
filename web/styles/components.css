@@ -1,8 +1,9 @@
 /* components.css - buttons, cards, rows, chips, sheets, calendar, forms, tab bar, animations. */
+/* The viewport already excludes safe areas; controls use ordinary spacing within it. */
 .scr{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 176px;animation:in .25s ease}
 /* 176px, not 110: the New Invoice button sits above the tab bar and was covering the last row of every list. */
 .row.sel{border-color:var(--pr);background:var(--prt)}
-.selbar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:12;display:flex;gap:8px;align-items:center}
+.selbar{position:absolute;left:14px;right:14px;bottom:14px;background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:12;display:flex;gap:8px;align-items:center}
 /* "Deselect all" is the longest label in the app's tightest row, so the select-all button gets a little more
    room than the others and the text never wraps. */
 .selbar .btn{flex:1;min-width:0;padding:11px 4px;font-size:11.5px;white-space:nowrap}
@@ -115,14 +116,14 @@
 .xl span{flex:1;text-align:center;font-size:10.5px;color:var(--tx2)}
 .fab{position:absolute;left:16px;right:16px;bottom:96px;background:var(--pr);color:var(--onpr);padding:15px;border-radius:99px;font-weight:700;box-shadow:0 6px 18px rgba(15,91,63,.35);z-index:5;transition:transform .15s}
 .fab:active,.btn:active,.row:active,.chip:active{transform:scale(.97)}
-.tabs{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--bd);border-radius:26px;display:flex;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:10}
+.tabs{position:absolute;left:14px;right:14px;bottom:14px;background:var(--sf);border:1px solid var(--bd);border-radius:26px;display:flex;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.14);z-index:10}
 .tab{flex:1;padding:7px 0;border-radius:20px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10.5px;font-weight:600;color:var(--tx2);transition:all .25s}
 .tab i{font-style:normal;font-size:18px;transition:transform .25s}
 .tab.on{background:var(--prt);color:var(--pr)}
 .tab.on i{transform:translateY(-2px) scale(1.12)}
 .btn{padding:13px;border-radius:99px;font-weight:700;border:1.5px solid var(--pr);color:var(--pr);flex:1;transition:transform .15s}
 .btn.p{background:var(--pr);color:var(--onpr)}
-.bar-act{position:absolute;left:0;right:0;bottom:0;background:var(--sf);border-top:1px solid var(--bd);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:6}
+.bar-act{position:absolute;left:0;right:0;bottom:0;background:var(--sf);border-top:1px solid var(--bd);padding:12px 16px 12px;display:flex;gap:10px;z-index:6}
 .tot div{display:flex;justify-content:space-between;padding:5px 0;font-variant-numeric:tabular-nums}
 .tot .g{font-weight:800;font-size:16px;border-top:1px solid var(--bd);margin-top:4px;padding-top:9px}
 .tot .bal{background:var(--prt);color:var(--pr);border-radius:10px;padding:10px;font-weight:800;margin-top:6px}
@@ -144,7 +145,7 @@
 .tg.on:after{transform:translateX(18px)}
 .ov{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;animation:fd .2s}
 @keyframes fd{from{opacity:0}}
-.sheet{background:var(--sf);border-radius:24px 24px 0 0;width:100%;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px));animation:up .3s cubic-bezier(.2,.9,.3,1.1)}
+.sheet{background:var(--sf);border-radius:24px 24px 0 0;width:100%;padding:16px 16px 24px;animation:up .3s cubic-bezier(.2,.9,.3,1.1)}
 @keyframes up{from{transform:translateY(100%)}}
 /* Closing. Every sheet, confirmation and success panel leaves the way it arrived: the sheet slides back
    down while the overlay fades out, and `forwards` holds that end state because the element is removed a
@@ -162,7 +163,7 @@
 .ok circle{fill:var(--prt)}
 .ok path{stroke:var(--pr);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:70;stroke-dashoffset:70;animation:dr .5s .15s forwards}
 @keyframes dr{to{stroke-dashoffset:0}}
-.toast{position:absolute;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 20px;border-radius:14px;font-weight:600;font-size:13.5px;max-width:calc(100% - 40px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:40;animation:tin .22s ease-out}
+.toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 20px;border-radius:14px;font-weight:600;font-size:13.5px;max-width:calc(100% - 40px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:40;animation:tin .22s ease-out}
 /* The toast is centred with a transform, so its own animation must repeat that transform in BOTH frames.
    Sharing the generic 'in' keyframe dropped the translateX and made it jump sideways as it appeared. */
 @keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%)}}

@@ -24,6 +24,12 @@ Source checkpoint before this documentation update: **`a0ac0a2`**, on branch `ma
 - Scroll positions and return routes are remembered. Search focus/caret, optional dropdown choices, disabled states, action-bar overlap, dialog closing/focus, dark textareas, icons and Urdu labels received fixes.
 - **Most recent UI fix:** invoice and due/expiry dates have matching header rows and aligned values. The oversized filled toggle is now a quiet Add/Remove action. This applies to sales, purchases and quotations, with date enabled or disabled.
 
+## Latest mobile inset correction
+
+After the APK build, the user reported excessive empty space above the dashboard and below navigation. Android was padding the native surface but forwarding the same insets to WebView; CSS also reserved safe areas at the root and again on bottom controls. The native listener now consumes handled insets, `.native-theme` disables web safe-area padding, and bottom controls use ordinary spacing inside the already safe viewport. Browser safe areas remain at the root once. Keyboard padding still uses the larger of the keyboard/navigation insets.
+
+Shared HTML and packaged desktop web resources were refreshed. **The APK listed below predates this correction. Ask before rebuilding it.** Native device verification remains outstanding; do not claim the reported phone layout has been verified from a desktop render.
+
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.
