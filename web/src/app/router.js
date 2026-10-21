@@ -7,14 +7,14 @@ window.appBack=()=>{const ov=document.querySelector('.ov:not(.off)');if(ov){ov.r
 const routeScrollMemory=new Map();
 let desktopNavScroll=0;
 function scrollRouteKey(){const sc=S.screen||'tab:'+S.tab;const detail=({rpt:S.rpk,pd:S.pk&&S.pk.n,pmd:S.pmk&&S.pmk.id,qd:S.qk,cbd:S.ac,acd:S.acct,dd:S.di,stfp:S.stfk,inv:S.editNo,prod:S.pi,jd:S.jk&&S.jk.id,rtd:S.rk&&S.rk.id,stmt:S.stn})[S.screen];return sc+(detail!=null?':'+detail:'')}
-function render(skel,soft){applyAccent();applyLang();const a=$('#app');
+function render(skel,soft){lpUp();applyAccent();applyLang();const a=$('#app');
 // The figures on screen now, in order, so a soft render can move from the old value to the new one instead of
 // snapping. Read before the screen is torn down; it is the only place the previous numbers still exist.
 let focused=null;try{const e=document.activeElement;if(soft&&e&&a.contains(e)&&e.matches('input,textarea')){focused={id:e.id,index:[...a.querySelectorAll('input,textarea')].indexOf(e),start:e.selectionStart,end:e.selectionEnd}}}catch(e){}
 let prevN=[];try{prevN=[...a.querySelectorAll('[data-n]')].map(e=>+e.dataset.n||0)}catch(e){}
 // Where the page and each horizontal filter row were scrolled to. A soft render rebuilds the screen, and a
 // rebuilt element starts at zero - so tapping a filter used to jump both chip rows back to their left edge.
-let prevChips=[],prevTop=0;try{prevChips=[...a.querySelectorAll('.chips')].map(c=>c.scrollLeft);const cur=a.querySelector('.scr');if(cur){prevTop=cur.scrollTop;if(cur.dataset.scrollRoute)routeScrollMemory.set(cur.dataset.scrollRoute,{top:prevTop,chips:prevChips})}const nav=a.querySelector('.desktop-nav');if(nav)desktopNavScroll=nav.scrollTop}catch(e){}
+let prevChips=[],prevTop=0,previousRoute=null;try{prevChips=[...a.querySelectorAll('.chips')].map(c=>c.scrollLeft);const cur=a.querySelector('.scr');if(cur){previousRoute=cur.dataset.scrollRoute;prevTop=cur.scrollTop;if(cur.dataset.scrollRoute)routeScrollMemory.set(cur.dataset.scrollRoute,{top:prevTop,chips:prevChips})}const nav=a.querySelector('.desktop-nav');if(nav)desktopNavScroll=nav.scrollTop}catch(e){}
 // `.selbar` is in this list for a reason: the selection bar is appended beside the screen, not inside it, so
 // leaving it out left one bar behind on every render - and Cancel drew a screen with no bar while an old one
 // stayed on top, which reads as "the bar is stuck".
@@ -23,6 +23,8 @@ a.querySelectorAll('.scr,.fab,.tabs,.bar-act,.ok,.selbar').forEach(e=>e.remove()
 // told so here, in one place, rather than every feature having to remember to check. The rules are in
 // core/users.js; an install with no users is ungated.
 S.screen=gateScreen();
+// Every navigation path (including direct assignments and entity changes) ends list selection.
+if(S.sel){if(previousRoute&&previousRoute!==scrollRouteKey())S.sel=null;if(S.sel&&selAt()!==(S.screen||S.tab))S.sel=null}
 const sc=S.screen,ok=screenAllowed();let body;try{body=!ok?noAccess():sc==='record'?cashRecordScreen():sc==='login'?loginScr():sc==='users'?usersScr():sc==='stf'?stfScr():sc==='stfp'?stfPageScr():sc==='skd'?skdScr():sc==='th'?thScr():sc==='lg'?lgScr():sc==='bk'?bkScr():sc==='cl'?clScr():sc==='batch'?batchScr():sc==='inv'?inv():sc==='prod'?prodForm():sc==='pay'?payScr():sc==='cust'?custScr():sc==='dl'?distList():sc==='dd'?distDet():sc==='pt'?ptScr():sc==='pd'?pdScr():sc==='co'?coScr():sc==='tp'?tpScr():sc==='st'?stScr():sc==='wz'?wzScr():sc==='rp'?rpScr():sc==='rpt'?rptScr():sc==='ac'?acScr():sc==='acd'?acdScr():sc==='stmt'?stmtScr():sc==='nt'?ntScr():sc==='jl'?jlScr():sc==='jf'?jfScr():sc==='jd'?jdScr():sc==='ex'?exScr():sc==='exf'?exfScr():sc==='exd'?exdScr():sc==='qt'?qtScr():sc==='qd'?qdScr():sc==='cb'?cbScr():sc==='cbd'?cbdScr():sc==='tfr'?tfrScr():sc==='rt'?rtScr():sc==='rtf'?rtfScr():sc==='rtd'?rtdScr():sc==='pm'?pmScr():sc==='pmf'?pmfScr():sc==='pmd'?pmdScr():sc==='prev'?prev():sc==='pl'?pl():({dash,sales:()=>list(INV,'Sales','New Invoice'),pur:()=>list(PUR,'Purchases','New Purchase'),inv:inventory,more})[S.tab]()}catch(err){body=screenError(sc||S.tab,err)}
 const routeKey=scrollRouteKey(),remembered=routeScrollMemory.get(routeKey),sy=remembered?remembered.top:0;
 const put=()=>{const chipTap=!!S.pop;let bar='';try{bar=selBar()}catch(e){}try{a.classList.toggle('selon',bar!=='')}catch(e){}

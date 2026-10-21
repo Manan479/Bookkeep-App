@@ -216,13 +216,14 @@ const selIn=id=>selHere()&&selIds().indexOf(id)>=0;
 // whole list destroyed the row under the finger mid-press, which made the tap animation snap back. Only the bar
 // is rebuilt, because which buttons it offers (PDF needs every pick to be a printable document) can change.
 const syncSel=()=>{try{
+  const screen=document.querySelector('.scr'),top=screen?screen.scrollTop:0;
   document.querySelectorAll('[data-sel]').forEach(el=>{el.classList.toggle('sel',selIn(el.dataset.sel));el.setAttribute('aria-selected',selIn(el.dataset.sel)?'true':'false')});
   document.querySelectorAll('[data-doc-check]').forEach(el=>{el.checked=selIn(el.dataset.docCheck)});
   document.querySelectorAll('[data-doc-all]').forEach(el=>{el.checked=selAllOn();el.indeterminate=selHere()&&!selAllOn()});
-  document.querySelectorAll('.select-start').forEach(el=>{el.textContent='Select';el.style.display=selMode()?'none':'';el.setAttribute('aria-pressed','false')});
+  document.querySelectorAll('.select-start').forEach(el=>{el.textContent='Select';el.style.display='';el.style.visibility=selMode()?'hidden':'';el.setAttribute('aria-pressed','false')});
   document.querySelectorAll('.selbar').forEach(e=>e.remove());
   const app=document.getElementById('app'),bar=selBar();
-  if(app){app.classList.toggle('selon',bar!=='');if(bar)app.insertAdjacentHTML('beforeend',bar)}layoutAppChrome();
+  if(app){app.classList.toggle('selon',bar!=='');if(bar)app.insertAdjacentHTML('beforeend',bar)}layoutAppChrome();if(screen)screen.scrollTop=top;
 }catch(e){}};
 function selToggle(id){if(!S.sel||selAt()!==(S.screen||S.tab))S.sel={ids:[],at:S.screen||S.tab};const i=S.sel.ids.indexOf(id);if(i>=0)S.sel.ids.splice(i,1);else S.sel.ids.push(id);if(!S.sel.ids.length)S.sel=null;syncSel()}
 const selClear=()=>{S.sel=null;syncSel()};
@@ -241,17 +242,35 @@ let lpTimer=null;
 // then stayed set and ate the *next* tap instead (the first tap on Cancel, or the tap that takes the only
 // selected row back out, appeared to do nothing). A timestamp expires by itself, so a missing click is harmless.
 const lpSwallow=()=>!!(S.lpAt&&Date.now()-S.lpAt<700);
-const lpDown=e=>{if(e.target&&e.target.closest&&e.target.closest('[data-select-control]'))return;const b=lpRow(e);if(!b)return;clearTimeout(lpTimer);lpTimer=setTimeout(()=>{lpTimer=null;S.lpAt=Date.now();selToggle(b.dataset.sel)},450)};
+let lpTouchAt=0,lpGestureUntil=0,lpTouchOrigin=null;
 const lpUp=()=>{clearTimeout(lpTimer);lpTimer=null};
+const lpDown=e=>{
+ lpUp();
+ const touch=e.touches&&e.touches[0];
+ if(touch){lpTouchAt=Date.now();lpTouchOrigin={x:touch.clientX,y:touch.clientY};
+  // Android owns the side edges for Back. Never arm a selection timer there.
+  if(e.touches.length!==1||touch.clientX<28||touch.clientX>window.innerWidth-28){lpGestureUntil=Date.now()+600;return}
+ }else if(e.button!==0||Date.now()-lpTouchAt<800||e.sourceCapabilities&&e.sourceCapabilities.firesTouchEvents)return;
+ lpGestureUntil=0;
+ if(e.target&&e.target.closest&&e.target.closest('[data-select-control]'))return;
+ const row=lpRow(e),route=S.screen||S.tab;if(!row)return;
+ lpTimer=setTimeout(()=>{lpTimer=null;if((S.screen||S.tab)!==route||!row.isConnected)return;S.lpAt=Date.now();selToggle(row.dataset.sel)},450);
+};
+const lpMove=e=>{const touch=e.touches&&e.touches[0];if(touch&&lpTouchOrigin&&Math.hypot(touch.clientX-lpTouchOrigin.x,touch.clientY-lpTouchOrigin.y)>8){lpUp();lpGestureUntil=Date.now()+600}};
+const lpCancel=()=>{lpUp();lpTouchOrigin=null;lpTouchAt=Date.now();lpGestureUntil=Date.now()+600};
 root_addLP();
 function root_addLP(){try{
  document.addEventListener('touchstart',lpDown,{passive:true});
  document.addEventListener('mousedown',lpDown);
- document.addEventListener('touchend',lpUp,true);
- document.addEventListener('touchmove',lpUp,true);
+ document.addEventListener('touchend',()=>{lpUp();lpTouchOrigin=null;lpTouchAt=Date.now()},true);
+ document.addEventListener('touchcancel',lpCancel,true);
+ document.addEventListener('touchmove',lpMove,{capture:true,passive:true});
  document.addEventListener('mouseup',lpUp,true);
+ document.addEventListener('mousemove',lpUp,true);
+ document.addEventListener('contextmenu',e=>{if(lpRow(e))e.preventDefault()});
  document.addEventListener('scroll',lpUp,true);
  document.addEventListener('click',e=>{
+   if(Date.now()<lpGestureUntil&&lpRow(e)){e.preventDefault();e.stopPropagation();return}
    if(e.target&&e.target.closest&&e.target.closest('[data-select-control]')){e.stopPropagation();return}
        if(lpSwallow()){S.lpAt=0;e.preventDefault();e.stopPropagation();return}
    if(!selMode())return;

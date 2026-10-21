@@ -526,3 +526,16 @@ textarea::placeholder{color:var(--tx2)}
 .invoice-date-field .dbtn{min-height:32px}
 .invoice-date-field .dbtn:disabled{opacity:.45;cursor:default}
 @media(pointer:coarse){.invoice-date-heading,.date-optional,.invoice-date-field .dbtn{min-height:44px}}
+
+/* Mobile selection replaces the avatar rather than taking width from the row text. */
+@media(max-width:899px){
+ .scr{overflow-anchor:none}
+ #app .doccard{position:relative;padding:10px 12px}
+ #app .doccard>.docpick{position:absolute;left:12px;top:50%;transform:translateY(-50%);margin:0;z-index:2}
+ #app .doccard:has(.av)>.docpick{left:20px}
+ #app.selon .doccard:has(.av) .av{visibility:hidden}
+ #app.selon .doccard:not(:has(.av))>.docpick{left:0;top:0;transform:translate(-20%,-20%);background:var(--sf);border:1px solid var(--bd);border-radius:50%}
+ html[dir="rtl"] #app .doccard>.docpick{left:auto;right:12px}
+ html[dir="rtl"] #app .doccard:has(.av)>.docpick{right:20px}
+ html[dir="rtl"] #app.selon .doccard:not(:has(.av))>.docpick{right:0;transform:translate(20%,-20%)}
+}

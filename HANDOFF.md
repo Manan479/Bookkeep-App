@@ -42,6 +42,14 @@ Source syntax checks and standalone generation were performed; functional/browse
 
 `openProfit()` records the actual entry screen/tab in `S.profitOrigin`. Both the page back arrow and Android `appBack` call `profitBack()`. Dashboard cards therefore return to Dashboard; the Reports entry returns to Reports. Redraws/period changes do not overwrite the origin, and the existing route scroll memory restores the originating page's position. `openScr('pl')` delegates to this helper; `openRpt('pl')` uses it directly. Syntax checking and the shared build were performed; no functional checks or APK build were requested for this change. The user is listing further UI issues, so handle them as they arrive.
 
+## Mobile selection behavior correction
+
+Mobile register checkboxes now overlay the avatar slot instead of consuming row width. Card padding and text width remain constant, Select is hidden with visibility rather than removing its layout space, scroll anchoring is disabled on mobile lists, and in-place selection updates retain scrollTop. Cards without avatars use an overlaid corner indicator.
+
+Long-press selection ignores the outer 28 CSS px on either side, multi-touch, non-primary mouse buttons and compatibility mouse events after touch. Movement beyond 8 px, touchcancel, scrolling and rendering cancel pending holds. Cancelled/edge gesture clicks do not toggle rows, and a fresh intentional touch resets that suppression.
+
+Render compares the old displayed route (including entity detail) with the new route and discards selection on navigation, even where features assign S.screen directly. Invoice batch previews capture their document snapshots before leaving the list, so they work without retaining selection state or its toolbar. No APK or functional/browser/device checks were run for this change; syntax checking and shared HTML generation were performed. Shared packaged desktop web resources were refreshed. The user is still reporting further UX issues.
+
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.
