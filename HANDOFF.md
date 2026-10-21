@@ -38,6 +38,10 @@ The footer is raised by extra bottom paper padding; the blank stamp/signature ar
 
 Source syntax checks and standalone generation were performed; functional/browser/device checks were not run for this change. Shared HTML and packaged desktop web resources were refreshed. **The existing APK predates these pagination/print changes. Ask before building it.**
 
+## Profit and Loss return route correction
+
+`openProfit()` records the actual entry screen/tab in `S.profitOrigin`. Both the page back arrow and Android `appBack` call `profitBack()`. Dashboard cards therefore return to Dashboard; the Reports entry returns to Reports. Redraws/period changes do not overwrite the origin, and the existing route scroll memory restores the originating page's position. `openScr('pl')` delegates to this helper; `openRpt('pl')` uses it directly. Syntax checking and the shared build were performed; no functional checks or APK build were requested for this change. The user is listing further UI issues, so handle them as they arrive.
+
 ## Current generated artifacts
 
 - `dist/bookkeep.html`: standalone shared app, rebuilt after the date-field fix.

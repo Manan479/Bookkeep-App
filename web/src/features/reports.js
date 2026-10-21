@@ -1,4 +1,13 @@
 // features/reports.js - Feature: reports (screens and the actions behind them).
+// Remember the actual entry route; redraws and period changes must not replace it.
+function openProfit(){
+ if(S.screen!=='pl')S.profitOrigin={screen:S.screen||null,tab:S.tab};
+ S.screen='pl';render();
+}
+function profitBack(){
+ const origin=S.profitOrigin||{screen:null,tab:S.tab||'dash'};
+ S.screen=origin.screen;S.tab=origin.tab;S.profitOrigin=null;render();
+}
 function pl(){const now=piso(),before=pisoPrev();
 // Cost of goods is reported on its own line, stock adjustments on theirs, and whatever is left of the
 // expense accounts is "Expenses". An expense account added later therefore appears without this screen
@@ -9,7 +18,7 @@ const rows=[['📈','Revenue',c.rev,q?q.rev:0],['🛒','Cost of goods',c.cogs,q?
 if(c.sa!==0||(q&&q.sa!==0))rows.push(['📦','Stock adjustments',c.sa,q?q.sa:0]);
 rows.push(['◔','Net profit',c.net,q?q.net:0]);
 setExport('Profit and Loss',['Item','This period','Previous'],rows.map(r=>[r[1],r[2],q?r[3]:'']));
- return `<div class="scr full"><div class="top"><button class="ic" onclick="S.screen='rp';render()">‹</button><h1>Profit and Loss</h1></div>
+ return `<div class="scr full"><div class="top"><button class="ic" onclick="profitBack()">‹</button><h1>Profit and Loss</h1></div>
 <div class="shead">${chips(Object.keys(PER),S.period,'setP')}</div><div class="card row" style="margin-bottom:10px"><span class="grow t">Compare the previous period</span><button class="tg ${S.cmp?'on':''}" onclick="S.cmp=!S.cmp;render(false,true)"></button></div>
 <div class="card" style="margin-bottom:10px"><div class="lbl">This period at a glance</div>${chart(['Revenue','Cost of goods','Expenses','Net'],[Math.max(c.rev,0),Math.max(c.cogs,0),Math.max(c.ex,0),Math.max(c.net,0)])}</div>
 <div class="card tbl"><div class="tr lbl"><span>Item</span><span>This · Previous</span></div>${rows.map(r=>`<div class="tr"><span>${r[0]} ${r[1]}</span><span><b>${fmt(r[2])}</b> <span class="lbl">${S.cmp?fmt(r[3]):''}</span></span></div>`).join('')}</div>
@@ -34,7 +43,7 @@ function acdScr(){const a=S.acct,k=ACCT_TYPES[a]||'expense',nat=DEBIT_SIDE(k),w=
  </div>`}
 // A report can offer a filter of its own: repData returns opts/skey/set and the screen draws the chips.
 const setTsAcct=v=>{S.tsAcct=v;render()};
-function openRpt(k){if(k==='pl'){S.screen='pl';render();return}if(k==='stm'){stPick();return}if(k==='ac'){S.screen='ac';render();return}S.rpk=k;S.screen='rpt';render()}
+function openRpt(k){if(k==='pl'){openProfit();return}if(k==='stm'){stPick();return}if(k==='ac'){S.screen='ac';render();return}S.rpk=k;S.screen='rpt';render()}
 function rptScr(){const d=repData(S.rpk);setExport(d.title,d.detailCols||d.cols,d.detailRows||d.rows);const g='minmax(0,1.5fr) '+d.cols.slice(1).map(()=>'minmax(0,1fr)').join(' ');
 const row=(c,b,h)=>`<div style="display:grid;grid-template-columns:${g};gap:6px;padding:10px 0;border-bottom:1px solid var(--bd);font-size:${d.cols.length>4?12:13.5}px;${b?'font-weight:800;':''}${h?'color:var(--tx2);font-weight:700;':''}">${c.map((x,i)=>`<span style="${i?'text-align:right;':''}overflow-wrap:anywhere">${x}</span>`).join('')}</div>`;
 return `<div class="scr full"><div class="top"><button class="ic" onclick="S.screen='rp';render()">‹</button><h1>${d.title}</h1><span style="width:38px"></span></div><div class="shead">${d.nop?'':chips(Object.keys(PER),S.period,'setP')}${d.opts?chips(d.opts,S[d.skey]||'All',d.set):''}</div><div class="card">${row(d.cols,0,1)}${d.rows.map(r=>row(r)).join('')||'<div class="lbl" style="padding:14px 0">Nothing to show for this period.</div>'}${d.total?row(d.total,1):''}</div>${d.note?'<div class="lbl sm" style="margin-top:8px">'+d.note+'</div>':''}</div><div class="bar-act"><button class="btn p" onclick="exportSheet()">⇪ Export</button></div>`}
