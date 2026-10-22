@@ -152,6 +152,8 @@ button.ic>.ui-icon{display:none}
 
 /* Editing columns stay comfortable on wide monitors, with or without the sidebar. */
 .dashboard-overview,.dashboard-summary{display:contents}
+.workspace-actions{display:contents}
+#dh:empty{display:none}
 @media screen and (min-width:900px){
  #app .dashboard .dashboard-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
  #app .dashboard-metrics>.card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:start;padding:16px}
@@ -176,7 +178,8 @@ button.ic>.ui-icon{display:none}
  #app.bounded-workspace{--workspace-column:840px}
  #app.bounded-workspace .scr>*{max-width:var(--workspace-column)!important;margin-inline:auto!important}
  #app.bounded-workspace .scr>.f,#app.bounded-workspace .scr>.top,#app.bounded-workspace .scr>.card,#app.bounded-workspace .scr>.gh{width:100%;min-width:0}
- #app.bounded-workspace>.bar-act{padding-inline:max(40px,calc((100% - var(--workspace-column))/2));justify-content:flex-end}
+ #app.bounded-workspace>.bar-act{padding-inline:40px;padding-inline-end:calc(40px + var(--workspace-scrollbar,0px));justify-content:center}
+ #app.bounded-workspace>.bar-act>.workspace-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end;width:100%;max-width:var(--workspace-column);margin-inline:auto}
  #app.bounded-workspace .item .ed{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 

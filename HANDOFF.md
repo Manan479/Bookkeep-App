@@ -201,3 +201,9 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Added slim rounded, theme-aware scrollbars for sidebar, screens, dialogs, tables, previews and text areas; transparent tracks and hover feedback. Preserves filter-chip hiding and high-contrast system colors.
 - HTML regenerated; desktop/APK packages untouched. Visual verification pending.
 
+
+### Editor action alignment
+- Bounded editor footers now use a real centered inner column matching the form width and scrollbar gutter. Removed percentage padding calculated against the wider app shell.
+- Product editor includes Cancel, spans the stock field when distributor pricing leaves an odd row, and hides the empty duplicate-name hint.
+- HTML rebuilt; desktop/APK untouched. Syntax checks passed; visual verification pending.
+
