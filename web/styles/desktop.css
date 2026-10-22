@@ -200,6 +200,9 @@ button.ic>.icon-original,[data-ui-icon]:not(button)>.icon-original{display:none}
 [data-ui-icon]:not(button)>.ui-icon{display:inline-block}
 .mobile-nav .ui-icon{width:22px;height:22px}
 .record-header-actions{display:contents}
+#app .scr .card.tbl>.tr{gap:12px}
+#app .scr .card.tbl>.tr>.lbl:first-child{flex-shrink:0}
+#app .scr .card.tbl>.tr>span:last-child{min-width:0;overflow-wrap:anywhere;text-align:end!important}
 .record-action-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 #app .record-action-group>.btn{flex:0 1 auto;width:auto;min-width:0}
 .settings-jumps{display:flex;flex-wrap:wrap;gap:8px;margin:0 auto 20px}
