@@ -166,3 +166,10 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Screen/sidebar scrollbar gutters reserve space to prevent shifts when record counts change. Table overflow stays within its container.
 - Rebuilt standalone HTML only. Desktop package intentionally left untouched at user request; no APK. Syntax and whitespace checks passed; visual verification remains pending.
 
+
+### Party and product selection (23 October 2026)
+- Connected Parties and Inventory to shared selection controls, including mobile long press, checkboxes, select all and selected-row image/PDF/CSV export.
+- Party search now refreshes export and selection data with its visible rows. Hidden selections are pruned consistently.
+- Master records do not receive invoice void actions. Also aligned Payments' generated selection column with its explicit column group.
+- Standalone HTML updated; desktop package and APK untouched. Syntax checks passed; interactive verification pending.
+

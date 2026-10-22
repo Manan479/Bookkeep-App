@@ -157,7 +157,7 @@ const registerRecord=(kind,id)=>REGISTER_ACTIONS[kind].rows().find(x=>(x.id||x.n
 function registerSelectionButtons(){return '<button class="btn p" onclick="registerDocuments()">PDF / Share</button><button class="btn" onclick="registerDocuments(true)">Print</button>'+(isAdmin()?'<button class="btn bulk-danger" onclick="registerRemoveAsk()">Delete / Void</button>':'')}
 function mountRegisterActions(){
  const kind=S.screen==='stfp'?'sr':S.screen,config=REGISTER_ACTIONS[kind],app=document.getElementById('app');if(!app)return;
- if(config){
+ if(config||S.screen==='pt'||(!S.screen&&S.tab==='inv')){
   const top=app.querySelector('.scr>.top');if(top&&!top.querySelector('.select-start')){const b=document.createElement('button');b.className='btn select-start';b.textContent='Select';b.onclick=selStart;b.disabled=!(S.selRows||[]).length;top.insertBefore(b,top.querySelector('button:last-child'))}
   // Drop selections hidden by the current period, category or search.
   if(selMode()){const visible=new Set((S.selRows||[]).map(r=>r.id));S.sel.ids=S.sel.ids.filter(id=>visible.has(id))}
@@ -166,6 +166,7 @@ function mountRegisterActions(){
    if(row.tagName==='TR'){const cell=document.createElement('td');cell.className='pickcell';cell.append(pick);row.prepend(cell)}
    else if(row.tagName==='BUTTON'){const wrap=document.createElement('div');wrap.className='row doccard register-card';wrap.dataset.sel=id;row.removeAttribute('data-sel');row.classList.remove('row');row.classList.add('docopen');row.before(wrap);wrap.append(pick,row)}
   });
+  app.querySelectorAll('.dtable colgroup').forEach(group=>{const col=document.createElement('col');col.className='col-pick';group.prepend(col)});
   app.querySelectorAll('.dtable thead tr').forEach(row=>{const cell=document.createElement('th');cell.className='pickcell';cell.innerHTML='<label class="docpick" data-select-control><input type="checkbox" data-doc-all aria-label="Select all visible records" onchange="selToggleAll()"><span aria-hidden="true"></span></label>';row.prepend(cell)});
  }
  const details={record:[S.recordKind,S.recordId],skd:['sr',S.skk&&S.skk.id],pmd:['pm',S.pmk&&S.pmk.id],exd:['ex',S.xk&&S.xk.id],qd:['qt',S.qk],rtd:['rt',S.rk&&S.rk.id],jd:['jl',S.jk&&S.jk.id]},detail=details[S.screen];
