@@ -193,3 +193,6 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Added inline PIN feedback and disabled the submit button during asynchronous sign-in. Preserved existing authentication and recovery behavior.
 - HTML regenerated; no desktop or APK build. Syntax/whitespace checks passed; visual and interaction verification pending.
 
+
+- Corrected sign-in centering: shared action-bar layout no longer overrides its bottom padding, and symmetric scrollbar gutters keep its horizontal center aligned. HTML rebuilt; desktop unchanged.
+
