@@ -112,6 +112,26 @@ button.ic>.ui-icon{display:none}
 #app .employee-list .employee-row-end{display:flex;align-items:center;gap:12px;flex-shrink:0}
 
 /* Editing columns stay comfortable on wide monitors, with or without the sidebar. */
+.dashboard-overview,.dashboard-summary{display:contents}
+@media screen and (min-width:900px){
+ #app .dashboard .dashboard-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+ #app .dashboard-metrics>.card{min-height:100px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;text-align:start;padding:16px}
+ #app .dashboard-metrics .num{margin-top:6px;overflow-wrap:anywhere}
+ #app .dashboard-metrics .sm{margin-top:4px}
+ #app .dashboard-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:1180px;margin:0 auto 16px}
+ #app .dashboard-summary{display:flex;flex-direction:column;gap:16px;min-width:0}
+ #app .dashboard-summary>.hero,#app .dashboard-summary>.card{margin:0!important;max-width:none;width:100%;text-align:start;padding:16px}
+ #app .dashboard-summary>.hero{min-height:120px;flex:1}
+ #app .dashboard .dashboard-accounts{margin:0;max-width:none;width:100%;min-width:0;padding:16px;align-self:stretch}
+ #app .dashboard-accounts .row{gap:12px;min-height:44px}
+ #app .dashboard-accounts .row b{overflow-wrap:anywhere;text-align:end}
+ #app .dashboard>.alerts{max-width:1180px;margin:0 auto 16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+ #app .dashboard>.alerts .alert{text-align:start;padding:16px}
+}
+@media screen and (min-width:900px) and (max-width:1099px){
+ #app .dashboard .dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #app .dashboard-overview{grid-template-columns:minmax(0,1fr)}
+}
 @media screen and (min-width:900px){
  #app.bounded-workspace{--workspace-column:840px}
  #app.bounded-workspace .scr>*{max-width:var(--workspace-column)!important;margin-inline:auto!important}

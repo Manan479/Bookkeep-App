@@ -178,3 +178,9 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Payments declares its checkbox column explicitly alongside Date, Party, Direction, Method and Amount; selection mounting avoids duplicating it. Empty rows span the selection column too.
 - Rebuilt HTML, syntax checked. Desktop package unchanged; visual verification pending.
 
+
+### Dashboard desktop layout (23 October 2026)
+- Replaced auto-fit KPI layout with three columns (two on narrower desktop widths), so six metrics form complete rows with aligned labels.
+- Grouped profit/distributor summaries beside cash and bank balances. Stock alerts share the main content width and expand cleanly when only one is present.
+- Standalone HTML regenerated. Desktop and APK packages untouched. Syntax/whitespace checks passed; visual verification pending.
+
