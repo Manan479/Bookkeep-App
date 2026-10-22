@@ -24,7 +24,7 @@ button.ic>.ui-icon{display:none}
   min-height:var(--desktop-control);border-radius:var(--desktop-radius);
   padding:9px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
  }
- #app .chip{padding:8px 12px;min-height:36px}
+ #app .chip{padding:9px 12px;min-height:var(--desktop-control)}
  #app .scr.tablemode~.fab{display:none}
  #app .ut{min-height:32px;padding:6px 10px}
  #app .ic,#app .theme-heading .ic{
@@ -67,6 +67,29 @@ button.ic>.ui-icon{display:none}
  #app .appearance-section h2{font-size:var(--desktop-section)}
  #app .theme-heading{margin-bottom:24px}
  #app .bar-act .btn{min-width:140px}
+}
+
+/* Lists share geometry regardless of record count, content lengths or host. */
+@media screen and (min-width:900px){
+ #app .scr,#app .desktop-nav{scrollbar-gutter:stable}
+ #app .scr.tablemode>.top,#app:not(.hasnav) .scr.tablemode>.top{max-width:1180px;margin:0 auto 20px}
+ #app .top>.btn{flex:none;width:auto;min-height:var(--desktop-control);padding:9px 14px!important}
+ #app .top>.btn.p{min-width:144px}
+ #app .shead>.search{margin-bottom:12px}
+ #app .shead>.chips{padding:0 0 12px;gap:8px;min-height:52px}
+ #app .tablewrap{overflow-x:auto}
+ #app .record-table{table-layout:fixed;min-width:640px}
+ #app .record-table .col-pick{width:48px}
+ #app .record-table .col-number{width:140px}
+ #app .record-table .col-date{width:136px}
+ #app .record-table .col-amount{width:148px}
+ #app .record-table .col-status{width:112px}
+ #app .record-table .col-method{width:124px}
+ #app .record-table th,#app .record-table td{overflow-wrap:anywhere}
+ #app .record-table td{height:50px}
+ #app .record-table .badge{margin-top:0}
+ #app .record-table th{text-align:start}
+ #app .record-table th.rt,#app .record-table td.rt{text-align:end}
 }
 
 /* Shared layout corrections for records, summaries and persistent actions. */

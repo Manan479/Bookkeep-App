@@ -159,3 +159,10 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Cash/bank subaccounts still roll into a shared ledger account; internal transfers need that context when interpreting ledger reports.
 - Long-document pagination, native device behaviors and arbitrary combinations of content, localization and window size need targeted verification when touched. The latest date-field defect demonstrates the limits of broad render checks.
 - The app still mixes some posting orchestration and screen code in feature files. Preserve the pure-core boundary when improving it.
+
+### Desktop list consistency (23 October 2026)
+- Shared desktop toolbar/filter controls use the same 40px control scale; removed inline New-action padding from invoices and payments.
+- Sales/purchases and payments use explicit record table column widths, with the party column taking remaining space. Long content wraps instead of moving other columns.
+- Screen/sidebar scrollbar gutters reserve space to prevent shifts when record counts change. Table overflow stays within its container.
+- Rebuilt standalone HTML only. Desktop package intentionally left untouched at user request; no APK. Syntax and whitespace checks passed; visual verification remains pending.
+
