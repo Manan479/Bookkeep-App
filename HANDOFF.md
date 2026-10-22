@@ -1,6 +1,6 @@
 # Bookkeep handoff
 
-Updated **21 October 2026**. Read this first. This file describes the current state; older implementation notes are preserved in `docs/HANDOFF_HISTORY.md` and may be obsolete.
+Updated **23 October 2026**. Read this first. This file describes the current state; older implementation notes are preserved in `docs/HANDOFF_HISTORY.md` and may be obsolete.
 
 ## User preferences and working rules
 
@@ -61,6 +61,10 @@ Source syntax and shared build completed; browser/native checks and APK generati
 The user showed two remaining desktop defects: the expense receipt-upload button sat left of the centred form, and employee search sat left of the surrounding list/cards. Shared rules now make bounded standalone action buttons block-level flex boxes (auto margins can centre them), centre direct/sticky-band search inputs as block boxes within the same list width, and display standalone receipt images as blocks. Employee search drops an extra top-padding gap. `.f > .w` now spans both columns for explanatory text as well as labels, including employee-reimbursement guidance. The same standalone-button rule covers journal add-line, quotation conversion and party/distributor actions on bounded screens.
 
 Source inspection and shared generation completed; no browser/device suite or APK build was performed. Packaged desktop web resources were refreshed. Keep looking for controls whose inline display or sticky negative margins bypass their parent column.
+
+## Desktop package rebuilt — 23 October 2026
+
+User explicitly requested updating the desktop app. With no Bookkeep process running, `node tools/build.js` and `node desktop/build.js` completed successfully. The full Electron package (including native shell and shared web resources) was regenerated at `desktop/release/Bookkeep-win32-x64/Bookkeep.exe`, using Electron 31.7.7. Packaged web files were compared byte-for-byte against current source. This includes the latest bounded desktop forms, search/action alignment and earlier UI/navigation/invoice changes through `712b64d`. The executable was not launched and no functional suite was run in this update. No APK was built. Generated package files remain ignored by Git.
 
 ## Current generated artifacts
 
