@@ -2,27 +2,29 @@
 const DEFAULT_PIN='1234';
 const defaultPin=()=>USERS.some(u=>u.role==='admin'&&(String(u.pin)===DEFAULT_PIN||u.wasDefault));
 function loginScr(){const u=USERS.filter(x=>x.active!==false);
- // One centred column, so the title, the fields, the button and the small notes all share the same edges on a
- // desktop. Before this the notes were left-aligned against the window while the card sat in the middle.
- return `<div class="scr"><div class="auth"><div class="top"><h1>Sign in</h1><span style="width:38px"></span></div>
- <div class="card" style="margin-bottom:12px"><div class="t">${COMP.name}</div><div class="lbl sm">Enter your PIN to open the books.</div></div>
- ${u.length?`<div class="f"><label class="w"><small>User</small><select id="lu">${u.map(x=>`<option value="${docAttr(x.id||x.n)}" ${S.lu===(x.id||x.n)?'selected':''}>${x.n} · ${ROLE_LABEL[x.role]||x.role}</option>`).join('')}</select></label>
- <label class="w"><small>PIN</small><input id="lp" type="password" inputmode="numeric" placeholder="••••" onkeydown="if(event.key==='Enter')tryPin()"></label></div>
- <button class="btn p" style="width:100%;flex:none;margin-top:12px" onclick="tryPin()">Sign in</button>
- ${defaultPin()?`<div class="lbl sm" style="margin-top:12px;text-align:center">First run: the administrator PIN is ${DEFAULT_PIN}. Change it under Users once you are in.</div>`:''}
- <button class="ut" style="display:block;margin:14px auto 0" onclick="forgotPin()">Can\'t sign in?</button>`
- :'<div class="card lbl">No users yet. This should not happen — reopen the app, or reset the data from Settings.</div>'}
- </div></div>`}
-async function tryPin(){const s=$('#lu'),p=$('#lp')?$('#lp').value:'';
- // The select's value is the user's id, but fall back to the name in front of the " · role" label, so a book
- // saved by an older build cannot leave the owner locked out.
- const key=s?String(s.value||'').split(' · ')[0]:'';
- const u=userBy(key)||USERS.filter(x=>x.active!==false)[0];
- if(!u){toast('There is no user to sign in as');return}
- // The PIN is hashed, so the check is asynchronous; the old synchronous signIn cannot verify a hash.
- const r=await signInHashed(u.id,p);
- if(!r.ok){toast(r.reason);return}
- S.screen=null;render();toast('Signed in as '+S.user.n)}
+ return `<div class="scr auth-screen"><section class="auth" aria-labelledby="auth-title">
+ <div class="auth-brand"><span class="auth-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span>Bookkeep</span></div>
+ <header class="auth-heading"><h1 id="auth-title">Welcome back</h1><p>Sign in to <strong>${esc(COMP.name||'your business')}</strong></p></header>
+ ${u.length?`<form class="auth-form" onsubmit="tryPin();return false">
+ <label class="auth-field" for="lu"><span>User</span><select id="lu" onchange="S.lu=this.value;document.getElementById('auth-error').textContent=''">${u.map(x=>`<option value="${docAttr(x.id||x.n)}" ${S.lu===(x.id||x.n)?'selected':''}>${esc(x.n)} · ${esc(ROLE_LABEL[x.role]||x.role)}</option>`).join('')}</select></label>
+ <label class="auth-field" for="lp"><span>PIN</span><input id="lp" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter your PIN" aria-describedby="auth-error" required oninput="this.removeAttribute('aria-invalid');document.getElementById('auth-error').textContent=''"></label>
+ <p id="auth-error" class="auth-error" role="alert" aria-live="polite"></p>
+ <button id="auth-submit" class="btn p" type="submit">Sign in</button>
+ </form>
+ ${defaultPin()?`<aside class="auth-setup"><strong>First time here?</strong><span>Administrator PIN: <b>${DEFAULT_PIN}</b>. You can change it in Users after signing in.</span></aside>`:''}
+ <button class="auth-help" type="button" onclick="forgotPin()">Can't sign in?</button>`
+ :'<p class="auth-empty">No active users are available. Contact your administrator to restore access.</p>'}
+ </section></div>`}
+async function tryPin(){const s=$('#lu'),input=$('#lp'),button=$('#auth-submit'),error=$('#auth-error'),p=input?input.value:'';
+ if(button&&button.disabled)return;
+ const key=s?String(s.value||'').split(' · ')[0]:'',u=userBy(key)||USERS.filter(x=>x.active!==false)[0];
+ const fail=message=>{if(error)error.textContent=message;else toast(message);if(input){input.setAttribute('aria-invalid','true');input.focus()}};
+ if(!u){fail('There is no user to sign in as');return}
+ if(!p){fail('Enter your PIN to continue.');return}
+ if(button){button.disabled=true;button.textContent='Signing in…'}
+ try{const r=await signInHashed(u.id,p);if(!r.ok){fail(r.reason);return}S.screen=null;render();toast('Signed in as '+S.user.n)}
+ catch(e){fail('Unable to sign in. Please try again.')}
+ finally{if(button&&button.isConnected){button.disabled=false;button.textContent='Sign in'}}}
 // Losing the PIN must not lose the books. Anyone holding the phone could clear this anyway - the PIN keeps
 // out a casual user, not the owner - so the honest thing is to offer it rather than pretend otherwise.
 const forgotPin=()=>confirmSheet('Remove the sign-in lock?','Every user on this device will be deleted and the books will open without a PIN. Add them again under Settings, Users.','Remove it',()=>{USERS.length=0;S.user=null;S.screen=null;render();toast('Sign-in lock removed')});

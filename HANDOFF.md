@@ -187,3 +187,9 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 
 - Dashboard metrics now place overdue details beside the amount when space permits, wrap on narrow cards, and remove the forced minimum height that left empty space below ordinary totals. HTML updated; desktop package untouched.
 
+
+### Sign-in presentation (23 October 2026)
+- Replaced generic stacked cards with a compact responsive sign-in panel, Bookkeep mark, company heading, labelled controls and a separate first-run hint.
+- Added inline PIN feedback and disabled the submit button during asynchronous sign-in. Preserved existing authentication and recovery behavior.
+- HTML regenerated; no desktop or APK build. Syntax/whitespace checks passed; visual and interaction verification pending.
+
