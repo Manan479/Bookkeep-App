@@ -6,7 +6,7 @@ Updated **23 October 2026**. Read this first. This file describes the current st
 
 - **Keep committing to Git.** Commit each completed, coherent set of changes with a useful message. Check status before and after; preserve unrelated work. The user explicitly reaffirmed this on 21 October 2026.
 - **Ask before generating an APK**, unless the current request explicitly asks for an APK. Do not rebuild it after every UI edit. The latest APK was explicitly requested and built successfully.
-- Update the shared standalone HTML and existing packaged desktop web resources when delivering shared UI changes. Restart is needed to load them. Avoid closing the user's app or repackaging the executable without need.
+- Update shared standalone HTML for UI changes. The user's latest instruction is to leave desktop builds/resources unchanged until requested; ask before APK generation. Avoid closing the user's app.
 - Explain changes in plain language. Complete authorized work without repeatedly asking for approval. Do not push commits or publish artifacts merely because local commits were requested.
 - Test/verification work should follow the active user request and session instructions. Documentation-only edits do not require app test runs. Use disposable books for automated feature checks, not the user's saved book.
 - Do not infer that broad screen checks prove every control or visual alignment is correct. A date-field misalignment was found after the broad audit; inspect the exact reported state and add a focused check when verification is authorized.
@@ -212,4 +212,11 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - See docs/LAYOUT_REVIEW_2026-10-23.md: 9 confirmed defects and 7 design inconsistencies, with screenshot references, priority and scope limits.
 - Broad pass exercised 71 screen states at desktop/mobile sizes; added 900px review and focused 320px checks. No screen exceptions or page overflow, but child layout defects were confirmed visually.
 - Audit only: no UI changes, desktop package or APK builds. Local evidence is under dist/layout-review; audit scripts are in tools/layout-{review,focus,extras}.cjs.
+
+### Layout audit fixes — 23 October 2026
+- Addressed the 16 findings in the audit. Shared `ui/layout.js` mounts list/header actions, settings sections and date isolation after record actions; CSS owns responsive sizing. Party forms now join bounded editors.
+- Mobile selection indicators remain inside invoice cards with a permanently reserved slot; mobile controls have larger touch targets and shared SVG icons. Narrow desktop tables scroll at a readable minimum width, and selection actions use three columns.
+- Settings sections stay expanded with jump navigation. Template preview supports fit/actual size in a keyboard-accessible dialog. Report exports move into desktop headers, and quotation detail keeps one Edit action.
+- Regenerated `dist/bookkeep.html`. No desktop resources/package or APK update.
+- Broad audit passed 213 runs across 71 screen states; focused `tools/layout-regression.cjs` passed 1440/900/390/320px. See the audit's Resolution section for scope and remaining native-device verification limits.
 

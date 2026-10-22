@@ -115,7 +115,7 @@ function headsStuck(){document.querySelectorAll('.shead').forEach(h=>{try{const 
 const setP=p=>{tick();if(p==='Custom'){pick(null,v=>{S.cr=v.split('|');S.period='Custom';render(false,true)},false,true);return}S.period=p;render(false,true)};
 function tabs(showMobile=true){
  const primary=[['dash','▦','Dashboard'],['sales','🧾','Sales'],['pur','🛒','Purchases'],['inv','📦','Inventory']].filter(t=>canTab(t[0]));
- const rootLink=(t,desktop=false)=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" ${S.tab===t[0]&&!S.screen?'aria-current="page"':''} onclick="go('${t[0]}')">${desktop?uiIcon(({dash:'dashboard',sales:'invoice',pur:'purchase',inv:'inventory'})[t[0]]):'<i aria-hidden="true">'+t[1]+'</i>'}<span>${tr(t[2])}</span></button>`;
+ const rootLink=(t,desktop=false)=>`<button class="tab ${S.tab===t[0]&&!S.screen?'on':''}" ${S.tab===t[0]&&!S.screen?'aria-current="page"':''} onclick="go('${t[0]}')">${uiIcon(({dash:'dashboard',sales:'invoice',pur:'purchase',inv:'inventory',more:'more'})[t[0]])}<span>${tr(t[2])}</span></button>`;
  const mobile=showMobile?'<nav class="tabs mobile-nav" aria-label="'+tr('Navigation')+'">'+primary.concat([['more','⋯','More']]).map(t=>rootLink(t)).join('')+'</nav>':'';
  const family={pt:['pd','stmt'],pm:['pmf','pmd'],ex:['exf','exd'],rt:['rtf','rtd'],qt:['qd'],cb:['cbd','tfr'],rp:['rpt','pl'],ac:['acd'],dl:['dd'],stf:['stfp','skd'],jl:['jf','jd'],st:['bk','cl']};
  let group='';
@@ -333,7 +333,7 @@ function fitPaper(){document.querySelectorAll('.paperwrap').forEach(w=>{
  if(p.querySelector('.invoice-lines'))w._paperSource=p.outerHTML;
  fitPage(p);p.style.transform='none';const pages=paginateInvoicePaper(p);
  const wide=window.matchMedia&&window.matchMedia('(min-width:900px)').matches,thermal=p.classList.contains('t80')||p.classList.contains('t58');
- const isZoom=S.pvZoom&&!wide;
+ const isZoom=w.dataset.previewZoom==='true'||(S.pvZoom&&!wide);
  const pageHeight=p.classList.contains('a5')?794:1123,availH=wide?Math.max(400,window.innerHeight-210):1e9;
  const available=Math.max(1,w.parentElement.clientWidth-32),scale=isZoom?1:Math.min(1,available/pages[0].offsetWidth,thermal?1:availH/pageHeight);
  let top=0;
@@ -353,7 +353,7 @@ o.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{const v=x.dataset.d;if(
 o.querySelectorAll('[data-t]').forEach(x=>x.onclick=()=>{const t=x.dataset.t;o.remove();if(t==='today'){if(!range)cb(tdy)}else if(t==='clear')cb('');else cb(a+'|'+b)})};
 o.onclick=e=>{if(e.target===o)o.remove()};draw();$('#app').append(o)}
 function pd(key,k){const cur=key==='exp'?S.items[k].exp:S.d[key];pick(cur,v=>{if(key==='exp')S.items[k].exp=v;else S.d[key]=v;render(false,true)},key==='exp')}
-function skinSelects(){document.querySelectorAll('select').forEach(sel=>{if(sel.dataset.sk)return;sel.dataset.sk=1;sel.style.display='none';const b=document.createElement('button');b.type='button';b.className='skl'+(sel.classList.contains('search')?' search':'');b.disabled=sel.disabled;b.setAttribute('aria-disabled',String(sel.disabled));b.setAttribute('aria-label',sel.getAttribute('aria-label')||sel.closest('label')?.querySelector('small')?.textContent||'Choose');
+function skinSelects(){document.querySelectorAll('select').forEach(sel=>{if(sel.dataset.sk)return;sel.dataset.sk=1;sel.style.display='none';const b=document.createElement('button');b.type='button';b.className='skl'+(sel.classList.contains('search')?' search':'');b.disabled=sel.disabled;b.setAttribute('aria-disabled',String(sel.disabled));b.setAttribute('aria-label',sel.getAttribute('aria-label')||sel.closest('label')?.querySelector('small,span')?.textContent||'Choose');
 const txt=()=>{const op=sel.options[sel.selectedIndex];b.innerHTML='<span'+(op&&op.value===''?' class="lbl"':'')+'>'+esc(op?tr(op.text):'')+'</span><span class="lbl">⌄</span>'};txt();sel.after(b);b.onclick=()=>choose(sel,txt)})}
 function choose(sel,txt){const opts=[...sel.options],o=document.createElement('div');o.className='ov';
 const pv=sel.previousElementSibling,title=sel.dataset.title||(sel.closest('label')&&sel.closest('label').querySelector('small')&&sel.closest('label').querySelector('small').textContent)||(pv&&pv.classList.contains('lbl')?pv.textContent:'Choose');

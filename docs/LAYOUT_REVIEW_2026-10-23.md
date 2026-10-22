@@ -62,3 +62,19 @@ Audit of the current standalone HTML/shared web source. This is a findings list,
 - Dashboard uses complete metric rows in the reviewed desktop layouts.
 
 Suggested order: 1–4 first, then 5–9, then consolidate shared list/header/action patterns (10–16). No app fixes or package builds were made during this audit.
+
+## Resolution — 23 October 2026
+
+All 16 findings above were addressed in shared source and the regenerated standalone HTML:
+
+- Tables retain a readable minimum width and horizontal scrolling on narrow desktop workspaces. Mobile invoice selection uses a reserved slot inside the card, preserving text width when selection starts.
+- Mobile detail actions occupy a separate row; quotation detail has one Edit action and a compact status-action group.
+- Custom sign-in selectors match the PIN field. Party editors use the same bounded column and footer alignment as other editors.
+- Mobile icons, filter chips, toggles and utility controls have 44px touch targets; template colour swatches wrap and have accessible labels. Navigation and header icons share the SVG system.
+- Selection actions use a deliberate three-column layout at narrow desktop widths. List searches precede period filters; desktop create actions use labelled header buttons.
+- Latin full dates are isolated from RTL layout. Editor/document headings align consistently. Desktop report exports move into the header.
+- Settings and Templates have compact sections and section navigation. Templates includes a full-preview dialog with fit/actual-size controls, keyboard focus containment, Escape dismissal and focus restoration.
+
+Verification: the broad Edge audit passed 213 runs (71 screen states at 1440/1024/390px), 882 inventoried fields and six existing interaction checks, with no detected overflow or runtime errors. Focused regression checks passed at 1440/900/390/320px for preview zoom/dismissal, settings navigation, party column assignment, detail action placement, quotation Edit uniqueness, report export visibility, list toolbar placement and RTL date isolation. Screenshot inspection covered selection, sign-in, settings, templates and Urdu Sales. Repeat with `tools/layout-regression.cjs`; results are under ignored `dist/layout-review/`.
+
+The native Android and installed Electron limitations above remain. These checks cover representative states, not every possible record or device. Desktop packaging and APK generation were not performed.

@@ -117,7 +117,7 @@ button.ic>.ui-icon{display:none}
  #app .shead>.search{margin-bottom:12px}
  #app .shead>.chips{padding:0 0 12px;gap:8px;min-height:52px}
  #app .tablewrap{overflow-x:auto}
- #app .record-table{table-layout:fixed;min-width:640px}
+ #app .record-table{table-layout:fixed;min-width:860px}
  #app .record-table .col-pick{width:48px}
  #app .record-table .col-number{width:140px}
  #app .record-table .col-date{width:136px}
@@ -191,4 +191,68 @@ button.ic>.ui-icon{display:none}
  #app .scr>.search,#app .shead>.search{display:block;width:100%;max-width:1180px;margin-inline:auto}
  #app.bounded-workspace .shead>.search{max-width:var(--workspace-column)}
  #app .employee-list>.shead{padding-top:0}
+}
+/* Shared layout review corrections: scoped to UI, never printed document content. */
+#app .auth-field>.skl{width:100%;min-height:48px;padding:12px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:10px;font-size:14px;line-height:1.5}
+#app .auth-field>.skl:focus-visible{outline:2px solid var(--pr);outline-offset:3px}
+button.ic>.ui-icon{display:block}
+button.ic>.icon-original,[data-ui-icon]:not(button)>.icon-original{display:none}
+[data-ui-icon]:not(button)>.ui-icon{display:inline-block}
+.mobile-nav .ui-icon{width:22px;height:22px}
+.record-header-actions{display:contents}
+.record-action-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+#app .record-action-group>.btn{flex:0 1 auto;width:auto;min-width:0}
+.settings-jumps{display:flex;flex-wrap:wrap;gap:8px;margin:0 auto 20px}
+.settings-section{margin-bottom:20px;scroll-margin-top:12px;min-width:0}
+.settings-section>.gh{margin-top:0;padding:0 0 8px}
+#app .settings-section>.row{border-radius:0;margin:0;border-bottom:0;padding:10px 12px;box-shadow:none;min-height:48px}
+#app .settings-section>.row:first-of-type{border-radius:12px 12px 0 0}
+#app .settings-section>.row:last-of-type{border-bottom:1px solid var(--bd);border-radius:0 0 12px 12px;margin-bottom:12px}
+#app .settings-section>.row:only-of-type{border-radius:12px}
+.settings-section>.f{margin-top:8px}
+.settings-section>.btn{margin-bottom:12px}
+.template-preview-dialog>.sheet{display:flex;flex-direction:column;width:min(1100px,96vw);max-width:1100px;height:90vh;max-height:90vh;overflow:hidden;padding:16px}
+.preview-tools{display:flex;align-items:center;gap:10px;flex:none;margin-bottom:12px}
+.preview-tools h2{flex:1;margin:0;min-width:0}
+#app .preview-tools>.btn{flex:none;min-width:0}
+.preview-scroll{flex:1;min-height:0;overflow:auto;direction:ltr}
+.preview-scroll>.paperwrap{margin-inline:auto}
+@media screen and (min-width:900px){
+ #app>.fab.desktop-relocated,#app>.report-export-bar,#app .top>.mobile-create{display:none}
+ #app .selbar{justify-content:flex-end}
+ #app .selbar .btn{flex:0 0 auto}
+ #app .selbar .selcount{margin-inline-end:auto}
+ #app .pvhead{align-items:stretch}
+ #app .pvhead .top{max-width:840px;padding:0;justify-content:flex-start}
+ #app .pvhead .top h1{flex:1;text-align:start}
+ #app .pvhead .sw{width:100%;max-width:840px;margin-inline:auto;justify-content:flex-start}
+}
+@media screen and (min-width:900px) and (max-width:1199px){
+ #app .selbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:calc(100% - 272px)!important;max-width:none!important;left:252px;right:20px;bottom:20px}
+ html[dir="rtl"] #app .selbar{left:20px;right:252px}
+ #app .selbar .selcount{grid-column:1/-1;margin:0}
+ #app .selbar .btn{min-width:0;white-space:normal}
+}
+@media screen and (max-width:899px){
+ #app .ic{width:44px;height:44px;min-width:44px;flex:none}
+ #app .ic:before{display:none}
+ #app .chip,#app .ut{min-height:44px;min-width:44px}
+ #app .tg{height:44px;background:transparent}
+ #app .tg:before{content:'';position:absolute;inset:8px 0;border-radius:99px;background:var(--bd)}
+ #app .tg.on:before{background:var(--pr)}
+ #app .tg:after{top:11px}
+ #app .top>.btn{flex:none;width:auto;min-width:0;padding:10px 12px}
+ #app .record-header{flex-wrap:wrap;gap:8px}
+ #app .record-header h1{overflow-wrap:normal;word-break:normal}
+ #app .record-header-actions{display:flex;flex-basis:100%;gap:8px;justify-content:flex-end}
+ #app .record-header-actions>.btn{flex:none;padding:10px 16px;min-width:0}
+ /* Reserve the checkbox slot even before selection so text and scroll positions stay stable. */
+ #app .doccard:not(:has(.av))>.docopen{padding-inline-start:44px}
+ #app .doccard:not(:has(.av))>.docpick,#app.selon .doccard:not(:has(.av))>.docpick{left:12px;right:auto;top:50%;transform:translateY(-50%);background:none;border:0;border-radius:0}
+ html[dir="rtl"] #app .doccard:not(:has(.av))>.docpick,html[dir="rtl"] #app.selon .doccard:not(:has(.av))>.docpick{left:auto;right:12px;transform:translateY(-50%)}
+ .settings-jumps{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}
+ .settings-jumps>.chip{white-space:nowrap}
+ .preview-tools{flex-wrap:wrap}
+ .preview-tools h2{font-size:18px}
+ .template-preview-dialog>.sheet{height:92vh;max-height:92vh;width:100%}
 }
