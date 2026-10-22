@@ -184,3 +184,6 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Grouped profit/distributor summaries beside cash and bank balances. Stock alerts share the main content width and expand cleanly when only one is present.
 - Standalone HTML regenerated. Desktop and APK packages untouched. Syntax/whitespace checks passed; visual verification pending.
 
+
+- Dashboard metrics now place overdue details beside the amount when space permits, wrap on narrow cards, and remove the forced minimum height that left empty space below ordinary totals. HTML updated; desktop package untouched.
+
