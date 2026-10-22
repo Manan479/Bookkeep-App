@@ -207,3 +207,9 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Product editor includes Cancel, spans the stock field when distributor pricing leaves an odd row, and hides the empty duplicate-name hint.
 - HTML rebuilt; desktop/APK untouched. Syntax checks passed; visual verification pending.
 
+
+### Layout audit — 23 October 2026
+- See docs/LAYOUT_REVIEW_2026-10-23.md: 9 confirmed defects and 7 design inconsistencies, with screenshot references, priority and scope limits.
+- Broad pass exercised 71 screen states at desktop/mobile sizes; added 900px review and focused 320px checks. No screen exceptions or page overflow, but child layout defects were confirmed visually.
+- Audit only: no UI changes, desktop package or APK builds. Local evidence is under dist/layout-review; audit scripts are in tools/layout-{review,focus,extras}.cjs.
+
