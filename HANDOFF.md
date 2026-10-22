@@ -196,3 +196,8 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 
 - Corrected sign-in centering: shared action-bar layout no longer overrides its bottom padding, and symmetric scrollbar gutters keep its horizontal center aligned. HTML rebuilt; desktop unchanged.
 
+
+### Desktop scrollbars
+- Added slim rounded, theme-aware scrollbars for sidebar, screens, dialogs, tables, previews and text areas; transparent tracks and hover feedback. Preserves filter-chip hiding and high-contrast system colors.
+- HTML regenerated; desktop/APK packages untouched. Visual verification pending.
+

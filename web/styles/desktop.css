@@ -1,5 +1,21 @@
 /* A single desktop scale. Screen-only rules keep invoice paper and mobile styling independent. */
 .ui-icon{width:20px;height:20px;display:inline-block;vertical-align:middle;flex:none}
+/* Theme-aware desktop scrollbars; filter chips retain their hidden scrollbars. */
+@media screen and (min-width:900px){
+ #app{--scroll-thumb:color-mix(in srgb,var(--tx2) 55%,var(--bg));--scroll-thumb-hover:var(--tx2)}
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea){scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent}
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea)::-webkit-scrollbar{width:10px;height:10px}
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea)::-webkit-scrollbar-track{background:transparent}
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea)::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border:3px solid transparent;background-clip:padding-box;border-radius:12px;min-height:40px}
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea)::-webkit-scrollbar-thumb:hover{background-color:var(--scroll-thumb-hover)}
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea)::-webkit-scrollbar-corner{background:transparent}
+ @supports selector(::-webkit-scrollbar){
+  #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea){scrollbar-width:auto;scrollbar-color:auto}
+ }
+}
+@media screen and (min-width:900px) and (forced-colors:active){
+ #app :is(.scr,.desktop-nav,.sheet,.tablewrap,.paperwrap,textarea){scrollbar-color:auto;--scroll-thumb:ButtonText;--scroll-thumb-hover:Highlight}
+}
 /* A self-contained sign-in panel, independent of list and editor sizing. */
 #app .scr.auth-screen{display:flex;flex-direction:column;padding:32px 20px;scrollbar-gutter:stable both-edges;}
 #app .auth-screen .auth{width:100%;max-width:420px;margin:auto;padding:32px;background:var(--sf);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--sh);flex:none}
