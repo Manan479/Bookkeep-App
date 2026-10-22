@@ -38,6 +38,9 @@ const hex2rgb=h=>{const s=String(h||'').replace('#',''),v=s.length===3?s.split('
 const rgb2hex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
 const shade=(h,f)=>{const a=hex2rgb(h);return a.map(v=>f>0?v+(255-v)*f:v*(1+f))};
 const lightOn=h=>{const a=hex2rgb(h);return (0.299*a[0]+0.587*a[1]+0.114*a[2])>150};
+const accentLuminance=h=>hex2rgb(h).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+const accentContrast=(a,b)=>{const x=accentLuminance(a),y=accentLuminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const accentInk=h=>accentContrast(h,'#000000')>=accentContrast(h,'#ffffff')?'#000000':'#ffffff';
 const isDarkNow=()=>{const r=document.documentElement;
  return r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&typeof matchMedia==='function'&&matchMedia('(prefers-color-scheme:dark)').matches)};
 // The accent is not just a button colour: the neutrals take the same hue, at a very low saturation, so the whole
@@ -48,7 +51,10 @@ function applyAccent(){try{const a=TPL.accent||'#0F5B3F',r=document.documentElem
  const pr=dark?rgb2hex(shade(a,.4)):a,tint=dark?('rgba('+hex2rgb(pr).join(',')+',.16)'):rgb2hex(shade(a,.86));
  r.style.setProperty('--pr',pr);
  r.style.setProperty('--prt',tint);
- r.style.setProperty('--onpr',lightOn(pr)?'#06190F':'#ffffff');
+ r.style.setProperty('--onpr',accentInk(pr));
+ // Text on neutral/tinted surfaces needs its own tone; preserve the selected fill.
+ let ink=pr;for(let step=0;step<=100;step++){ink=rgb2hex(shade(pr,(dark?1:-1)*step/100));if(accentContrast(ink,dark?'#333333':'#dddddd')>=4.5)break}
+ r.style.setProperty('--pr-text',ink);
  r.style.setProperty('--bar2',rgb2hex(shade(a,dark?.5:.5)));
  const [h,s]=rgb2hsl(hex2rgb(a)),ns=Math.min(.34,s*.45);
  if(dark){

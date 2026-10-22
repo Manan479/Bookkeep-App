@@ -1,5 +1,12 @@
 # Bookkeep handoff
 
+## Dashboard customization and accent readability — 23 October 2026
+
+- Dashboard → Customize lets users show/hide and reorder 11 sections, with desktop drag handles and accessible up/down controls. Changes are drafted until Save layout; Cancel discards them and Restore defaults resets the draft. Empty dashboards retain a customization action. Conditional stock alerts/distributor sections still obey their existing availability rules.
+- Preferences use the separate localStorage key `bookkeep.dashboard-layout.v1`, outside business backup/cloud data. The flexible widget layout fills remaining space when sections are hidden. Calculations, permissions and dashboard data exports are unchanged.
+- Accent fills now choose black/white foregrounds using relative luminance contrast, including swatch check marks. Accent text on neutral/tinted surfaces uses a separate adjusted tone. Hero labels retain full opacity for readability.
+- HTML regenerated. Syntax/whitespace checks performed; no browser/device interaction testing for this change. Desktop resources/packages and APK unchanged. Source: `features/dashboard-layout.js`, shared layout mounting, `ui/kit.js`, `styles/desktop.css`.
+
 Updated **23 October 2026**. Read this first. This file describes the current state; older implementation notes are preserved in `docs/HANDOFF_HISTORY.md` and may be obsolete.
 
 ## User preferences and working rules

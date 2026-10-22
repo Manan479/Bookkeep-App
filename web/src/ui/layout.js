@@ -1,6 +1,7 @@
 // Shared screen presentation. Called once after each new screen is mounted.
 function mountScreenLayout(){
  const app=document.getElementById('app'),screen=app.querySelector('.scr'),top=screen?.querySelector(':scope>.top');if(!screen)return;
+ mountDashboardLayout(screen);
  screen.querySelectorAll('.shead').forEach(band=>{const search=band.querySelector(':scope>.search');if(search)band.prepend(search)});
  // Keep the same action handlers; only their desktop placement changes.
  const fab=app.querySelector(':scope>.fab');

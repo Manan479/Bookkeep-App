@@ -200,6 +200,42 @@ button.ic>.icon-original,[data-ui-icon]:not(button)>.icon-original{display:none}
 [data-ui-icon]:not(button)>.ui-icon{display:inline-block}
 .mobile-nav .ui-icon{width:22px;height:22px}
 .record-header-actions{display:contents}
+/* Filled and outlined accents have separate readable foregrounds. */
+#app :is(.hero,.btn.p,.chip.on,.fab,.ut,.cd.on,.preview-action){color:var(--onpr)}
+#app .hero :is(.lbl,.sm,.num){color:inherit;opacity:1}
+#app :is(.btn:not(.p),.tab.on,.av,.tot .bal,.b-Converted,.accent-current,.appearance-shortcut-icon,.date-optional,.auth-mark,.auth-help){color:var(--pr-text,var(--pr))}
+.dashboard-widgets{display:flex;flex-wrap:wrap;gap:16px;max-width:1180px;margin:0 auto}
+#app .dashboard-widgets>.dashboard-widget{flex:1 1 calc(50% - 8px);width:auto;min-width:0;max-width:none;margin:0!important;padding:16px;text-align:start;overflow-wrap:anywhere}
+#app .dashboard-widgets>.hero,#app .dashboard-widgets>[data-widget="accounts"],#app .dashboard-widgets>[data-widget="chart"],#app .dashboard-widgets>[data-widget="alerts"]{flex-basis:100%}
+.dashboard-widgets .metric-value{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin-top:6px}
+.dashboard-widgets .metric-value .sm{margin-inline-start:auto}
+.dashboard-widgets .dashboard-accounts .row{gap:12px;min-height:44px}
+.dashboard-widgets>.alerts{display:grid;gap:12px}
+.dashboard-widgets .alert{text-align:start}
+.dashboard-empty{width:100%}
+.dashboard-customizer>.sheet{display:flex;flex-direction:column;width:min(640px,100%);max-height:90vh}
+.dashboard-customizer p{margin:0 0 16px}
+.dashboard-options{overflow-y:auto;min-height:0}
+.dashboard-option{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)}
+.dashboard-option label{display:flex;align-items:center;gap:12px;flex:1;min-width:0;min-height:44px;cursor:pointer}
+.dashboard-option input{width:20px;height:20px;flex:none;accent-color:var(--pr)}
+.dashboard-option .ic{width:44px;height:44px;min-width:44px}
+.dashboard-option .ic:disabled{opacity:.3;cursor:default}
+.dashboard-drag{cursor:grab}
+.dashboard-customizer-actions{display:flex;flex-wrap:wrap;gap:8px;padding-top:16px}
+.dashboard-customizer-actions .btn{min-height:44px}
+@media(min-width:1100px){
+ #app .dashboard-widgets>.dashboard-widget{flex-basis:calc(33.333% - 11px)}
+ #app .dashboard-widgets>:is(.hero,[data-widget="accounts"],[data-widget="distributors"],[data-widget="alerts"]){flex-basis:calc(50% - 8px)}
+ #app .dashboard-widgets>[data-widget="chart"]{flex-basis:100%}
+}
+@media(max-width:899px){
+ .dashboard .top{flex-wrap:wrap}
+ #app .dashboard .dashboard-customize{margin-inline-start:auto}
+ .dashboard-drag{display:none}
+ .dashboard-customizer-actions [data-reset]{flex-basis:100%}
+ .dashboard-widgets{gap:12px}
+}
 #app .scr .card.tbl>.tr{gap:12px}
 #app .scr .card.tbl>.tr>.lbl:first-child{flex-shrink:0}
 #app .scr .card.tbl>.tr>span:last-child{min-width:0;overflow-wrap:anywhere;text-align:end!important}
