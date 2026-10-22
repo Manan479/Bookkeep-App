@@ -166,7 +166,8 @@ function mountRegisterActions(){
    if(row.tagName==='TR'){const cell=document.createElement('td');cell.className='pickcell';cell.append(pick);row.prepend(cell)}
    else if(row.tagName==='BUTTON'){const wrap=document.createElement('div');wrap.className='row doccard register-card';wrap.dataset.sel=id;row.removeAttribute('data-sel');row.classList.remove('row');row.classList.add('docopen');row.before(wrap);wrap.append(pick,row)}
   });
-  app.querySelectorAll('.dtable colgroup').forEach(group=>{const col=document.createElement('col');col.className='col-pick';group.prepend(col)});
+  app.querySelectorAll('.dtable colgroup').forEach(group=>{if(group.querySelector('.col-pick'))return;const col=document.createElement('col');col.className='col-pick';group.prepend(col)});
+  app.querySelectorAll('.dtable tbody td.empty[colspan]').forEach(cell=>{cell.colSpan=cell.closest('table').querySelectorAll('thead th').length+1});
   app.querySelectorAll('.dtable thead tr').forEach(row=>{const cell=document.createElement('th');cell.className='pickcell';cell.innerHTML='<label class="docpick" data-select-control><input type="checkbox" data-doc-all aria-label="Select all visible records" onchange="selToggleAll()"><span aria-hidden="true"></span></label>';row.prepend(cell)});
  }
  const details={record:[S.recordKind,S.recordId],skd:['sr',S.skk&&S.skk.id],pmd:['pm',S.pmk&&S.pmk.id],exd:['ex',S.xk&&S.xk.id],qd:['qt',S.qk],rtd:['rt',S.rk&&S.rk.id],jd:['jl',S.jk&&S.jk.id]},detail=details[S.screen];

@@ -173,3 +173,8 @@ Then copy `android/app/build/outputs/apk/debug/app-debug.apk` to `dist/Bookkeep-
 - Master records do not receive invoice void actions. Also aligned Payments' generated selection column with its explicit column group.
 - Standalone HTML updated; desktop package and APK untouched. Syntax checks passed; interactive verification pending.
 
+
+### Payments column alignment
+- Payments declares its checkbox column explicitly alongside Date, Party, Direction, Method and Amount; selection mounting avoids duplicating it. Empty rows span the selection column too.
+- Rebuilt HTML, syntax checked. Desktop package unchanged; visual verification pending.
+
