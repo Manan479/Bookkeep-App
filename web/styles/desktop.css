@@ -202,6 +202,7 @@ button.ic>.icon-original,[data-ui-icon]:not(button)>.icon-original{display:none}
 .record-header-actions{display:contents}
 /* Filled and outlined accents have separate readable foregrounds. */
 #app :is(.hero,.btn.p,.chip.on,.fab,.ut,.cd.on,.preview-action){color:var(--onpr)}
+#app .scr .hero{background:var(--sf2);color:var(--tx);border:1px solid var(--bd);border-inline-start:4px solid var(--pr);box-shadow:var(--sh)}
 #app .hero :is(.lbl,.sm,.num){color:inherit;opacity:1}
 #app :is(.btn:not(.p),.tab.on,.av,.tot .bal,.b-Converted,.accent-current,.appearance-shortcut-icon,.date-optional,.auth-mark,.auth-help){color:var(--pr-text,var(--pr))}
 .dashboard-widgets{display:flex;flex-wrap:wrap;gap:16px;max-width:1180px;margin:0 auto}
@@ -210,8 +211,8 @@ button.ic>.icon-original,[data-ui-icon]:not(button)>.icon-original{display:none}
 .dashboard-widgets .metric-value{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin-top:6px}
 .dashboard-widgets .metric-value .sm{margin-inline-start:auto}
 .dashboard-widgets .dashboard-accounts .row{gap:12px;min-height:44px}
-.dashboard-widgets>.alerts{display:grid;gap:12px}
-.dashboard-widgets .alert{text-align:start}
+#app .dashboard-widgets>.alerts.dashboard-widget{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:12px;padding:0;align-self:stretch}
+.dashboard-widgets .alert{text-align:start;padding:16px;min-height:100px}
 .dashboard-empty{width:100%}
 .dashboard-customizer>.sheet{display:flex;flex-direction:column;width:min(640px,100%);max-height:90vh}
 .dashboard-customizer p{margin:0 0 16px}

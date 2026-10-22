@@ -13,6 +13,7 @@ Bookkeeping, inventory and invoicing for small trading businesses. The Android a
 - Record selection and actions across document registers. Export selected data as image, PDF or CSV; use PDF / Share for full invoice documents, combined or separate when multiple invoices are selected.
 - Editing and confirmed void/permanent-delete actions, subject to permissions and accounting dependencies. Posted records retain audit history.
 - Light/dark/system appearance, accent selection, English/Urdu, desktop sidebar navigation and mobile selection mode. Applying the accent to invoice paper is optional.
+- Dashboard customization: show/hide and reorder sections, restore defaults and save the layout on each device. Summary cards use readable neutral surfaces with accent borders; filled controls choose a contrasting foreground.
 - Local persistence, backup/restore, posting history and a review tool for older saved invoice accounting.
 - Optional Supabase cloud-sync client and SQL setup. Live multi-device operation still needs deployment and verification.
 
@@ -107,6 +108,8 @@ node tests/date-fields-browser.cjs
 ```
 
 The last broad audit recorded 901 source checks, 901 standalone checks, restart checks, 213 screen scenarios and 132 additional UI screen runs. A subsequent focused check passed 18 invoice/purchase/quotation date alignment and toggle combinations. These are historical results, not a guarantee that every possible layout or feature works. See `docs/AUDIT_FIXES_2026-10-21.md` for evidence and scope. No checks were rerun for this documentation update.
+
+The 23 October layout work also passed a 213-scenario screen review, focused layout checks at four widths, and dashboard checks for alert geometry, saved customization and rendered accent contrast. Run `tools/layout-regression.cjs` or `tools/dashboard-review.cjs` with Playwright configured as above. See `docs/UI_UPDATE_2026-10-23.md` for the changes since the previous GitHub update and verification limits.
 
 ## Accounting and remaining limits
 
